@@ -1,6 +1,12 @@
 build
+dist
 locale
 MANIFEST
+BUILD
+BUILDROOT
+SOURCES
+RPMS
+SRPMS
 *.pyc
 *~
 
