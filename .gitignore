@@ -1,11 +1,6 @@
 build
 locale
 MANIFEST
-BUILD
-BUILDROOT
-RPMS
-SOURCES
-SRPMS
 *.pyc
 *~
 
