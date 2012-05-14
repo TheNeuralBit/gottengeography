@@ -16,11 +16,9 @@
 
 from __future__ import division
 
-from cPickle import dumps as pickle
-from cPickle import loads as unpickle
 from os.path import join, dirname, basename
 from xml.parsers.expat import ParserCreate, ExpatError
-from gi.repository import GConf, Clutter, Champlain
+from gi.repository import Gio, GLib, Clutter, Champlain
 from math import acos, sin, cos, radians
 from time import strftime, localtime
 from math import modf as split_float
@@ -40,25 +38,62 @@ def make_clutter_color(color):
         *[x / 256 for x in [color.red, color.green, color.blue, 32768]])
 
 ################################################################################
-# GConf methods. These methods interact with GConf.
+# GSettings overrides. This allows me to interact with GSettings more easily.
 ################################################################################
 
-gconf = GConf.Client.get_default()
-
-def gconf_key(key):
-    """Determine appropriate GConf key that is unique to this application."""
-    return "/apps/gottengeography/" + key
-
-def gconf_set(key, value):
-    """Sets the given GConf key to the given value."""
-    gconf.set_string(gconf_key(key), pickle(value))
-
-def gconf_get(key, default=None):
-    """Gets the given GConf key as the requested type."""
-    try:
-        return unpickle(gconf.get_string(gconf_key(key)))
-    except TypeError:
-        return default
+class GSettingsSetting(Gio.Settings):
+    def __init__(self, schema_name):
+        Gio.Settings.__init__(self, schema_name)
+        
+        # These are used to avoid infinite looping.
+        self._ignore_key_changed = False
+        self._ignore_prop_changed = True
+    
+    def bind(self, key, widget, prop, flags=Gio.SettingsBindFlags.DEFAULT):
+        """Don't make me specify the default flags every time."""
+        Gio.Settings.bind(self, key, widget, prop, flags)
+    
+    def set_value(self, key, value):
+        """Convert arrays to GVariants.
+        
+        This allows me to set the back-button history directly.
+        """
+        if type(value) is list:
+            value = GLib.Variant.parse(GLib.VariantType.new('aad'),
+                str(value), None, None)
+        Gio.Settings.set_value(self, key, value)
+    
+    def bind_with_convert(self, key, widget, prop, key_to_prop_converter, prop_to_key_converter):
+        """Recreate g_settings_bind_with_mapping from scratch.
+        
+        This method was shamelessly stolen from John Stowers'
+        gnome-tweak-tool on May 14, 2012.
+        """
+        def key_changed(settings, key):
+            if self._ignore_key_changed: return
+            orig_value = self[key]
+            converted_value = key_to_prop_converter(orig_value)
+            self._ignore_prop_changed = True
+            try:
+                widget.set_property(prop, converted_value)
+            except TypeError:
+                print "TypeError: %s not a valid %s." % (converted_value, key)
+            self._ignore_prop_changed = False
+        
+        def prop_changed(widget, param):
+            if self._ignore_prop_changed: return
+            orig_value = widget.get_property(prop)
+            converted_value = prop_to_key_converter(orig_value)
+            self._ignore_key_changed = True
+            try:
+                self[key] = converted_value
+            except TypeError:
+                print "TypeError: %s not a valid %s." % (converted_value, prop)
+            self._ignore_key_changed = False
+        
+        self.connect("changed::" + key, key_changed)
+        widget.connect("notify::" + prop, prop_changed)
+        key_changed(self,key) # init default state
 
 ################################################################################
 # GPS math functions. These methods convert numbers into other numbers.
