@@ -48,6 +48,7 @@ fi
 
 %changelog
 * Mon May 14 2012 Robert Park <rbpark@exolucere.ca> - 1.3-1
+- Module cleanup, put data files in a more standard location
 - Convert to GSettings
 - Run glib-compile-schemas in post scripts
 - Added geoname data to window titlebar
