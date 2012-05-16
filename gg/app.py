@@ -25,7 +25,7 @@ gettext.textdomain(PACKAGE)
 from gi.repository import GObject, GtkClutter, Clutter
 
 GObject.threads_init()
-GObject.set_prgname('gottengeography')
+GObject.set_prgname(PACKAGE)
 GtkClutter.init([])
 
 from gi.repository import Gtk, Gdk, GdkPixbuf
@@ -53,10 +53,10 @@ LOCATION, LATITUDE, LONGITUDE = range(3)
 
 builder = Gtk.Builder()
 builder.set_translation_domain(PACKAGE)
-builder.add_from_file(get_file("ui.glade"))
+builder.add_from_file(get_file(PACKAGE + '.ui'))
 get_obj = builder.get_object
 
-gsettings = GSettingsSetting('ca.exolucere.gottengeography')
+gsettings = GSettingsSetting('ca.exolucere.' + PACKAGE)
 gst_get = gsettings.get_value
 gst_set = gsettings.set_value
 bind_with_convert = gsettings.bind_with_convert
@@ -260,7 +260,7 @@ class SearchController(CommonAttributes):
 
 class PreferencesController(CommonAttributes):
     """Controls the behavior of the preferences dialog."""
-    timezone = None
+    gpx_timezone = ''
     
     def __init__(self):
         self.region = region = get_obj("timezone_region")
@@ -328,18 +328,13 @@ class PreferencesController(CommonAttributes):
             cities.set_active(previous.city)
         dialog.hide()
     
-    def set_timezone(self, timezone=None):
+    def set_timezone(self):
         """Set the timezone to the given zone and update all photos."""
-        for radio in get_obj("system-timezone").get_group():
-            if radio.get_active():
-                option = radio.get_name()
-        if timezone is not None:
-            self.timezone = timezone
         if "TZ" in environ:
             del environ["TZ"]
-        if   option == "lookup-timezone" and self.timezone is not None:
-            environ["TZ"] = self.timezone
-        elif option == "custom-timezone":
+        if gsettings.get_boolean('lookup-timezone'):
+            environ["TZ"] = self.gpx_timezone
+        elif gsettings.get_boolean('custom-timezone'):
             region = self.region.get_active_id()
             city   = self.cities.get_active_id()
             if region is not None and city is not None:
@@ -576,7 +571,8 @@ class GottenGeography(CommonAttributes):
         gpx.latitude, gpx.longitude = bounds.get_center()
         self.map_view.ensure_visible(bounds, False)
         
-        self.prefs.set_timezone(gpx.lookup_geoname())
+        self.prefs.gpx_timezone = gpx.lookup_geoname()
+        self.prefs.set_timezone()
         self.gpx_sensitivity()
     
     def apply_selected_photos(self, button, selected, view):

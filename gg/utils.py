@@ -16,7 +16,8 @@
 
 from __future__ import division
 
-from os.path import join, dirname, basename
+from os import sep as os_sep
+from os.path import join, isdir, dirname, basename
 from xml.parsers.expat import ParserCreate, ExpatError
 from gi.repository import Gio, GLib, Clutter, Champlain
 from math import acos, sin, cos, radians
@@ -27,10 +28,11 @@ from fractions import Fraction
 from pyexiv2 import Rational
 
 from territories import get_state, get_country
+from build_info import PKG_DATA_DIR
 
 def get_file(filename):
     """Find a file that's in the same directory as this program."""
-    return join(dirname(__file__), filename)
+    return join(PKG_DATA_DIR, filename)
 
 def make_clutter_color(color):
     """Generate a Clutter.Color from the currently chosen color."""
