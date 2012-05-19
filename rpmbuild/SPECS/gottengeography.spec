@@ -57,6 +57,7 @@ fi
 - Alter Google Maps link to honor the current zoom level
 - Module cleanup, put data files in a more standard location
 - Run glib-compile-schemas, gtk-update-icon-cache in post scripts
+- Remember last-used window size on app launch
 - Added geoname data to window titlebar
 - Convert to GSettings
 - Add new application icon
