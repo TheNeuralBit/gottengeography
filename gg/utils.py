@@ -47,6 +47,10 @@ class GSettingsSetting(Gio.Settings):
     def __init__(self, schema_name):
         Gio.Settings.__init__(self, schema_name)
         
+        # Some common data types I use
+        self._history_matrix = GLib.VariantType.new('aad')
+        self._window_size = GLib.VariantType.new('(ii)')
+        
         # These are used to avoid infinite looping.
         self._ignore_key_changed = False
         self._ignore_prop_changed = True
@@ -58,12 +62,13 @@ class GSettingsSetting(Gio.Settings):
     def set_value(self, key, value):
         """Convert arrays to GVariants.
         
-        This allows me to set the back-button history directly.
+        This makes it easier to set the back button history and the window size.
         """
-        if type(value) is list:
-            value = GLib.Variant.parse(GLib.VariantType.new('aad'),
-                str(value), None, None)
-        Gio.Settings.set_value(self, key, value)
+        use_matrix = type(value) is list
+        do_override = type(value) is tuple or use_matrix
+        Gio.Settings.set_value(self, key, GLib.Variant.parse(
+            self._history_matrix if use_matrix else self._window_size,
+            str(value), None, None) if do_override else value)
     
     def bind_with_convert(self, key, widget, prop, key_to_prop_converter, prop_to_key_converter):
         """Recreate g_settings_bind_with_mapping from scratch.
@@ -148,6 +153,62 @@ def format_coords(lat, lon):
         _("N") if lat >= 0 else _("S"), abs(lat),
         _("E") if lon >= 0 else _("W"), abs(lon)
     )
+
+################################################################################
+# Map source definitions.
+################################################################################
+
+def create_map_source(id, name, license, uri, minzoom, maxzoom, tile_size, uri_format):
+    renderer  = Champlain.ImageRenderer()
+    map_chain = Champlain.MapSourceChain()
+    factory   = Champlain.MapSourceFactory.dup_default()
+    err_src   = factory.create_error_source(tile_size)
+    tile_src  = Champlain.NetworkTileSource.new_full(id, name, license, uri,
+        minzoom, maxzoom, tile_size, Champlain.MapProjection.MAP_PROJECTION_MERCATOR,
+        uri_format, renderer)
+    
+    renderer   = Champlain.ImageRenderer()
+    file_cache = Champlain.FileCache.new_full(100000000, None, renderer)
+    
+    renderer  = Champlain.ImageRenderer()
+    mem_cache = Champlain.MemoryCache.new_full(100, renderer)
+    
+    for src in (err_src, tile_src, file_cache, mem_cache):
+        map_chain.push(src)
+    
+    return map_chain
+
+map_sources = {
+    'osm-mapnik':
+    create_map_source('osm-mapnik', 'OpenStreetMap Mapnik',
+    'Map data is CC-BY-SA 2.0 OpenStreetMap contributors',
+    'http://creativecommons.org/licenses/by-sa/2.0/',
+    0, 18, 256, 'http://tile.openstreetmap.org/#Z#/#X#/#Y#.png'),
+    
+    'osm-cyclemap':
+    create_map_source('osm-cyclemap', 'OpenStreetMap Cycle Map',
+    'Map data is CC-BY-SA 2.0 OpenStreetMap contributors',
+    'http://creativecommons.org/licenses/by-sa/2.0/',
+    0, 17, 256, 'http://a.tile.opencyclemap.org/cycle/#Z#/#X#/#Y#.png'),
+    
+    'osm-transport':
+    create_map_source('osm-transport', 'OpenStreetMap Transport Map',
+    'Map data is CC-BY-SA 2.0 OpenStreetMap contributors',
+    'http://creativecommons.org/licenses/by-sa/2.0/',
+    0, 18, 256, 'http://tile.xn--pnvkarte-m4a.de/tilegen/#Z#/#X#/#Y#.png'),
+    
+    'mapquest-osm':
+    create_map_source('mapquest-osm', 'MapQuest OSM',
+    'Data, imagery and map information provided by MapQuest, Open Street Map and contributors',
+    'http://creativecommons.org/licenses/by-sa/2.0/',
+    0, 17, 256, 'http://otile1.mqcdn.com/tiles/1.0.0/osm/#Z#/#X#/#Y#.png'),
+    
+    'mff-relief':
+    create_map_source('mff-relief', 'Maps for Free Relief',
+    'Map data available under GNU Free Documentation license, Version 1.2 or later',
+    'http://www.gnu.org/copyleft/fdl.html',
+    0, 11, 256, 'http://maps-for-free.com/layer/relief/z#Z#/row#Y#/#Z#_#X#-#Y#.jpg')
+}
 
 ################################################################################
 # Class definitions.

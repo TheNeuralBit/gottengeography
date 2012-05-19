@@ -42,9 +42,9 @@ from sys import argv
 #                                    --- Isaac Newton
 
 from files import Photograph, GPXFile, KMLFile
-from utils import get_file, GSettingsSetting
-from utils import Coordinates, Polygon, Struct, make_clutter_color
-from utils import format_list, format_coords, valid_coords, maps_link
+from utils import format_list, format_coords, valid_coords
+from utils import make_clutter_color, get_file, map_sources
+from utils import GSettingsSetting, Coordinates, Polygon, Struct
 from territories import tz_regions, get_timezone, get_state, get_country
 
 # Handy names for GtkListStore column numbers.
@@ -281,17 +281,16 @@ class PreferencesController(CommonAttributes):
         
         radio_group = []
         map_menu = get_obj("map_source_menu")
-        factory = Champlain.MapSourceFactory.dup_default()
         bind_with_convert("map-source-id", self.map_view, "map-source",
-            lambda x: factory.create_cached_source(x), lambda x: x.get_id())
+            map_sources.get, lambda x: x.get_id())
         last_source = self.map_view.get_map_source().get_id()
-        for i, source in enumerate(factory.get_registered()):
+        for i, source_id in enumerate(sorted(map_sources.keys())):
+            source = map_sources[source_id]
             menu_item = Gtk.RadioMenuItem.new_with_label(radio_group, source.get_name())
             radio_group.append(menu_item)
-            if last_source == source.get_id():
+            if last_source == source_id:
                 menu_item.set_active(True)
-            menu_item.connect("activate", self.map_menu_clicked,
-                source.get_id(), factory)
+            menu_item.connect("activate", self.map_menu_clicked, source_id)
             map_menu.attach(menu_item, 0, 1, i, i+1)
         map_menu.show_all()
         
@@ -368,10 +367,10 @@ class PreferencesController(CommonAttributes):
         for i, polygon in enumerate(polygons):
             polygon.set_stroke_color(two if i % 2 else one)
     
-    def map_menu_clicked(self, menu_item, mapid, factory):
+    def map_menu_clicked(self, menu_item, mapid):
         """Change the map source when the user selects a different one."""
         if menu_item.get_active():
-            self.map_view.set_map_source(factory.create_cached_source(mapid))
+            self.map_view.set_map_source(map_sources[mapid])
 
 
 class LabelController(CommonAttributes):
@@ -472,8 +471,11 @@ class ActorController(CommonAttributes):
     def display(self, view, param, mlink, label):
         """Display map center coordinates when they change."""
         lat, lon = [ view.get_property(x) for x in ('latitude', 'longitude') ]
-        mlink.set_markup(maps_link(lat, lon))
         label.set_markup(format_coords(lat, lon))
+        mlink.set_markup(
+            '<a title="%s" href="http://maps.google.com/maps?ll=%s,%s&amp;spn=%s,%s">Google</a>'
+            % (_("View in Google Maps"), lat, lon,
+            lon - view.x_to_longitude(0), view.y_to_latitude(0) - lat))
     
     def animate_in(self, start=400):
         """Animate the crosshair."""
@@ -807,9 +809,14 @@ class GottenGeography(CommonAttributes):
         
         accel  = Gtk.AccelGroup()
         window = get_obj("main")
+        window.resize(*gst_get('window-size'))
         window.connect("delete_event", self.confirm_quit_dialog)
         window.add_accel_group(accel)
         window.show_all()
+        
+        save_size = lambda v,s,size: gst_set('window-size', size())
+        for prop in ['width', 'height']:
+            self.map_view.connect('notify::' + prop, save_size, window.get_size)
         
         map_source_button = get_obj("map_source_label").get_parent()
         if map_source_button:
