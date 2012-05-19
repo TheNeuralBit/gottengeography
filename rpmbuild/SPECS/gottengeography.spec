@@ -37,21 +37,30 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 
 %post
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 if [ $1 -ge 1 ]; then
-   glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+    /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 fi
 
 %postun
 if [ $1 -eq 0 ]; then
-   glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+    /usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
+    /usr/bin/glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 fi
+
+%posttrans
+/usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
 
 %changelog
 * Mon May 14 2012 Robert Park <rbpark@exolucere.ca> - 1.3-1
+- Alter Google Maps link to honor the current zoom level
 - Module cleanup, put data files in a more standard location
-- Convert to GSettings
-- Run glib-compile-schemas in post scripts
+- Run glib-compile-schemas, gtk-update-icon-cache in post scripts
 - Added geoname data to window titlebar
+- Convert to GSettings
+- Add new application icon
+- Fix OpenCycleMap
 
 * Sun May 13 2012 Robert Park <rbpark@exolucere.ca> - 1.2.1-1
 - Remember the last used map source each run
