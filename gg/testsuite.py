@@ -1,4 +1,4 @@
-# GottenGeography - Test suite ensures that GottenGeography functions correctly
+# GottenGeography - Test suite ensures that GottenGeography functions correctly.
 # Copyright (C) 2010 Robert Park <rbpark@exolucere.ca>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,9 @@
 
 from __future__ import division
 
-from gi.repository import Gdk, Clutter, GObject, Champlain
+from gi.repository import Gdk, Clutter, Champlain
 from unittest import TestCase, TextTestRunner, TestLoader
-from os import listdir, getcwd, system, environ
+from os import listdir, system, environ
 from fractions import Fraction
 from random import random
 from os.path import join
@@ -26,17 +26,21 @@ from math import floor
 from time import tzset
 
 import app
-from files import Photograph
-from utils import Coordinates, Polygon, Struct
-from utils import get_file, make_clutter_color, maps_link, valid_coords
-from utils import decimal_to_dms, dms_to_decimal, float_to_rational
-
-# Disable animations so tests pass more quickly.
-app.CommonAttributes.slide_to = app.CommonAttributes.map_view.center_on
+from photos import Photograph
+from gpsmath import Coordinates, valid_coords
+from gpsmath import decimal_to_dms, dms_to_decimal, float_to_rational
+from common import Struct, Polygon, polygons, map_view
+from common import points, photos, selected, modified
+from preferences import make_clutter_color
+from navigation import move_by_arrow_keys
+from build_info import PKG_DATA_DIR
 
 gui = app.GottenGeography()
 get_obj = app.get_obj
-gst_get = app.gst_get
+gst_get = app.gst.get
+
+# Disable animations so tests pass more quickly.
+gui.search.slide_to = map_view.center_on
 
 class GottenGeographyTester(TestCase):
     def setUp(self):
@@ -50,8 +54,8 @@ class GottenGeographyTester(TestCase):
     def tearDown(self):
         """Undo whatever mess the testsuite created."""
         system('git checkout demo')
-        for key in app.gsettings.list_keys():
-            app.gsettings.reset(key)
+        for key in app.gst.list_keys():
+            app.gst.reset(key)
     
     def test_gtk_window(self):
         """Make sure that various widgets were created properly."""
@@ -67,10 +71,10 @@ class GottenGeographyTester(TestCase):
         
         # Start with a fresh state.
         system('git checkout demo')
-        self.assertEqual(len(gui.tracks), 0)
-        self.assertEqual(len(gui.polygons), 0)
-        self.assertEqual(gui.metadata.alpha, float('inf'))
-        self.assertEqual(gui.metadata.omega, float('-inf'))
+        self.assertEqual(len(points), 0)
+        self.assertEqual(len(polygons), 0)
+        self.assertEqual(app.metadata.alpha, float('inf'))
+        self.assertEqual(app.metadata.omega, float('-inf'))
         
         # No buttons should be sensitive yet because nothing's loaded.
         buttons = {}
@@ -80,7 +84,7 @@ class GottenGeographyTester(TestCase):
         
         # Load only the photos first.
         for demo in listdir('./demo/'):
-            filename = join(getcwd(), 'demo', demo)
+            filename = join(PKG_DATA_DIR, '..', 'demo', demo)
             if demo[-3:] != 'gpx':
                 self.assertRaises(IOError, gui.load_gpx_from_file, filename)
                 gui.load_img_from_file(filename)
@@ -93,9 +97,9 @@ class GottenGeographyTester(TestCase):
         self.assertEqual(len(gui.liststore), 6)
         self.assertTrue(gui.liststore.get_iter_first())
         
-        for photo in gui.photo.values():
-            self.assertFalse(photo in gui.modified)
-            self.assertFalse(photo in gui.selected)
+        for photo in photos.values():
+            self.assertFalse(photo in modified)
+            self.assertFalse(photo in selected)
             self.assertFalse(photo.label.get_property('visible'))
             
             # Test that missing the provincestate doesn't break the geoname.
@@ -125,8 +129,9 @@ class GottenGeographyTester(TestCase):
             old = [photo.latitude, photo.longitude, photo.pretty_geoname()]
             
             # 'Drag' a photo onto the map and make sure that also works.
-            gui.selected.add(photo)
-            gui.photo_drag_end(None, None, 20, 20, None, None, None)
+            selected.add(photo)
+            data = Struct({'get_text': lambda: photo.filename})
+            gui.drag.photo_drag_end(None, None, 20, 20, data, None, None, lambda x: None)
             self.assertEqual(photo.label.get_latitude(), photo.latitude)
             self.assertEqual(photo.label.get_longitude(), photo.longitude)
             self.assertGreater(len(photo.pretty_geoname()), 5)
@@ -151,22 +156,22 @@ class GottenGeographyTester(TestCase):
         # Test the select-all button.
         select_all = get_obj('select_all_button')
         select_all.set_active(True)
-        self.assertEqual(len(gui.selected), len(gui.liststore))
+        self.assertEqual(len(selected), len(gui.liststore))
         select_all.set_active(False)
-        self.assertEqual(len(gui.selected), 0)
+        self.assertEqual(len(selected), 0)
         
         # Load the GPX
-        gpx_filename=join(getcwd(), 'demo', '20101016.gpx')
+        gpx_filename=join(PKG_DATA_DIR, '..', 'demo', '20101016.gpx')
         self.assertRaises(IOError, gui.load_img_from_file, gpx_filename)
         gui.load_gpx_from_file(gpx_filename)
         self.assertTrue(buttons['clear'].get_sensitive())
         gui.labels.selection.emit('changed')
         
         # Check that the GPX is loaded
-        self.assertEqual(len(gui.tracks), 374)
-        self.assertEqual(len(gui.polygons), 1)
-        self.assertEqual(gui.metadata.alpha, 1287259751)
-        self.assertEqual(gui.metadata.omega, 1287260756)
+        self.assertEqual(len(points), 374)
+        self.assertEqual(len(polygons), 1)
+        self.assertEqual(app.metadata.alpha, 1287259751)
+        self.assertEqual(app.metadata.omega, 1287260756)
         
         # The save button should be sensitive because loading GPX modifies
         # photos, but nothing is selected so the others are insensitive.
@@ -174,8 +179,8 @@ class GottenGeographyTester(TestCase):
         for button in ('revert', 'apply', 'close'):
             self.assertFalse(buttons[button].get_sensitive())
         
-        for photo in gui.photo.values():
-            self.assertTrue(photo in gui.modified)
+        for photo in photos.values():
+            self.assertTrue(photo in modified)
             
             self.assertIsNotNone(photo.latitude)
             self.assertIsNotNone(photo.longitude)
@@ -195,48 +200,48 @@ class GottenGeographyTester(TestCase):
                 self.assertTrue(buttons[button].get_sensitive())
             self.assertTrue(gui.labels.selection.iter_is_selected(photo.iter))
             self.assertEqual(gui.labels.selection.count_selected_rows(), 1)
-            self.assertTrue(photo in gui.selected)
-            self.assertEqual(len(gui.selected), 1)
+            self.assertTrue(photo in selected)
+            self.assertEqual(len(selected), 1)
             self.assertEqual(photo.label.get_scale(), (1.1, 1.1))
             self.assertTrue(photo.label.get_selected())
             self.assertEqual(photo.label.get_property('opacity'), 255)
             
             # Make sure the Labels that we didn't click on are deselected.
-            for other in gui.photo.values():
+            for other in photos.values():
                 if other.filename == photo.filename: continue
                 self.assertFalse(gui.labels.selection.iter_is_selected(other.iter))
-                self.assertFalse(other in gui.selected)
+                self.assertFalse(other in selected)
                 self.assertEqual(other.label.get_scale(), (1, 1))
                 self.assertFalse(other.label.get_selected())
                 self.assertEqual(other.label.get_property('opacity'), 64)
         
         # Unload the GPX data.
         buttons['clear'].emit('clicked')
-        self.assertEqual(len(gui.tracks), 0)
-        self.assertEqual(len(gui.polygons), 0)
+        self.assertEqual(len(points), 0)
+        self.assertEqual(len(polygons), 0)
         self.assertFalse(buttons['clear'].get_sensitive())
         
         # Save all photos
         buttons['save'].emit('clicked')
-        self.assertEqual(len(gui.modified), 0)
+        self.assertEqual(len(modified), 0)
         for button in ('save', 'revert'):
             self.assertFalse(buttons[button].get_sensitive())
         
         gui.labels.selection.select_all()
-        self.assertEqual(len(gui.selected), 6)
+        self.assertEqual(len(selected), 6)
         for button in ('save', 'revert'):
             self.assertFalse(buttons[button].get_sensitive())
         for button in ('apply', 'close'):
             self.assertTrue(buttons[button].get_sensitive())
         
         # Close all the photos.
-        files = [photo.filename for photo in gui.selected]
+        files = [photo.filename for photo in selected]
         buttons['close'].emit('clicked')
         for button in ('save', 'revert', 'apply', 'close'):
             self.assertFalse(buttons[button].get_sensitive())
-        self.assertEqual(len(gui.photo), 0)
-        self.assertEqual(len(gui.modified), 0)
-        self.assertEqual(len(gui.selected), 0)
+        self.assertEqual(len(photos), 0)
+        self.assertEqual(len(modified), 0)
+        self.assertEqual(len(selected), 0)
         
         # Re-read the photos back from disk to make sure that the saving
         # was successful.
@@ -263,7 +268,7 @@ class GottenGeographyTester(TestCase):
         
         # Make a photo with a dummy ChamplainLabel.
         label = Struct()
-        label.get_text = lambda: get_file('../demo/IMG_2411.JPG')
+        label.get_text = lambda: join(PKG_DATA_DIR, '..', 'demo', 'IMG_2411.JPG')
         photo = Photograph(label.get_text(), lambda x: None)
         photo.read()
         photo.label = label
@@ -382,14 +387,14 @@ S 10.00000, W 10.00000
         """Ensure that it's possible to navigate the map."""
         
         coords = [[
-            gui.map_view.get_property('latitude'),
-            gui.map_view.get_property('longitude')
+            map_view.get_property('latitude'),
+            map_view.get_property('longitude')
         ]]
-        gui.map_view.emit('realize')
+        map_view.emit('realize')
         
         lat = round(random_coord(90),  6)
         lon = round(random_coord(180), 6)
-        gui.map_view.center_on(lat, lon)
+        map_view.center_on(lat, lon)
         coords.append([lat, lon])
         
         self.assertAlmostEqual(coords[0][0], gst_get('history')[-1][0], 5)
@@ -397,73 +402,73 @@ S 10.00000, W 10.00000
         
         lat = round(random_coord(80),  6)
         lon = round(random_coord(170), 6)
-        gui.map_view.center_on(lat, lon)
+        map_view.center_on(lat, lon)
         
         zoom_in  = get_obj('zoom_in_button')
         zoom_out = get_obj('zoom_out_button')
-        gui.map_view.set_zoom_level(0)
+        map_view.set_zoom_level(0)
         self.assertFalse(zoom_out.get_sensitive())
         self.assertTrue(zoom_in.get_sensitive())
         zoom_in.emit('clicked')
         self.assertTrue(zoom_out.get_sensitive())
         self.assertTrue(zoom_in.get_sensitive())
-        self.assertEqual(1, gui.map_view.get_zoom_level())
+        self.assertEqual(1, map_view.get_zoom_level())
         zoom_in.emit('clicked')
-        self.assertEqual(2, gui.map_view.get_zoom_level())
+        self.assertEqual(2, map_view.get_zoom_level())
         zoom_in.emit('clicked')
-        self.assertEqual(3, gui.map_view.get_zoom_level())
+        self.assertEqual(3, map_view.get_zoom_level())
         zoom_out.emit('clicked')
-        self.assertEqual(2, gui.map_view.get_zoom_level())
-        gui.map_view.set_zoom_level(gui.map_view.get_max_zoom_level()-1)
+        self.assertEqual(2, map_view.get_zoom_level())
+        map_view.set_zoom_level(map_view.get_max_zoom_level()-1)
         self.assertTrue(zoom_out.get_sensitive())
         self.assertTrue(zoom_in.get_sensitive())
-        zoom = gui.map_view.get_zoom_level()
+        zoom = map_view.get_zoom_level()
         zoom_in.emit('clicked')
         self.assertTrue(zoom_out.get_sensitive())
         self.assertFalse(zoom_in.get_sensitive())
-        self.assertEqual(gui.map_view.get_max_zoom_level(),
-            gui.map_view.get_zoom_level())
+        self.assertEqual(map_view.get_max_zoom_level(),
+            map_view.get_zoom_level())
         
         get_obj("back_button").emit('clicked')
         
-        gui.map_view.set_zoom_level(5)
+        map_view.set_zoom_level(5)
         
-        lat = gui.map_view.get_property('latitude')
-        lon = gui.map_view.get_property('longitude')
+        lat = map_view.get_property('latitude')
+        lon = map_view.get_property('longitude')
         
-        gui.navigator.move_by_arrow_keys(None, None, Gdk.keyval_from_name("Left"), None)
-        self.assertAlmostEqual(lat, gui.map_view.get_property('latitude'), 4)
-        self.assertGreater(    lon, gui.map_view.get_property('longitude'))
+        move_by_arrow_keys(None, None, Gdk.keyval_from_name("Left"), None)
+        self.assertAlmostEqual(lat, map_view.get_property('latitude'), 4)
+        self.assertGreater(    lon, map_view.get_property('longitude'))
         
-        gui.navigator.move_by_arrow_keys(None, None, Gdk.keyval_from_name("Right"), None)
-        self.assertAlmostEqual(lat, gui.map_view.get_property('latitude'), 4)
-        self.assertAlmostEqual(lon, gui.map_view.get_property('longitude'), 0)
+        move_by_arrow_keys(None, None, Gdk.keyval_from_name("Right"), None)
+        self.assertAlmostEqual(lat, map_view.get_property('latitude'), 4)
+        self.assertAlmostEqual(lon, map_view.get_property('longitude'), 0)
         
-        gui.navigator.move_by_arrow_keys(None, None, Gdk.keyval_from_name("Right"), None)
-        self.assertLess(       lon, gui.map_view.get_property('longitude'))
-        self.assertAlmostEqual(lat, gui.map_view.get_property('latitude'), 4)
+        move_by_arrow_keys(None, None, Gdk.keyval_from_name("Right"), None)
+        self.assertLess(       lon, map_view.get_property('longitude'))
+        self.assertAlmostEqual(lat, map_view.get_property('latitude'), 4)
         
-        gui.navigator.move_by_arrow_keys(None, None, Gdk.keyval_from_name("Left"), None)
-        self.assertAlmostEqual(lon, gui.map_view.get_property('longitude'), 0)
-        self.assertAlmostEqual(lat, gui.map_view.get_property('latitude'), 4)
+        move_by_arrow_keys(None, None, Gdk.keyval_from_name("Left"), None)
+        self.assertAlmostEqual(lon, map_view.get_property('longitude'), 0)
+        self.assertAlmostEqual(lat, map_view.get_property('latitude'), 4)
         
-        lon = gui.map_view.get_property('longitude')
+        lon = map_view.get_property('longitude')
         
-        gui.navigator.move_by_arrow_keys(None, None, Gdk.keyval_from_name("Up"), None)
-        self.assertAlmostEqual(lon, gui.map_view.get_property('longitude'), 4)
-        self.assertLess(       lat, gui.map_view.get_property('latitude'))
+        move_by_arrow_keys(None, None, Gdk.keyval_from_name("Up"), None)
+        self.assertAlmostEqual(lon, map_view.get_property('longitude'), 4)
+        self.assertLess(       lat, map_view.get_property('latitude'))
         
-        gui.navigator.move_by_arrow_keys(None, None, Gdk.keyval_from_name("Down"), None)
-        self.assertAlmostEqual(lon, gui.map_view.get_property('longitude'), 4)
-        self.assertAlmostEqual(lat, gui.map_view.get_property('latitude'), 0)
+        move_by_arrow_keys(None, None, Gdk.keyval_from_name("Down"), None)
+        self.assertAlmostEqual(lon, map_view.get_property('longitude'), 4)
+        self.assertAlmostEqual(lat, map_view.get_property('latitude'), 0)
         
-        gui.navigator.move_by_arrow_keys(None, None, Gdk.keyval_from_name("Down"), None)
-        self.assertAlmostEqual(lon, gui.map_view.get_property('longitude'), 4)
-        self.assertGreater(    lat, gui.map_view.get_property('latitude'))
+        move_by_arrow_keys(None, None, Gdk.keyval_from_name("Down"), None)
+        self.assertAlmostEqual(lon, map_view.get_property('longitude'), 4)
+        self.assertGreater(    lat, map_view.get_property('latitude'))
         
-        gui.navigator.move_by_arrow_keys(None, None, Gdk.keyval_from_name("Up"), None)
-        self.assertAlmostEqual(lon, gui.map_view.get_property('longitude'), 4)
-        self.assertAlmostEqual(lat, gui.map_view.get_property('latitude'), 0)
+        move_by_arrow_keys(None, None, Gdk.keyval_from_name("Up"), None)
+        self.assertAlmostEqual(lon, map_view.get_property('longitude'), 4)
+        self.assertAlmostEqual(lat, map_view.get_property('latitude'), 0)
     
     def test_map_objects(self):
         """Test ChamplainMarkers."""
@@ -502,21 +507,21 @@ S 10.00000, W 10.00000
         seconds = get_obj("seconds")
         seconds.set_value(0)
         minutes.set_value(0)
-        self.assertEqual(gui.metadata.delta, 0)
+        self.assertEqual(app.metadata.delta, 0)
         minutes.set_value(1)
-        self.assertEqual(gui.metadata.delta, 60)
+        self.assertEqual(app.metadata.delta, 60)
         seconds.set_value(1)
-        self.assertEqual(gui.metadata.delta, 61)
+        self.assertEqual(app.metadata.delta, 61)
         
         seconds.set_value(59)
-        self.assertEqual(gui.metadata.delta, 119)
+        self.assertEqual(app.metadata.delta, 119)
         minutes.set_value(59)
-        self.assertEqual(gui.metadata.delta, 3599)
+        self.assertEqual(app.metadata.delta, 3599)
         
         seconds.set_value(60)
         self.assertEqual(seconds.get_value(), 0)
         self.assertEqual(minutes.get_value(), 60)
-        self.assertEqual(gui.metadata.delta, 3600)
+        self.assertEqual(app.metadata.delta, 3600)
     
     def test_search(self):
         """Make sure the search box functions."""
@@ -532,12 +537,12 @@ S 10.00000, W 10.00000
         
         get_title = get_obj("main").get_title
         for result in gui.search.results:
-            gui.search.search_completed(entry, gui.search.results, result.iter, gui.map_view)
+            gui.search.search_completed(entry, gui.search.results, result.iter, map_view)
             loc, lat, lon = result
-            self.assertAlmostEqual(lat, gui.map_view.get_property('latitude'), 4)
-            self.assertAlmostEqual(lon, gui.map_view.get_property('longitude'), 4)
+            self.assertAlmostEqual(lat, map_view.get_property('latitude'), 4)
+            self.assertAlmostEqual(lon, map_view.get_property('longitude'), 4)
             
-            gui.map_view.emit("animation-completed")
+            map_view.emit("animation-completed")
             self.assertEqual(get_title(), "GottenGeography - " + loc)
         
         entry.set_text('calg')
@@ -560,10 +565,10 @@ S 10.00000, W 10.00000
         self.assertEqual(list(gst_get('track-color')), [32768, 32768, 32768])
         
         self.assertEqual(str(gst_get('map-source-id')), "<GLib.Variant('%s')>" %
-            gui.map_view.get_property('map-source').get_id())
+            map_view.get_property('map-source').get_id())
         for menu_item in get_obj("map_source_menu").get_active().get_group():
             menu_item.set_active(True)
-            self.assertEqual(gui.map_view.get_property('map-source').get_name(), menu_item.get_label())
+            self.assertEqual(map_view.get_property('map-source').get_name(), menu_item.get_label())
 
 def random_coord(maximum=180):
     """Generate a random number -maximum <= x <= maximum."""
