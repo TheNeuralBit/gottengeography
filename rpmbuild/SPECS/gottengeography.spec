@@ -1,6 +1,6 @@
 Name: gottengeography
-Version: 1.2.1
-Release: 2%{?dist}
+Version: 1.3
+Release: 1%{?dist}
 Source0: %{name}-%{version}.tar.gz
 License: GPLv3
 Group: Applications/Archiving
@@ -53,9 +53,10 @@ fi
 /usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
 
 %changelog
-* Mon May 14 2012 Robert Park <rbpark@exolucere.ca> - 1.3-1
-- Alter Google Maps link to honor the current zoom level
+* Mon May 21 2012 Robert Park <rbpark@exolucere.ca> - 1.3-1
+- Major module refactoring, enhances readability and maintainability
 - Module cleanup, put data files in a more standard location
+- Alter Google Maps link to honor the current zoom level
 - Run glib-compile-schemas, gtk-update-icon-cache in post scripts
 - Remember last-used window size on app launch
 - Added geoname data to window titlebar
