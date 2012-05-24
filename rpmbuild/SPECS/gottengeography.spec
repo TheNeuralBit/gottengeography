@@ -53,7 +53,7 @@ fi
 /usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
 
 %changelog
-* Mon May 21 2012 Robert Park <rbpark@exolucere.ca> - 1.3-1
+* Wed May 23 2012 Robert Park <rbpark@exolucere.ca> - 1.3-1
 - Major module refactoring, enhances readability and maintainability
 - Module cleanup, put data files in a more standard location
 - Alter Google Maps link to honor the current zoom level
@@ -63,6 +63,7 @@ fi
 - Convert to GSettings
 - Add new application icon
 - Fix OpenCycleMap
+- Increase testsuite coverage
 
 * Sun May 13 2012 Robert Park <rbpark@exolucere.ca> - 1.2.1-1
 - Remember the last used map source each run
