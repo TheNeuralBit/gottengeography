@@ -1,4 +1,3 @@
-# GottenGeography - Test suite ensures that GottenGeography functions correctly.
 # Copyright (C) 2010 Robert Park <rbpark@exolucere.ca>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,14 +13,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""Ensure that GottenGeography is behaving correctly."""
+
 from __future__ import division
 
 from gi.repository import Gdk, Clutter, Champlain
 from unittest import TestCase, TextTestRunner, TestLoader
 from os import listdir, system, environ
+from os.path import join, abspath
 from fractions import Fraction
 from random import random
-from os.path import join
 from math import floor
 from time import tzset
 
@@ -29,9 +30,9 @@ import app
 from photos import Photograph
 from gpsmath import Coordinates, valid_coords
 from gpsmath import decimal_to_dms, dms_to_decimal, float_to_rational
+from preferences import MAP_SOURCES, make_clutter_color
 from common import Struct, Polygon, polygons, map_view
 from common import points, photos, selected, modified
-from preferences import make_clutter_color
 from navigation import move_by_arrow_keys
 from build_info import PKG_DATA_DIR
 
@@ -41,6 +42,9 @@ gst_get = app.gst.get
 
 # Disable animations so tests pass more quickly.
 gui.search.slide_to = map_view.center_on
+
+DEMOFILES = [abspath(join(PKG_DATA_DIR, '..', 'demo', f))
+             for f in listdir('./demo/')]
 
 class GottenGeographyTester(TestCase):
     def setUp(self):
@@ -57,7 +61,94 @@ class GottenGeographyTester(TestCase):
         for key in app.gst.list_keys():
             app.gst.reset(key)
     
-    def test_gtk_window(self):
+    def test_actor_controller(self):
+        """Make sure the actors are behaving."""
+        from actor import ActorController
+        control = ActorController()
+        link = get_obj('maps_link')
+        map_view.center_on(50, 50)
+        self.assertEqual(control.label.get_text(), 'N 50.00000, E 50.00000')
+        self.assertEqual(link.get_current_uri()[:45],
+            'http://maps.google.com/maps?ll=50.0,50.0&spn=')
+        map_view.center_on(-10, -30)
+        self.assertEqual(control.label.get_text(), 'S 10.00000, W 30.00000')
+        self.assertEqual(link.get_current_uri()[:47],
+            'http://maps.google.com/maps?ll=-10.0,-30.0&spn=')
+        for rot in control.xhair.get_rotation(Clutter.RotateAxis.Z_AXIS):
+            self.assertEqual(rot, 0)
+        control.animate_in(10)
+        self.assertEqual(control.xhair.get_rotation(Clutter.RotateAxis.Z_AXIS)[0], 45)
+        self.assertEqual(control.xhair.get_size(), (8, 9))
+        self.assertEqual(control.black.get_width(), map_view.get_width())
+    
+    def test_drag_controller(self):
+        """Make sure that we can drag photos around."""
+        # Can we load files?
+        data = Struct({'get_text': lambda: '\n'.join(DEMOFILES)})
+        self.assertEqual(len(photos), 0)
+        self.assertEqual(len(points), 0)
+        gui.drag.photo_drag_end(None, None, 20, 20, data,
+                                None, None, True)
+        self.assertEqual(len(photos), 6)
+        self.assertEqual(len(points), 374)
+        for button in ('select_all', 'close', 'clear'):
+            get_obj(button + '_button').emit('clicked')
+        self.assertEqual(len(photos), 0)
+        self.assertEqual(len(points), 0)
+        
+        gui.open_files(DEMOFILES)
+        for photo in photos.values():
+            # 'Drag' a ChamplainLabel and make sure the photo location matches.
+            photo.label.set_location(random_coord(80), random_coord(180))
+            photo.label.emit('drag-finish', Clutter.Event())
+            self.assertEqual(photo.label.get_latitude(), photo.latitude)
+            self.assertEqual(photo.label.get_longitude(), photo.longitude)
+            self.assertGreater(len(photo.pretty_geoname()), 5)
+            old = [photo.latitude, photo.longitude]
+            
+            # 'Drag' a photo onto the map and make sure that also works.
+            selected.add(photo)
+            data = Struct({'get_text': lambda: photo.filename})
+            gui.drag.photo_drag_end(None, None, 20, 20, data,
+                                    None, None, True)
+            self.assertEqual(photo.label.get_latitude(), photo.latitude)
+            self.assertEqual(photo.label.get_longitude(), photo.longitude)
+            self.assertGreater(len(photo.pretty_geoname()), 5)
+            self.assertNotEqual(photo.latitude, old[0])
+            self.assertNotEqual(photo.longitude, old[1])
+    
+    def test_label_controller(self):
+        """Make sure that ChamplainLabels are behaving."""
+        gui.open_files(DEMOFILES)
+        for photo in photos.values():
+            self.assertEqual(photo.label.get_scale(), (1, 1))
+            photo.label.emit("enter-event", Clutter.Event())
+            self.assertEqual(photo.label.get_scale(), (1.05, 1.05))
+            photo.label.emit("leave-event", Clutter.Event())
+            self.assertEqual(photo.label.get_scale(), (1, 1))
+            
+            # Are Labels clickable?
+            photo.label.emit("button-press", Clutter.Event())
+            for button in ('save', 'revert', 'apply', 'close'):
+                self.assertTrue(get_obj(button + '_button').get_sensitive())
+            self.assertTrue(gui.labels.selection.iter_is_selected(photo.iter))
+            self.assertEqual(gui.labels.selection.count_selected_rows(), 1)
+            self.assertTrue(photo in selected)
+            self.assertEqual(len(selected), 1)
+            self.assertEqual(photo.label.get_scale(), (1.1, 1.1))
+            self.assertTrue(photo.label.get_selected())
+            self.assertEqual(photo.label.get_property('opacity'), 255)
+            
+            # Make sure the Labels that we didn't click on are deselected.
+            for other in photos.values():
+                if other.filename == photo.filename: continue
+                self.assertFalse(gui.labels.selection.iter_is_selected(other.iter))
+                self.assertFalse(other in selected)
+                self.assertEqual(other.label.get_scale(), (1, 1))
+                self.assertFalse(other.label.get_selected())
+                self.assertEqual(other.label.get_property('opacity'), 64)
+    
+    def test_gtk_builder(self):
         """Make sure that various widgets were created properly."""
         self.assertEqual(gui.liststore.get_n_columns(), 4)
         self.assertEqual(gui.search.results.get_n_columns(), 3)
@@ -65,6 +156,20 @@ class GottenGeographyTester(TestCase):
         self.assertGreater(size[1], 500)
         self.assertGreater(size[0], 799)
         self.assertEqual(gui.labels.selection.count_selected_rows(), 0)
+    
+    def test_gsettings(self):
+        """Make sure that GSettings is storing data correctly."""
+        app.gst.reset('history')
+        self.assertEqual(gst_get('history')[0], [34.5, 15.8, 2.0])
+        map_view.center_on(12.3, 45.6)
+        self.assertEqual(app.gst.get_double('latitude'), 12.3)
+        self.assertEqual(app.gst.get_double('longitude'), 45.6)
+        map_view.zoom_in()
+        map_view.emit('realize')
+        self.assertEqual(list(gst_get('history')),
+                         [[34.5, 15.8, 2.0], [12.3, 45.6, 3.0]])
+        map_view.set_map_source(MAP_SOURCES['osm-cyclemap'])
+        self.assertEqual(app.gst.get_string('map-source-id'), 'osm-cyclemap')
     
     def test_demo_data(self):
         """Load the demo data and ensure that we're reading it in properly."""
@@ -83,9 +188,8 @@ class GottenGeographyTester(TestCase):
             self.assertFalse(buttons[button].get_sensitive())
         
         # Load only the photos first.
-        for demo in listdir('./demo/'):
-            filename = join(PKG_DATA_DIR, '..', 'demo', demo)
-            if demo[-3:] != 'gpx':
+        for filename in DEMOFILES:
+            if filename[-3:] != 'gpx':
                 self.assertRaises(IOError, gui.load_gpx_from_file, filename)
                 gui.load_img_from_file(filename)
         
@@ -102,16 +206,21 @@ class GottenGeographyTester(TestCase):
             self.assertFalse(photo in selected)
             self.assertFalse(photo.label.get_property('visible'))
             
-            # Test that missing the provincestate doesn't break the geoname.
-            photo.set_geodata(['Anytown', None, 'US', 'timezone'])
-            self.assertEqual(photo.pretty_geoname(), 'Anytown, United States')
-            self.assertEqual(photo.timezone, 'timezone')
-            
             # Pristine demo data shouldn't have any tags.
             self.assertIsNone(photo.altitude)
             self.assertIsNone(photo.latitude)
             self.assertIsNone(photo.longitude)
             self.assertFalse(photo.manual)
+            
+            # Test that missing the provincestate doesn't break the geoname.
+            photo.latitude = 47.56494
+            photo.longitude = -52.70931
+            photo.lookup_geoname()
+            self.assertEqual(photo.pretty_geoname(),
+                "St. John's,\nNewfoundland and Labrador,\nCanada")
+            photo.set_geodata(['Anytown', None, 'US', 'timezone'])
+            self.assertEqual(photo.pretty_geoname(), 'Anytown, United States')
+            self.assertEqual(photo.timezone, 'timezone')
             
             # Add some crap
             photo.manual    = True
@@ -119,25 +228,6 @@ class GottenGeographyTester(TestCase):
             photo.altitude  = 650
             photo.longitude = 45.0
             self.assertTrue(photo.valid_coords())
-            
-            # 'Drag' a ChamplainLabel and make sure the photo gets the same location.
-            photo.label.set_location(random_coord(80), random_coord(180))
-            photo.label.emit('drag-finish', Clutter.Event())
-            self.assertEqual(photo.label.get_latitude(), photo.latitude)
-            self.assertEqual(photo.label.get_longitude(), photo.longitude)
-            self.assertGreater(len(photo.pretty_geoname()), 5)
-            old = [photo.latitude, photo.longitude, photo.pretty_geoname()]
-            
-            # 'Drag' a photo onto the map and make sure that also works.
-            selected.add(photo)
-            data = Struct({'get_text': lambda: photo.filename})
-            gui.drag.photo_drag_end(None, None, 20, 20, data, None, None, lambda x: None)
-            self.assertEqual(photo.label.get_latitude(), photo.latitude)
-            self.assertEqual(photo.label.get_longitude(), photo.longitude)
-            self.assertGreater(len(photo.pretty_geoname()), 5)
-            self.assertNotEqual(photo.latitude, old[0])
-            self.assertNotEqual(photo.longitude, old[1])
-            self.assertNotEqual(photo.pretty_geoname(), old[2])
             
             # photo.read() should discard all the crap we added above.
             # This is in response to a bug where I was using pyexiv2 wrongly
@@ -186,34 +276,6 @@ class GottenGeographyTester(TestCase):
             self.assertIsNotNone(photo.longitude)
             self.assertTrue(photo.valid_coords())
             self.assertTrue(photo.label.get_property('visible'))
-            
-            # Play with ChamplainLabels for a bit.
-            self.assertEqual(photo.label.get_scale(), (1, 1))
-            photo.label.emit("enter-event", Clutter.Event())
-            self.assertEqual(photo.label.get_scale(), (1.05, 1.05))
-            photo.label.emit("leave-event", Clutter.Event())
-            self.assertEqual(photo.label.get_scale(), (1, 1))
-            
-            # Are Labels clickable?
-            photo.label.emit("button-press", Clutter.Event())
-            for button in ('save', 'revert', 'apply', 'close'):
-                self.assertTrue(buttons[button].get_sensitive())
-            self.assertTrue(gui.labels.selection.iter_is_selected(photo.iter))
-            self.assertEqual(gui.labels.selection.count_selected_rows(), 1)
-            self.assertTrue(photo in selected)
-            self.assertEqual(len(selected), 1)
-            self.assertEqual(photo.label.get_scale(), (1.1, 1.1))
-            self.assertTrue(photo.label.get_selected())
-            self.assertEqual(photo.label.get_property('opacity'), 255)
-            
-            # Make sure the Labels that we didn't click on are deselected.
-            for other in photos.values():
-                if other.filename == photo.filename: continue
-                self.assertFalse(gui.labels.selection.iter_is_selected(other.iter))
-                self.assertFalse(other in selected)
-                self.assertEqual(other.label.get_scale(), (1, 1))
-                self.assertFalse(other.label.get_selected())
-                self.assertEqual(other.label.get_property('opacity'), 64)
         
         # Unload the GPX data.
         buttons['clear'].emit('clicked')
@@ -268,7 +330,7 @@ class GottenGeographyTester(TestCase):
         
         # Make a photo with a dummy ChamplainLabel.
         label = Struct()
-        label.get_text = lambda: join(PKG_DATA_DIR, '..', 'demo', 'IMG_2411.JPG')
+        label.get_text = lambda: DEMOFILES[5]
         photo = Photograph(label.get_text(), lambda x: None)
         photo.read()
         photo.label = label
@@ -335,11 +397,6 @@ S 10.00000, W 10.00000
         stjohns.lookup_geoname()
         self.assertEqual(stjohns.city, "St. John's")
         
-        # Also test this bug fixed in commit 47efbeba.
-        self.assertEqual(stjohns.pretty_geoname(), "St. John's,\nNewfoundland and Labrador,\nCanada")
-        stjohns.provincestate = None
-        self.assertEqual(stjohns.pretty_geoname(), "St. John's, Canada")
-        
         # Pick 100 random coordinates on the globe, convert them from decimal
         # to sexagesimal and then back, and ensure that they are always equal.
         for i in range(100):
@@ -383,14 +440,15 @@ S 10.00000, W 10.00000
                 10 # equal to 10 places
             )
     
-    def test_map_navigation(self):
+    def test_navigation_controller(self):
         """Ensure that it's possible to navigate the map."""
-        
         coords = [[
             map_view.get_property('latitude'),
             map_view.get_property('longitude')
         ]]
         map_view.emit('realize')
+        map_view.emit('animation-completed')
+        self.assertGreater(len(get_obj('main').get_title()[18:]), 5)
         
         lat = round(random_coord(90),  6)
         lon = round(random_coord(180), 6)
