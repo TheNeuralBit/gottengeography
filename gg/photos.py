@@ -8,8 +8,8 @@ from __future__ import division
 from gi.repository import GtkClutter
 GtkClutter.init([])
 
-from gi.repository import Gio, GObject, GdkPixbuf
-from pyexiv2 import ImageMetadata
+from gi.repository import GdkPixbuf, GExiv2
+from gi.repository import Gio, GObject
 from os.path import basename
 from time import mktime
 from os import stat
@@ -17,15 +17,13 @@ from os import stat
 from label import Label
 from widgets import Widgets
 from xmlfiles import TrackFile
+from gpsmath import Coordinates
 from common import staticmethod
 from common import Gst, memoize
 from common import points, modified
 from camera import Camera, CameraView
-from gpsmath import Coordinates, Fraction
-from gpsmath import dms_to_decimal, decimal_to_dms
 
 # Prefixes for common EXIF keys.
-GPS  = 'Exif.GPSInfo.GPS'
 IPTC = 'Iptc.Application2.'
 
 
@@ -65,40 +63,21 @@ def auto_timestamp_comparison(photo):
     
     photo.set_location(lat, lon, ele)
 
-def fetch_exif(filename):
-    """Load EXIF data from disk.
-    
-    >>> fetch_exif('demo/2010 10 16.gpx')
-    Traceback (most recent call last):
-    IOError: demo/2010 10 16.gpx: The file contains data of an unknown image type
-    >>> type(fetch_exif('demo/IMG_2411.JPG'))
-    <class 'pyexiv2.metadata.ImageMetadata'>
-    """
-    exif = ImageMetadata(filename)
-    exif.read()
-    return exif
-
 def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size')):
     """Load a photo's thumbnail from disk, avoiding EXIF data if possible.
     
     >>> fetch_thumbnail('gg/widgets.py')
     Traceback (most recent call last):
-    IOError: gg/widgets.py: The file contains data of an unknown image type
+    IOError: gg/widgets.py: No thumbnail found.
     >>> type(fetch_thumbnail('demo/IMG_2411.JPG'))
     <class 'gi.repository.GdkPixbuf.Pixbuf'>
     """
-    #TODO: The above IOError is raise by pyexiv2 in fetch_exif,
-    # I need to find a file that pyexiv2 thinks is an image, but has
-    # no thumbnail and thus raises IOError here anyway.
     try:
         return GdkPixbuf.Pixbuf.new_from_file_at_size(filename, size, size)
     except GObject.GError:
-        exif = fetch_exif(filename)
-        if len(exif.previews) > 0:
-            data = exif.previews[-1].data
-        elif len(exif.exif_thumbnail.data) > 0:
-            data = exif.exif_thumbnail.data
-        else:
+        try:
+            data = GExiv2.Metadata(filename).get_preview_image().get_data()
+        except GObject.GError:
             raise IOError('%s: No thumbnail found.' % filename)
         
         return GdkPixbuf.Pixbuf.new_from_stream_at_scale(
@@ -205,7 +184,7 @@ class Photograph(Coordinates):
     
     def read(self):
         """Discard all state and (re)initialize from disk."""
-        self.exif = fetch_exif(self.filename)
+        self.exif = GExiv2.Metadata(self.filename)
         self.manual = False
         self.modified_timeout = None
         self.latitude = 0.0
@@ -217,28 +196,11 @@ class Photograph(Coordinates):
         self.geotimezone = ''
         
         try:
-            self.orig_time = self.exif[
-                'Exif.Photo.DateTimeOriginal'].value.timetuple()
+            self.orig_time = self.exif.get_date_time().timetuple()
         except KeyError:
             pass
         
-        try:
-            self.latitude = dms_to_decimal(
-                *self.exif[GPS + 'Latitude'].value +
-                [self.exif[GPS + 'LatitudeRef'].value]
-            )
-            self.longitude = dms_to_decimal(
-                *self.exif[GPS + 'Longitude'].value +
-                [self.exif[GPS + 'LongitudeRef'].value]
-            )
-        except KeyError:
-            pass
-        try:
-            self.altitude = float(self.exif[GPS + 'Altitude'].value)
-            if int(self.exif[GPS + 'AltitudeRef'].value) > 0:
-                self.altitude *= -1
-        except KeyError:
-            pass
+        self.longitude, self.latitude, self.altitude = self.exif.get_gps_info()
         
         modified.discard(self)
         self.calculate_timestamp()
@@ -257,7 +219,7 @@ class Photograph(Coordinates):
         for key in keys:
             try:
                 self.camera_info.update(
-                    {key.split('.')[-1]: self.exif[key].value})
+                    {key.split('.')[-1]: self.exif[key]})
             except KeyError:
                 pass
     
@@ -278,17 +240,12 @@ class Photograph(Coordinates):
     
     def write(self):
         """Save exif data to photo file on disk."""
-        self.exif[GPS + 'AltitudeRef']  = '0' if self.altitude >= 0 else '1'
-        self.exif[GPS + 'Altitude']     = Fraction(self.altitude)
-        self.exif[GPS + 'Latitude']     = decimal_to_dms(self.latitude)
-        self.exif[GPS + 'LatitudeRef']  = 'N' if self.latitude >= 0 else 'S'
-        self.exif[GPS + 'Longitude']    = decimal_to_dms(self.longitude)
-        self.exif[GPS + 'LongitudeRef'] = 'E' if self.longitude >= 0 else 'W'
-        self.exif[GPS + 'MapDatum']     = 'WGS-84'
-        self.exif[IPTC + 'City']          = [self.names[0] or '']
-        self.exif[IPTC + 'ProvinceState'] = [self.names[1] or '']
-        self.exif[IPTC + 'CountryName']   = [self.names[2] or '']
-        self.exif.write()
+        self.exif.set_gps_info(self.longitude, self.latitude, self.altitude)
+        self.exif['Exif.GPSInfo.GPSMapDatum'] = 'WGS-84'
+        self.exif[IPTC + 'City']          = self.names[0] or ''
+        self.exif[IPTC + 'ProvinceState'] = self.names[1] or ''
+        self.exif[IPTC + 'CountryName']   = self.names[2] or ''
+        self.exif.save_file()
         modified.discard(self)
         Widgets.loaded_photos.set_value(self.iter, 1, str(self))
     
