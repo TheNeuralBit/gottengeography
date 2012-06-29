@@ -139,7 +139,7 @@ def test_demo_data():
         assert photo.positioned
         assert photo.latitude
         assert photo.longitude
-        #assert photo.altitude > 600 #FIXME
+        assert photo.altitude > 600
         assert photo.geoname == 'Edmonton, Alberta, Canada'
     assert not modified
     assert len(Photograph.instances) == 6

@@ -10,6 +10,7 @@ GtkClutter.init([])
 
 from gi.repository import GdkPixbuf, GExiv2
 from gi.repository import Gio, GObject
+from fractions import Fraction
 from os.path import basename
 from time import mktime
 from os import stat
@@ -241,6 +242,10 @@ class Photograph(Coordinates):
     def write(self):
         """Save exif data to photo file on disk."""
         self.exif.set_gps_info(self.longitude, self.latitude, self.altitude)
+        self.exif['Exif.GPSInfo.GPSAltitudeRef'] = '0' if self.altitude >= 0 else '1'
+        self.exif['Exif.GPSInfo.GPSAltitude'] = str(
+            Fraction.from_float(self.altitude).limit_denominator(99999))
+        
         self.exif['Exif.GPSInfo.GPSMapDatum'] = 'WGS-84'
         self.exif[IPTC + 'City']          = self.names[0] or ''
         self.exif[IPTC + 'ProvinceState'] = self.names[1] or ''
