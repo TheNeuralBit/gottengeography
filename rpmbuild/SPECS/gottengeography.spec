@@ -1,5 +1,5 @@
 Name: gottengeography
-Version: 1.3
+Version: 2.0
 Release: 1%{?dist}
 Source0: %{name}-%{version}.tar.gz
 License: GPLv3
@@ -53,6 +53,29 @@ fi
 /usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
 
 %changelog
+* Thu Jun 28 2012 Robert Park <rbpark@exolucere.ca> - 2.0-1
+- Major UI overhaul, allowing for per-camera and per-trackfile config
+- Added Mallard help docs with basic tutorial including screenshots
+- Massive improvement in testsuite coverage
+- Convert to GtkApplication, enforcing single-instance UI
+- Start using Gnome Shell menu
+- Reduce some incompatibity with Python 2.6
+- Updated geonames.org db dump
+- Major performance enhancements, UI feels significantly more responsive
+- Improve drag&drop accuracy
+- More timezones available in the manual timezone selector
+- Allow choosing UTC offsets as well as timezones
+- Add support for CSV, and Garmin TCX
+- Huge expansion in use of GObject properties/signals to automate things
+- New animation when you search for a city
+- Fixed a segfault when closing photos
+- Implement general-purpose memoizer for performance, used in a few places
+- Converted testsuite to Nose
+- Allow multiple photos during drag & drop
+- Use GtkInfoBar instead of GtkStatusBar
+- No more preferences dialog
+
+
 * Wed May 23 2012 Robert Park <rbpark@exolucere.ca> - 1.3-1
 - Major module refactoring, enhances readability and maintainability
 - Module cleanup, put data files in a more standard location
