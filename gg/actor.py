@@ -1,77 +1,169 @@
-# Copyright (C) 2010 Robert Park <rbpark@exolucere.ca>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Author: Robert Park <rbpark@exolucere.ca>, (C) 2010
+# Copyright: See COPYING file included with this distribution.
 
-"""Control how the custom map actors behave."""
+"""Custom map sources are defined here:
+
+>>> MAP_SOURCES['osm-mapnik']                                #doctest: +ELLIPSIS
+<MapSourceChain object at 0x... (ChamplainMapSourceChain at 0x...)>
+
+Custom map actors are defined here as well:
+
+>>> MapView.notify('width')
+>>> Box.get_width() == MapView.get_width()
+True
+"""
 
 from __future__ import division
 
+from gi.repository import GtkClutter
+GtkClutter.init([])
+
 from gi.repository import Gtk, Champlain, Clutter
-from gettext import gettext as _
 from time import sleep
 
-from common import get_obj, map_view
-from gpsmath import format_coords
+from widgets import Widgets, MapView
+from common import Gst, singleton, memoize
 
-def display(view, param, mlink, label):
-    """Display map center coordinates when they change."""
-    lat, lon = [ view.get_property(x) for x in ('latitude', 'longitude') ]
-    label.set_markup(format_coords(lat, lon))
-    mlink.set_markup(
-        '<a title="%s" href="%s?ll=%s,%s&amp;spn=%s,%s">Google</a>'
-        % (_('View in Google Maps'), 'http://maps.google.com/maps', lat, lon,
-        lon - view.x_to_longitude(0), view.y_to_latitude(0) - lat))
+START  = Clutter.BinAlignment.START
+CENTER = Clutter.BinAlignment.CENTER
+END    = Clutter.BinAlignment.END
+
+MAP_SOURCES = {}
+
+for map_desc in [
+    ['osm-mapnik', 'OpenStreetMap Mapnik', 0, 18, 256,
+    'Map data is CC-BY-SA 2.0 OpenStreetMap contributors',
+    'http://creativecommons.org/licenses/by-sa/2.0/',
+    'http://tile.openstreetmap.org/#Z#/#X#/#Y#.png'],
+    
+    ['osm-cyclemap', 'OpenStreetMap Cycle Map', 0, 17, 256,
+    'Map data is CC-BY-SA 2.0 OpenStreetMap contributors',
+    'http://creativecommons.org/licenses/by-sa/2.0/',
+    'http://a.tile.opencyclemap.org/cycle/#Z#/#X#/#Y#.png'],
+    
+    ['osm-transport', 'OpenStreetMap Transport Map', 0, 18, 256,
+    'Map data is CC-BY-SA 2.0 OpenStreetMap contributors',
+    'http://creativecommons.org/licenses/by-sa/2.0/',
+    'http://tile.xn--pnvkarte-m4a.de/tilegen/#Z#/#X#/#Y#.png'],
+    
+    ['mapquest-osm', 'MapQuest OSM', 0, 17, 256,
+    'Map data provided by MapQuest, Open Street Map and contributors',
+    'http://creativecommons.org/licenses/by-sa/2.0/',
+    'http://otile1.mqcdn.com/tiles/1.0.0/osm/#Z#/#X#/#Y#.png'],
+    
+    ['mff-relief', 'Maps for Free Relief', 0, 11, 256,
+    'Map data available under GNU Free Documentation license, v1.2 or later',
+    'http://www.gnu.org/copyleft/fdl.html',
+    'http://maps-for-free.com/layer/relief/z#Z#/row#Y#/#Z#_#X#-#Y#.jpg'],
+    ]:
+    mapid, name, min_zoom, max_zoom, size, lic, lic_uri, tile_uri = map_desc
+    
+    c = Champlain.MapSourceChain()
+    c.push(Champlain.MapSourceFactory.dup_default().create_error_source(size))
+    
+    c.push(Champlain.NetworkTileSource.new_full(
+        mapid, name, lic, lic_uri, min_zoom, max_zoom,
+        size, Champlain.MapProjection.MAP_PROJECTION_MERCATOR,
+        tile_uri, Champlain.ImageRenderer()))
+    
+    c.push(Champlain.FileCache.new_full(1e8, None, Champlain.ImageRenderer()))
+    c.push(Champlain.MemoryCache.new_full(100,     Champlain.ImageRenderer()))
+    MAP_SOURCES[mapid] = c
 
 
-class ActorController():
-    """Controls the behavior of the custom actors I have placed over the map."""
+@memoize
+class RadioMenuItem(Gtk.RadioMenuItem):
+    """Create the individual menu items for choosing map sources.
+    
+    >>> RadioMenuItem(MAP_SOURCES['osm-cyclemap']).get_label()
+    'OpenStreetMap Cycle Map'
+    >>> len(Widgets.map_source_menu.get_children()) == len(MAP_SOURCES)
+    True
+    """
+    
+    def __init__(self, source):
+        Gtk.RadioMenuItem.__init__(self)
+        if self.instances:
+            self.set_property('group', list(self.instances).pop())
+        self.set_label(source.get_name())
+        self.connect('activate', self.menu_item_clicked, source.get_id())
+        Widgets.map_source_menu.append(self)
+    
+    def menu_item_clicked(self, item, map_id):
+        """Switch to the clicked map source."""
+        if self.get_active():
+            MapView.set_map_source(MAP_SOURCES[map_id])
+
+
+@singleton
+class Sources:
+    """Set up the source menu and link to GSettings."""
     
     def __init__(self):
-        self.black = Clutter.Box.new(Clutter.BinLayout())
-        self.black.set_color(Clutter.Color.new(0, 0, 0, 96))
-        self.label = Clutter.Text()
-        self.label.set_color(Clutter.Color.new(255, 255, 255, 255))
-        self.xhair = Clutter.Rectangle.new_with_color(
-            Clutter.Color.new(0, 0, 0, 64))
-        for signal in [ 'latitude', 'longitude' ]:
-            map_view.connect('notify::' + signal, display,
-                get_obj('maps_link'), self.label)
-        map_view.connect('notify::width',
-            lambda view, param, black:
-                black.set_size(view.get_width(), 30),
-            self.black)
+        last_source = Gst.get_string('map-source-id')
+        Gst.bind_with_convert('map-source-id', MapView, 'map-source',
+            MAP_SOURCES.get, lambda x: x.get_id())
         
-        scale = Champlain.Scale.new()
-        scale.connect_view(map_view)
-        map_view.bin_layout_add(scale,
-            Clutter.BinAlignment.START, Clutter.BinAlignment.END)
-        map_view.bin_layout_add(self.black,
-            Clutter.BinAlignment.START, Clutter.BinAlignment.START)
-        self.black.get_layout_manager().add(self.label,
-            Clutter.BinAlignment.CENTER, Clutter.BinAlignment.CENTER)
+        for source_id in sorted(MAP_SOURCES):
+            menu_item = RadioMenuItem(MAP_SOURCES[source_id])
+            if last_source == source_id:
+                menu_item.set_active(True)
+        
+        Widgets.map_source_menu.show_all()
+
+
+@singleton
+class Crosshair(Champlain.Point):
+    """Display a target at map center for placing photos."""
     
-    def animate_in(self, start):
-        """Animate the crosshair."""
-        map_view.bin_layout_add(self.xhair,
-            Clutter.BinAlignment.CENTER, Clutter.BinAlignment.CENTER)
-        self.xhair.set_z_rotation_from_gravity(45, Clutter.Gravity.CENTER)
-        for i in xrange(start, 7, -1):
-            self.xhair.set_size(i, i)
-            opacity = 0.6407035175879398 * (400 - i) # don't ask
-            for actor in [self.xhair, self.label, self.black]:
-                actor.set_opacity(opacity)
-            while Gtk.events_pending():
-                Gtk.main_iteration()
-            sleep(0.01)
+    def __init__(self):
+        Champlain.Point.__init__(self)
+        self.set_size(4)
+        self.set_color(Clutter.Color.new(0, 0, 0, 64))
+        Gst.bind('show-map-center', self, 'visible')
+        MapView.bin_layout_add(self, CENTER, CENTER)
+
+
+@singleton
+class Scale(Champlain.Scale):
+    """Display a distance scale on the map."""
+    
+    def __init__(self):
+        Champlain.Scale.__init__(self)
+        self.connect_view(MapView)
+        Gst.bind('show-map-scale', self, 'visible')
+        MapView.bin_layout_add(self, START, END)
+
+
+@singleton
+class CoordLabel(Clutter.Text):
+    """Put the current map coordinates into the black coordinate bar."""
+    
+    def __init__(self):
+        Clutter.Text.__init__(self)
+        self.set_color(Clutter.Color.new(255, 255, 255, 255))
+
+
+@singleton
+class Box(Clutter.Box):
+    """Draw the black coordinate display bar atop map."""
+    
+    def __init__(self):
+        Clutter.Box.__init__(self)
+        self.set_layout_manager(Clutter.BinLayout())
+        self.set_color(Clutter.Color.new(0, 0, 0, 96))
+        Gst.bind('show-map-coords', self, 'visible')
+        MapView.bin_layout_add(self, START, START)
+        self.get_layout_manager().add(CoordLabel, CENTER, CENTER)
+        MapView.connect('notify::width',
+            lambda *ignore: self.set_size(MapView.get_width(), 30))
+
+
+def animate_in(anim=True):
+    """Fade in all the map actors."""
+    for i in xrange(Gst.get_int('animation-steps') if anim else 1, 0, -1):
+        for actor in (Crosshair, Box, Scale):
+            actor.set_opacity(256 - i)
+        Widgets.redraw_interface()
+        sleep(0.01)
 

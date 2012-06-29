@@ -1,17 +1,5 @@
-# Copyright (C) 2012 Robert Park <rbpark@exolucere.ca>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Author: Robert Park <rbpark@exolucere.ca>, (C) 2010
+# Copyright: See COPYING file included with this distribution.
 
 """Control the drag & drop behavior.
 
@@ -34,28 +22,35 @@ is defined in label.py
 
 from __future__ import division
 
+from gi.repository import GtkClutter
+GtkClutter.init([])
+
 from gi.repository import Gtk, Gdk
 from urlparse import urlparse
+from urllib import unquote
 
-from common import Struct, get_obj, map_view, selected, modified, photos
+from widgets import Widgets, MapView
+from common import selected, modified
+from photos import Photograph
 
 class DragController():
     """Control the drag & drop behavior."""
     
     def __init__(self, open_files):
         # Drag source definitons
-        photos_view = get_obj('photos_view')
+        photos_view = Widgets.photos_view
         photos_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
             [], Gdk.DragAction.COPY)
         photos_view.drag_source_add_text_targets()
         photos_view.connect('drag-data-get', self.photo_drag_start)
         
         # Drag destination defintions
-        photos_view.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
-        photos_view.drag_dest_add_text_targets()
-        photos_view.connect('drag-data-received', self.photo_drag_end, False)
+        notebook = Widgets.photo_camera_gps
+        notebook.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
+        notebook.drag_dest_add_text_targets()
+        notebook.connect('drag-data-received', self.photo_drag_end, False)
         
-        container = get_obj('map_container')
+        container = Widgets.map_container
         container.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
         container.drag_dest_add_text_targets()
         container.connect('drag-data-received', self.photo_drag_end, True)
@@ -67,8 +62,7 @@ class DragController():
     def photo_drag_start(self, widget, drag_context, data, info, time):
         """Allow dragging more than one photo."""
         self.external_drag = False # Don't reload files from disk
-        files = [ photo.filename for photo in selected ]
-        data.set_text('\n'.join(files), -1)
+        data.set_text('\n'.join([photo.filename for photo in selected]), -1)
     
     def photo_drag_end(self, widget, drag_context, x, y,
                        data, info, time, on_map):
@@ -77,7 +71,12 @@ class DragController():
         This method allows photos to be dropped in from the photo
         pane or any other drag source, such as the file browser.
         """
-        files = [urlparse(s).path.strip() for s in
+        if not data.get_text():
+            return
+        
+        lat, lon = MapView.y_to_latitude(y), MapView.x_to_longitude(x)
+        
+        files = [unquote(urlparse(s).path.strip()) for s in
                  data.get_text().split('\n') if s]
         
         if self.external_drag:
@@ -85,15 +84,11 @@ class DragController():
         self.external_drag = True
         
         if on_map:
-          for filename in files:
-                photo = photos.get(filename)
+            for filename in files:
+                photo = Photograph.cache.get(filename)
                 if photo is not None:
                     photo.manual = True
-                    photo.set_location(
-                        map_view.y_to_latitude(y),
-                        map_view.x_to_longitude(x))
-                    modified.add(photo)
+                    photo.set_location(lat, lon)
         
         self.selection.emit('changed')
-        map_view.emit('animation-completed')
 

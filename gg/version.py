@@ -1,23 +1,10 @@
-# Copyright (C) 2011 Robert Park <rbpark@exolucere.ca>
+# Author: Robert Park <rbpark@exolucere.ca>, (C) 2011
+# Copyright: See COPYING file included with this distribution.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
+# Package version data.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-"""Package version data.
-
-Please note that this file is equally valid as Python as it is Bash,
-as it is also imported by the po/initialize-pot.sh script.
-"""
+# Please note that this file is equally valid as Python as it is Bash,
+# as it is also imported by the po/initialize-pot.sh script.
 
 APPNAME='GottenGeography'
 PACKAGE='gottengeography'

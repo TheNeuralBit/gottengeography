@@ -1,135 +1,159 @@
-# Copyright (C) 2010 Robert Park <rbpark@exolucere.ca>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Author: Robert Park <rbpark@exolucere.ca>, (C) 2010
+# Copyright: See COPYING file included with this distribution.
 
 """Common classes and datatypes used throughout the app.
 
 The `selected` and `modified` set()s contain Photograph() instances, and
 are frequently used for iteration and membership testing throughout the app.
 
-The `polygons` list contains a list of Polygon() instances in the order they
-were loaded. It's mostly used for being able to change the colors of the 
-polygons but is also iterated over during unloading of GPS data.
-
 The `points` dict maps epoch seconds to ChamplainCoordinate() instances. This
 is used to place photos on the map by looking up their timestamps.
-
-The `photos` dict maps absolute filename paths to Photograph() instances, and
-is used for most of the photo manipulations (eg, loading, saving, etc).
 """
 
 from __future__ import division
 
-from gi.repository import Gtk, Gio, GLib
-from gi.repository import GtkChamplain, Champlain
-from os.path import join
+from gi.repository import GObject, Gio, GLib
+from functools import wraps
 
-from build_info import PKG_DATA_DIR
 from version import PACKAGE
 
 # These variables are used for sharing data between classes
 selected = set()
 modified = set()
-polygons = []
 points   = {}
-photos   = {}
 
 
-class metadata:
-    """Records clock offset and times of first/last gps track points.
+def singleton(cls):
+    """Decorate a class with @singleton when There Can Be Only One.
     
-    Never instantiated, simply used for static class attributes.
+    >>> @singleton
+    ... class Highlander: pass
+    >>> Highlander() is Highlander() is Highlander
+    True
+    >>> id(Highlander()) == id(Highlander)
+    True
     """
-    delta = 0
-    omega = float('-inf')
-    alpha = float('inf')
+    instance = cls()
+    instance.__call__ = lambda: instance
+    return instance
 
 
-# This function is the embodiment of my applications core logic.
-# Everything else is just implementation details.
-def auto_timestamp_comparison(photo):
-    """Use GPX data to calculate photo coordinates and elevation."""
-    if photo.manual or len(points) < 2:
-        return
+def memoize(obj):
+    """General-purpose cache for classes, methods, and functions.
     
-    # Add the user-specified clock offset (metadata.delta) to the photo
-    # timestamp, and then keep it within the range of available GPX points.
-    # The result is in epoch seconds, just like the keys of the 'points' dict.
-    stamp = min(max(
-        metadata.delta + photo.timestamp,
-        metadata.alpha),
-        metadata.omega)
+    Functions are cached by their arguments:
     
-    try:
-        point = points[stamp] # Try to use an exact match,
-        lat   = point.lat     # if such a thing were to exist.
-        lon   = point.lon     # It's more likely than you think. 50%
-        ele   = point.ele     # of the included demo data matches here.
+    >>> @memoize
+    ... def doubler(foo):
+    ...     print 'performing expensive calculation...'
+    ...     return foo * 2
+    >>> doubler(50)
+    performing expensive calculation...
+    100
+    >>> doubler(50)
+    100
     
-    except KeyError:
-        # Find the two points that are nearest (in time) to the photo.
-        hi = min([point for point in points if point > stamp])
-        lo = max([point for point in points if point < stamp])
-        hi_point = points[hi]
-        lo_point = points[lo]
-        hi_ratio = (stamp - lo) / (hi - lo)  # Proportional amount of time
-        lo_ratio = (hi - stamp) / (hi - lo)  # between each point & the photo.
-        
-        # Find intermediate values using the proportional ratios.
-        lat = ((lo_point.lat * lo_ratio)  +
-               (hi_point.lat * hi_ratio))
-        lon = ((lo_point.lon * lo_ratio)  +
-               (hi_point.lon * hi_ratio))
-        ele = ((lo_point.ele * lo_ratio)  +
-               (hi_point.ele * hi_ratio))
+    Methods are also cached by all their arguments, including `self`, which
+    means that different instances will not share their cache. This is primarily
+    used in the Gtk.Builder subclasses, where we want to cache slow widget
+    lookups, but we don't want different instances stepping on each other's
+    widgets:
     
-    photo.set_location(lat, lon, ele)
+    >>> class WidgetFactory:
+    ...     @memoize
+    ...     def get_by_name(self, name):
+    ...         print 'Making new widget named', name
+    ...         return '<<%s>>' % name
+    >>> one = WidgetFactory()
+    >>> one.get_by_name('bob')
+    Making new widget named bob
+    '<<bob>>'
+    >>> one.get_by_name('bob')
+    '<<bob>>'
+    >>> two = WidgetFactory()
+    >>> two.get_by_name('bob')
+    Making new widget named bob
+    '<<bob>>'
+    
+    Finally, class instantiations are also cached based on the arguments passed
+    to the constructor:
+    
+    >>> @memoize
+    ... class Memorable:
+    ...     def __init__(self, foo): pass
+    >>> Memorable('alpha') is Memorable('alpha')
+    True
+    >>> Memorable('alpha') is Memorable('beta')
+    False
+    >>> len(Memorable.instances)
+    2
+    """
+    cache = obj.cache = {}
+    obj.instances = cache.viewvalues()
+    
+    @wraps(obj)
+    def memoizer(*args, **kwargs):
+        """Do cache lookups and populate the cache in the case of misses."""
+        key = args[0] if len(args) is 1 else args
+        if key not in cache:
+            cache[key] = obj(*args, **kwargs)
+        return cache[key]
+    return memoizer
 
 
-class Builder(Gtk.Builder):
-    """Load GottenGeography's UI definitions."""
-    def __init__(self):
-        Gtk.Builder.__init__(self)
-        
-        self.set_translation_domain(PACKAGE)
-        self.add_from_file(join(PKG_DATA_DIR, PACKAGE + '.ui'))
+class staticmethod(object):
+    """Make @staticmethods play nice with @memoize.
+    
+    >>> @memoize
+    ... class HasStatic:
+    ...     @staticmethod
+    ...     def do_something():
+    ...         print 'Invoked with no arguments.'
+    >>> HasStatic.do_something()
+    Invoked with no arguments.
+    
+    Without this class, the above example would raise
+    TypeError: 'staticmethod' object is not callable
+    """
+    
+    def __init__(self, func):
+        self.func = func
+    
+    def __call__(self, *args, **kwargs):
+        """Call the static method with no instance."""
+        return self.func(*args, **kwargs)
+
+
+@memoize
+class Binding(GObject.Binding):
+    """Make it easier to bind properties between GObjects."""
+    
+    def __init__(self, source, sprop, target, tprop=None,
+                 flags=GObject.BindingFlags.DEFAULT):
+        GObject.Binding.__init__(self,
+            source=source, source_property=sprop,
+            target=target, target_property=tprop or sprop,
+            flags=flags)
 
 
 class GSettings(Gio.Settings):
     """Override GSettings to be more useful to me."""
     get = Gio.Settings.get_value
     
-    def __init__(self):
-        Gio.Settings.__init__(self, 'ca.exolucere.' + PACKAGE)
+    def __init__(self, schema='ca.exolucere.' + PACKAGE, path=None):
+        if path is not None:
+            path = '/ca/exolucere/%s/%ss/%s/' % (PACKAGE, schema, path)
+            schema = 'ca.exolucere.%s.%s' % (PACKAGE, schema)
+        
+        Gio.Settings.__init__(self, schema, path)
         
         # These are used to avoid infinite looping.
         self._ignore_key_changed = False
         self._ignore_prop_changed = True
     
-    def bind(self, key, widget, prop, flags=Gio.SettingsBindFlags.DEFAULT):
+    def bind(self, key, widget, prop=None, flags=Gio.SettingsBindFlags.DEFAULT):
         """Don't make me specify the default flags every time."""
-        Gio.Settings.bind(self, key, widget, prop, flags)
-    
-    def set(self, key, value):
-        """Convert arrays to GVariants.
-        
-        This makes it easier to set the back button history and the window size.
-        """
-        use_matrix = type(value) is list
-        do_override = type(value) is tuple or use_matrix
-        Gio.Settings.set_value(self, key, value if not do_override else
-            GLib.Variant('aad' if use_matrix else '(ii)', value))
+        Gio.Settings.bind(self, key, widget, prop or key, flags)
     
     def bind_with_convert(self, key, widget, prop, key_to_prop, prop_to_key):
         """Recreate g_settings_bind_with_mapping from scratch.
@@ -156,66 +180,58 @@ class GSettings(Gio.Settings):
         key_changed(self, key) # init default state
 
 
-class ChamplainEmbedder(GtkChamplain.Embed):
-    """Put the map view onto the main window."""
+@singleton
+class Gst(GSettings):
+    """This is the primary GSettings instance for main app settings only.
+    
+    It cannot be used to access the relocatable schema, for that you'll have
+    to create a new GSettings() instance.
+    """
     
     def __init__(self):
-        GtkChamplain.Embed.__init__(self)
-        get_obj('map_container').add_with_viewport(self)
-
-
-class Polygon(Champlain.PathLayer):
-    """Extend a Champlain.PathLayer to do things more the way I like them."""
+        GSettings.__init__(self)
     
-    def __init__(self):
-        Champlain.PathLayer.__init__(self)
-        self.set_stroke_width(4)
+    def set_history(self, value):
+        """Convert the map history to an array of tuples."""
+        Gio.Settings.set_value(self, 'history', GLib.Variant('a(ddi)', value))
     
-    def append_point(self, latitude, longitude, elevation):
-        """Simplify appending a point onto a polygon."""
-        coord = Champlain.Coordinate.new_full(latitude, longitude)
-        coord.lat = latitude
-        coord.lon = longitude
-        coord.ele = elevation
-        self.add_node(coord)
-        return coord
+    def set_window_size(self, value):
+        """Convert the window size to a pair of ints."""
+        Gio.Settings.set_value(self, 'window-size', GLib.Variant('(ii)', value))
+    
+    def set_color(self, color):
+        """Convert the GdkColor to a three-int tuple."""
+        Gio.Settings.set_value(self, 'track-color',
+            GLib.Variant('(iii)', (color.red, color.green, color.blue)))
 
 
 class Struct:
-    """This is a generic object which can be assigned arbitrary attributes."""
+    """This is a generic object which can be assigned arbitrary attributes.
+    
+    >>> foo = Struct({'one': 2})
+    >>> foo.one
+    2
+    >>> foo.four = 4
+    >>> foo.four
+    4
+    """
     
     def __init__(self, attributes={}):
         self.__dict__.update(attributes)
 
 
-# Initialize GtkBuilder, Champlain, and GSettings
-get_obj  = Builder().get_object
-map_view = ChamplainEmbedder().get_view()
-gst      = GSettings()
-
-
-def add_polygon_to_map():
-    """Create a new Polygon and add it to the map."""
-    polygon = Polygon()
-    polygons.append(polygon)
-    map_view.add_layer(polygon)
-    return polygon.append_point
-
-def clear_all_gpx(widget=None):
-    """Forget all GPX data, start over with a clean slate."""
-    for polygon in polygons:
-        map_view.remove_layer(polygon)
+class Dummy(Struct):
+    """This is a do-nothing stub that can pretend to be anything.
     
-    del polygons[:]
-    points.clear()
-    metadata.omega = float('-inf')   # Final GPX track point
-    metadata.alpha = float('inf')    # Initial GPX track point
-    gpx_sensitivity()
-
-def gpx_sensitivity():
-    """Control the sensitivity of GPX-related widgets."""
-    gpx_sensitive = len(points) > 0
-    get_obj('clear_button').set_sensitive(gpx_sensitive)
-    for widget in [ 'minutes', 'seconds', 'offset_label' ]:
-        get_obj(widget).set_visible(gpx_sensitive)
+    >>> Dummy().this_method_doesnt_exist(1, 2, 3, 4)
+    True
+    """
+    
+    def __getattr__(self, attribute):
+        """Any method you attempt to call will return True."""
+        return lambda *dummy: True
+    
+    def __hash__(self):
+        """Instances can be uniquely identified."""
+        return id(self)
 

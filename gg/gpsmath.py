@@ -1,177 +1,309 @@
-# Copyright (C) 2010 Robert Park <rbpark@exolucere.ca>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Author: Robert Park <rbpark@exolucere.ca>, (C) 2010
+# Copyright: See COPYING file included with this distribution.
 
-"""Trigonometry and other mathematical calculations."""
+"""Reverse geocoding and other mathematical calculations."""
 
 from __future__ import division
 
-from math import acos, sin, cos, radians
+from gi.repository import GLib, GObject
 from time import strftime, localtime
 from math import modf as split_float
-from os.path import join, basename
 from gettext import gettext as _
-from fractions import Fraction
-from pyexiv2 import Rational
+from os.path import join
+import fractions
 
 from territories import get_state, get_country
 from build_info import PKG_DATA_DIR
+from common import memoize
 
-EARTH_RADIUS = 6371 #km
+
+class Fraction(fractions.Fraction):
+    """Only create Fractions from floats.
+    
+    >>> Fraction(0.3)
+    Fraction(3, 10)
+    >>> Fraction(1.1)
+    Fraction(11, 10)
+    """
+    
+    def __new__(cls, value, ignore=None):
+        """Should be compatible with Python 2.6, though untested."""
+        return fractions.Fraction.from_float(value).limit_denominator(99999)
+
 
 def dms_to_decimal(degrees, minutes, seconds, sign=' '):
-    """Convert degrees, minutes, seconds into decimal degrees."""
+    """Convert degrees, minutes, seconds into decimal degrees.
+    
+    >>> dms_to_decimal(10, 10, 10)
+    10.169444444444444
+    >>> dms_to_decimal(8, 9, 10, 'S')
+    -8.152777777777779
+    """
     return (-1 if sign[0] in 'SWsw' else 1) * (
         float(degrees)        +
         float(minutes) / 60   +
         float(seconds) / 3600
     )
 
+
 def decimal_to_dms(decimal):
-    """Convert decimal degrees into degrees, minutes, seconds."""
+    """Convert decimal degrees into degrees, minutes, seconds.
+    
+    >>> decimal_to_dms(50.445891)
+    [Fraction(50, 1), Fraction(26, 1), Fraction(113019, 2500)]
+    >>> decimal_to_dms(-125.976893)
+    [Fraction(125, 1), Fraction(58, 1), Fraction(92037, 2500)]
+    """
     remainder, degrees = split_float(abs(decimal))
     remainder, minutes = split_float(remainder * 60)
-    return [
-        Rational(degrees, 1),
-        Rational(minutes, 1),
-        float_to_rational(remainder * 60)
-    ]
+    return [Fraction(n) for n in (degrees, minutes, remainder * 60)]
 
-def float_to_rational(value):
-    """Create a pyexiv2.Rational with help from fractions.Fraction."""
-    frac = Fraction(abs(value)).limit_denominator(99999)
-    return Rational(frac.numerator, frac.denominator)
 
 def valid_coords(lat, lon):
-    """Determine the validity of coordinates."""
+    """Determine the validity of coordinates.
+    
+    >>> valid_coords(200, 300)
+    False
+    >>> valid_coords(40.689167, -74.044678)
+    True
+    >>> valid_coords(50, [])
+    False
+    """
     if type(lat) not in (float, int): return False
     if type(lon) not in (float, int): return False
     return abs(lat) <= 90 and abs(lon) <= 180
 
-def format_list(strings, joiner=', '):
-    """Join geonames with a comma, ignoring missing names."""
-    return joiner.join([name for name in strings if name])
 
-def format_coords(lat, lon):
-    """Add cardinal directions to decimal coordinates."""
-    return '%s %.5f, %s %.5f' % (
-        _('N') if lat >= 0 else _('S'), abs(lat),
-        _('E') if lon >= 0 else _('W'), abs(lon)
-    )
+@memoize
+def do_cached_lookup(key):
+    """Scan cities.txt for the nearest town.
+    
+    >>> do_cached_lookup(GeoCacheKey(43.646424, -79.333426))
+    ('Toronto', '08', 'CA', 'America/Toronto\\n')
+    >>> do_cached_lookup(GeoCacheKey(48.440257, -89.204443))
+    ('Thunder Bay', '08', 'CA', 'America/Thunder_Bay\\n')
+    """
+    near, dist = None, float('inf')
+    lat1, lon1 = key.lat, key.lon
+    with open(join(PKG_DATA_DIR, 'cities.txt')) as cities:
+        for city in cities:
+            name, lat2, lon2, country, state, tz = city.split('\t')
+            x = (float(lon2) - lon1)
+            y = (float(lat2) - lat1)
+            delta = x * x + y * y
+            if delta < dist:
+                dist = delta
+                near = (name, state, country, tz)
+    return near
 
 
-class Coordinates():
+class GeoCacheKey:
+    """This class allows fuzzy geodata cache lookups."""
+    
+    def __init__(self, lat, lon):
+        self.key = '%.2f,%.2f' % (lat, lon)
+        self.lat = lat
+        self.lon = lon
+    
+    def __str__(self):
+        """Show the key being used.
+        
+        >>> print GeoCacheKey(53.564, -113.564)
+        53.56,-113.56
+        """
+        return self.key
+    
+    def __hash__(self):
+        """Different instances can be used to fetch dictionary values.
+        
+        >>> cache = { GeoCacheKey(53.564, -113.564): 'example' }
+        >>> cache.get(GeoCacheKey(53.559, -113.560))
+        'example'
+        >>> cache.get(GeoCacheKey(0, 0), 'Missing')
+        'Missing'
+        """
+        return hash(self.key)
+    
+    def __cmp__(self, other):
+        """Different instances can compare equally.
+        
+        >>> GeoCacheKey(10.004, 10.004) == GeoCacheKey(9.996, 9.996)
+        True
+        >>> GeoCacheKey(10.004, 10.004) == GeoCacheKey(0, 0)
+        False
+        """
+        return cmp(self.key, other.key)
+
+
+class Coordinates(GObject.GObject):
     """A generic object containing latitude and longitude coordinates.
     
-    This class is inherited by Photograph and TrackFile and contains methods
-    required by both of those classes.
+    >>> import os, time
+    >>> os.environ['TZ'] = 'America/Winnipeg'
+    >>> time.tzset()
+    >>> coord = Coordinates()
     
-    The geodata attribute of this class is shared across all instances of
-    all subclasses of this class. When it is modified by any instance, the
-    changes are immediately available to all other instances. It serves as
-    a cache for data read from cities.txt, which contains geocoding data
-    provided by geonames.org. All subclasses of this class can call
-    self.lookup_geoname() and receive cached data if it was already
-    looked up by another instance of any subclass.
+    >>> coord.date
+    >>> coord.timestamp = 60 * 60 * 24 * 365 * 50
+    >>> coord.date
+    '2019-12-19 06:00:00 PM'
+    
+    >>> coord.height
+    >>> coord.altitude = 600
+    >>> coord.height
+    '600.0m above sea level'
+    >>> coord.altitude = -100
+    >>> coord.height
+    '100.0m below sea level'
+    
+    >>> coord.positioned
+    False
+    >>> coord.coords
+    >>> coord.latitude = -51.688687
+    >>> coord.longitude = -57.804152
+    >>> coord.coords
+    'S 51.68869, W 57.80415'
+    >>> coord.positioned
+    True
+    
+    >>> coord.lookup_geodata()
+    'Atlantic/Stanley'
+    >>> coord.geoname
+    'Stanley, Falkland Islands'
     """
+    modified_timeout = None
+    timeout_seconds = 0
+    geotimezone = ''
+    names = (None, None, None)
     
-    provincestate = None
-    countrycode   = None
-    countryname   = None
-    city          = None
+    timestamp = GObject.property(type=int)
+    altitude  = GObject.property(type=float)
+    latitude  = GObject.property(type=float, minimum=-90.0,  maximum=90.0)
+    longitude = GObject.property(type=float, minimum=-180.0, maximum=180.0)
     
-    filename  = ''
-    altitude  = None
-    latitude  = None
-    longitude = None
-    timestamp = None
-    timezone  = None
-    geodata   = {}
+    @GObject.property(type=bool, default=False)
+    def positioned(self):
+        """Identify if this instance occupies a valid point on the map.
+        
+        Returns False at 0,0 because it's actually remarkably difficult to
+        achieve that exact point in a natural way (not to mention it's in the
+        middle of the Atlantic), which means the photo hasn't been placed yet.
+        """
+        return bool(self.latitude or self.longitude)
     
-    def valid_coords(self):
-        """Check if this object contains valid coordinates."""
-        return valid_coords(self.latitude, self.longitude)
+    @GObject.property(type=str)
+    def geoname(self):
+        """Report the city, state, and country in a pretty list."""
+        return ', '.join([name for name in self.names if name])
     
-    def maps_link(self, link=_('View in Google Maps')):
-        """Return a link to Google Maps if this object has valid coordinates."""
-        return '<a href="%s?q=%s,%s">%s</a>' % ('http://maps.google.com/maps',
-            self.latitude, self.longitude, link) if self.valid_coords() else ''
-    
-    def lookup_geoname(self):
-        """Search cities.txt for nearest city."""
-        if not self.valid_coords():
-            return
-        assert self.geodata is Coordinates.geodata
-        key = '%.2f,%.2f' % (self.latitude, self.longitude)
-        if key in self.geodata:
-            return self.set_geodata(self.geodata[key])
-        near, dist = None, float('inf')
-        lat1, lon1 = radians(self.latitude), radians(self.longitude)
-        with open(join(PKG_DATA_DIR, 'cities.txt')) as cities:
-            for city in cities:
-                name, lat, lon, country, state, tz = city.split('\t')
-                lat2, lon2 = radians(float(lat)), radians(float(lon))
-                try:
-                    delta = acos(sin(lat1) * sin(lat2) +
-                                 cos(lat1) * cos(lat2) *
-                                 cos(lon2  - lon1))    * EARTH_RADIUS
-                except ValueError:
-                    delta = 0
-                if delta < dist:
-                    dist = delta
-                    near = [name, state, country, tz]
-        self.geodata[key] = near
-        return self.set_geodata(near)
-    
-    def set_geodata(self, data):
-        """Apply geodata to internal attributes."""
-        self.city, state, self.countrycode, tz = data
-        self.provincestate = get_state(self.countrycode, state)
-        self.countryname   = get_country(self.countrycode)
-        self.timezone      = tz.strip()
-        return self.timezone
-    
-    def pretty_time(self):
+    @GObject.property(type=str)
+    def date(self):
         """Convert epoch seconds to a human-readable date."""
-        if type(self.timestamp) is int:
+        if self.timestamp:
             return strftime('%Y-%m-%d %X', localtime(self.timestamp))
     
-    def pretty_coords(self):
-        """Add cardinal directions to decimal coordinates."""
-        return format_coords(self.latitude, self.longitude) \
-            if self.valid_coords() else _('Not geotagged')
+    @GObject.property(type=str)
+    def coords(self):
+        """Report a nicely formatted latitude and longitude pair."""
+        if self.positioned:
+            lat, lon = self.latitude, self.longitude
+            return '%s %.5f, %s %.5f' % (
+                _('N') if lat >= 0 else _('S'), abs(lat),
+                _('E') if lon >= 0 else _('W'), abs(lon)
+            )
     
-    def pretty_geoname(self):
-        """Display city, state, and country, if present."""
-        return ', '.join(
-            [s for s in (self.city, self.provincestate, self.countryname) if s])
-    
-    def pretty_elevation(self):
+    @GObject.property(type=str)
+    def height(self):
         """Convert elevation into a human readable format."""
-        if type(self.altitude) in (float, int):
+        if self.altitude:
             return '%.1f%s' % (abs(self.altitude), _('m above sea level')
                         if self.altitude >= 0 else _('m below sea level'))
     
-    def short_summary(self):
-        """Plaintext summary of photo metadata."""
-        return format_list([self.pretty_time(), self.pretty_coords(),
-            self.pretty_geoname(), self.pretty_elevation()], '\n')
+    def __init__(self, **props):
+        self.filename = ''
+        
+        GObject.GObject.__init__(self, **props)
+        
+        for prop in ('latitude', 'longitude', 'altitude', 'timestamp'):
+            self.connect('notify::' + prop, self.do_modified)
     
-    def long_summary(self):
-        """Longer summary with Pango markup."""
-        return '<span %s>%s</span>\n<span %s>%s</span>' % (
-            'size="larger"', basename(self.filename),
-            'style="italic" size="smaller"', self.short_summary()
-        )
+    def __str__(self):
+        """Plaintext summary of metadata.
+        
+        >>> coord = Coordinates()
+        >>> print coord
+        <BLANKLINE>
+        >>> coord.altitude = 456.7
+        >>> coord.latitude = 10
+        >>> coord.lookup_geodata()
+        'Africa/Accra'
+        >>> print coord
+        Yendi, Ghana
+        N 10.00000, E 0.00000
+        456.7m above sea level
+        """
+        return '\n'.join([s for s in
+            (self.geoname, self.date, self.coords, self.height) if s])
+    
+    def lookup_geodata(self):
+        """Check the cache for geonames, and notify of any changes.
+        
+        >>> coord = Coordinates()
+        >>> coord.lookup_geodata()
+        >>> coord.latitude = 47.56494
+        >>> coord.longitude = -52.70931
+        >>> coord.lookup_geodata()
+        'America/St_Johns'
+        >>> coord.geoname
+        "St. John's, Newfoundland and Labrador, Canada"
+        """
+        if not self.positioned:
+            return
+        
+        old_geoname = self.geoname
+        city, state, code, tz = do_cached_lookup(
+            GeoCacheKey(self.latitude, self.longitude))
+        self.names = (city, get_state(code, state), get_country(code))
+        self.geotimezone = tz.strip()
+        if self.geoname != old_geoname:
+            self.notify('geoname')
+        
+        return self.geotimezone
+    
+    def do_modified(self, *ignore):
+        """Set timer to update the geoname after all modifications are done.
+        
+        >>> coord = Coordinates()
+        >>> type(coord.modified_timeout)
+        <type 'NoneType'>
+        >>> coord.latitude = 10
+        >>> type(coord.modified_timeout)
+        <type 'int'>
+        """
+        self.notify('positioned')
+        self.notify('coords')
+        if not self.modified_timeout:
+            self.modified_timeout = GLib.timeout_add_seconds(
+                self.timeout_seconds, self.update_derived_properties)
+    
+    def update_derived_properties(self):
+        """Do expensive geodata lookups after the timeout.
+        
+        >>> coord = Coordinates()
+        >>> coord.latitude = 10
+        >>> type(coord.modified_timeout)
+        <type 'int'>
+        >>> coord.update_derived_properties()
+        False
+        >>> type(coord.modified_timeout)
+        <type 'NoneType'>
+        >>> coord.geoname
+        'Yendi, Ghana'
+        """
+        if self.modified_timeout:
+            self.notify('positioned')
+            GLib.source_remove(self.modified_timeout)
+            self.lookup_geodata()
+            self.modified_timeout = None
+        return False
 

@@ -1,68 +1,141 @@
-# Copyright (C) 2010 Robert Park <rbpark@exolucere.ca>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Author: Robert Park <rbpark@exolucere.ca>, (C) 2010
+# Copyright: See COPYING file included with this distribution.
 
 """Main application code that ties all the other modules together."""
 
 from __future__ import division
 
-from version import APPNAME, PACKAGE, VERSION
+from version import APPNAME, PACKAGE
 
 import gettext
 gettext.bindtextdomain(PACKAGE)
 gettext.textdomain(PACKAGE)
 
-from gi.repository import GObject, GtkClutter
-
-GObject.threads_init()
-GObject.set_prgname(PACKAGE)
-GtkClutter.init([])
-
-from gi.repository import Gtk, Gdk
-from gi.repository import Champlain
+from gi.repository import GLib, GObject, GtkClutter, Gtk, Gdk, Gio
 from os.path import basename, abspath
 from gettext import gettext as _
-from time import clock
-from sys import argv
 
-# "If I have seen a little further it is by standing on the shoulders of Giants."
+# If I have seen a little further it is by standing on the shoulders of Giants.
 #                                    --- Isaac Newton
 
-from photos import Photograph
-from xmlfiles import GPXFile, KMLFile
-from common import polygons, points, photos
-from common import auto_timestamp_comparison
-from common import metadata, selected, modified
-from common import Struct, get_obj, gst, map_view
-from common import gpx_sensitivity, clear_all_gpx
+if not GLib.get_application_name():
+    GLib.set_application_name(APPNAME)
+    GObject.set_prgname(PACKAGE)
+
+GtkClutter.init([])
+
+from camera import Camera
+from xmlfiles import TrackFile
+from gpsmath import Coordinates
+from widgets import Widgets, MapView
+from actor import CoordLabel, animate_in
+from photos import Photograph, fetch_thumbnail
+from navigation import go_back, move_by_arrow_keys
+from common import Gst, Binding, selected, modified
 
 from drag import DragController
-from actor import ActorController
-from label import LabelController
 from search import SearchController
-from navigation import NavigationController
-from preferences import PreferencesController
 
 # Handy names for GtkListStore column numbers.
 PATH, SUMMARY, THUMB, TIMESTAMP = range(4)
 
-def toggle_selected_photos(button, sel):
-    """Toggle the selection of photos."""
-    (sel.select_all if button.get_active() else sel.unselect_all)()
+# Just pretend these functions are actually GottenGeography() instance methods.
+# The 'self' argument gets passed in by GtkApplication instead of Python.
+
+def command_line(self, commands):
+    """Open the files passed in at the commandline.
+    
+    This method collects any commandline arguments from any invocation of
+    GottenGeography and reports them to the primary instance for opening.
+    """
+    files = commands.get_arguments()[1:]
+    if files:
+        self.activate()
+        self.open_files([abspath(f) for f in files])
+    return 0
+
+def startup(self):
+    """Display the primary window and connect some signals."""
+    self.quit_message = Widgets.quit.get_property('secondary-text')
+    
+    self.drag   = DragController(self.open_files)
+    self.search = SearchController()
+    
+    center = Coordinates()
+    Binding(MapView, 'latitude', center)
+    Binding(MapView, 'longitude', center)
+    center.do_modified()
+    Binding(center, 'geoname', Widgets.main, 'title')
+    Binding(center, 'coords', CoordLabel, 'text')
+    center.timeout_seconds = 10 # Only update titlebar every 10 seconds
+    
+    screen = Gdk.Screen.get_default()
+    
+    app_menu = ('open', 'save', 'help', 'about', 'quit')
+    click_handlers = {
+        'open':
+            self.add_files_dialog,
+        'save':
+            self.save_all_files,
+        'close':
+            lambda btn: [p.destroy() for p in selected.copy()],
+        'revert':
+            lambda btn: self.open_files(
+                [p.filename for p in modified & selected]),
+        'about':
+            lambda *ignore: Widgets.about.run() and Widgets.about.hide(),
+        'help':
+            lambda *ignore: Gtk.show_uri(screen,
+                'ghelp:gottengeography', Gdk.CURRENT_TIME),
+        'jump':
+            self.jump_to_photo,
+        'apply':
+            self.apply_selected_photos,
+        'map_source_menu':
+            lambda *ignore: Gtk.show_uri(
+                screen, 'http://maps.google.com/maps?q=%s,%s' %
+                (center.latitude, center.longitude), Gdk.CURRENT_TIME),
+        'quit':
+            self.confirm_quit_dialog,
+    }
+    for name, handler in click_handlers.items():
+        button = Widgets[name + '_button']
+        if button:
+            button.connect('clicked', handler)
+        if name in app_menu:
+            action = Gio.SimpleAction(name=name)
+            action.connect('activate', handler)
+            self.add_action(action)
+    self.set_app_menu(Widgets.appmenu)
+    
+    Widgets.zoom_in_button.connect('clicked', lambda *x: MapView.zoom_in())
+    Widgets.zoom_out_button.connect('clicked', lambda *x: MapView.zoom_out())
+    Widgets.back_button.connect('clicked', go_back)
+    
+    Widgets.open.connect('update-preview', self.update_preview, Widgets.preview)
+    
+    accel = Gtk.AccelGroup()
+    for key in [ 'Left', 'Right', 'Up', 'Down' ]:
+        accel.connect(Gdk.keyval_from_name(key),
+            Gdk.ModifierType.MOD1_MASK, 0, move_by_arrow_keys)
+    
+    Widgets.main.add_accel_group(accel)
+    Widgets.main.connect('delete_event', self.confirm_quit_dialog)
+    self.add_window(Widgets.main)
+    
+    save_size = lambda v, s, size: Gst.set_window_size(size())
+    for prop in ['width', 'height']:
+        MapView.connect('notify::' + prop, save_size, Widgets.main.get_size)
+    
+    Widgets.button_sensitivity()
+    
+    Gst.connect('changed::thumbnail-size', Photograph.resize_all_photos)
+    
+    Widgets.launch()
+    animate_in(self.do_fade_in)
 
 
-class GottenGeography():
+class GottenGeography(Gtk.Application):
     """Provides a graphical interface to automagically geotag photos.
     
     Just load your photos, and load a GPX file, and GottenGeography will
@@ -70,289 +143,107 @@ class GottenGeography():
     in the GPX to determine the three-dimensional coordinates of each photo.
     """
     
-################################################################################
-# File data handling. These methods interact with files (loading, saving, etc)
-################################################################################
+    def __init__(self, do_fade_in=True):
+        Gtk.Application.__init__(
+            self, application_id='ca.exolucere.' + APPNAME,
+            flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
+        
+        self.connect('activate', lambda *ignore: Widgets.main.present())
+        self.connect('command-line', command_line)
+        self.connect('startup', startup)
+        
+        self.do_fade_in = do_fade_in
     
     def open_files(self, files):
-        """Attempt to load all of the specified files."""
-        self.progressbar.show()
+        """Attempt to load all of the specified files.
+        
+        >>> len(Photograph.instances)
+        0
+        >>> GottenGeography().open_files(
+        ...     ['demo/IMG_2411.JPG', 'demo/IMG_2412.JPG'])
+        >>> len(Photograph.instances)
+        2
+        """
+        Widgets.progressbar.show()
         invalid, total = [], len(files)
         for i, name in enumerate(files, 1):
-            self.redraw_interface(i / total, basename(name))
+            Widgets.redraw_interface(i / total, basename(name))
             try:
-                try:            self.load_img_from_file(name)
-                except IOError: self.load_gpx_from_file(name)
+                try:
+                    Photograph.load_from_file(name)
+                except IOError:
+                    TrackFile.load_from_file(name)
             except IOError:
                 invalid.append(basename(name))
-        if len(invalid) > 0:
-            self.status_message(_('Could not open: ') + ', '.join(invalid))
-        self.progressbar.hide()
-        self.labels.selection.emit('changed')
-        map_view.emit('animation-completed')
+        if invalid:
+            Widgets.status_message(_('Could not open: ') + ', '.join(invalid))
+        
+        # Ensure camera has found correct timezone regardless of the order
+        # that the GPX/KML files were loaded in.
+        likely_zone = TrackFile.query_all_timezones()
+        if likely_zone:
+            Camera.set_all_found_timezone(likely_zone)
+        Camera.timezone_handler_all()
+        Widgets.progressbar.hide()
+        Widgets.button_sensitivity()
     
-    def load_img_from_file(self, uri):
-        """Create or update a row in the ListStore.
-        
-        Checks if the file has already been loaded, and if not, creates a new
-        row in the ListStore. Either way, it then populates that row with
-        photo metadata as read from disk. Effectively, this is used both for
-        loading new photos, and reverting old photos, discarding any changes.
-        
-        Raises IOError if filename refers to a file that is not a photograph.
-        """
-        photo = photos.get(uri) or Photograph(uri, self.modify_summary)
-        photo.read()
-        if uri not in photos:
-            photo.iter  = self.liststore.append()
-            photo.label = self.labels.add(uri)
-            photos[uri] = photo
-        photo.position_label()
-        modified.discard(photo)
-        self.liststore.set_row(photo.iter,
-            [uri, photo.long_summary(), photo.thumb, photo.timestamp])
-        auto_timestamp_comparison(photo)
-    
-    def load_gpx_from_file(self, uri):
-        """Parse GPX data, drawing each GPS track segment on the map."""
-        start_time = clock()
-        
-        open_file = KMLFile if uri[-3:].lower() == 'kml' else GPXFile
-        gpx = open_file(uri, self.progressbar)
-        
-        # Emitting this signal ensures the new tracks get the correct color.
-        get_obj('colorselection').emit('color-changed')
-        
-        self.status_message(_('%d points loaded in %.2fs.') %
-            (len(gpx.tracks), clock() - start_time))
-        
-        if len(gpx.tracks) < 2:
-            return
-        
-        points.update(gpx.tracks)
-        metadata.alpha = min(metadata.alpha, gpx.alpha)
-        metadata.omega = max(metadata.omega, gpx.omega)
-        
-        map_view.emit('realize')
-        map_view.set_zoom_level(map_view.get_max_zoom_level())
-        bounds = Champlain.BoundingBox.new()
-        for poly in polygons:
-            bounds.compose(poly.get_bounding_box())
-        gpx.latitude, gpx.longitude = bounds.get_center()
-        map_view.ensure_visible(bounds, False)
-        
-        self.prefs.gpx_timezone = gpx.lookup_geoname()
-        self.prefs.set_timezone()
-        gpx_sensitivity()
-    
-    def apply_selected_photos(self, button, view):
-        """Manually apply map center coordinates to all selected photos."""
+    def apply_selected_photos(self, button):
+        """Manually apply map center coordinates to selected photos."""
+        lat, lon = MapView.get_center_latitude(), MapView.get_center_longitude()
         for photo in selected:
             photo.manual = True
-            photo.set_location(
-                view.get_property('latitude'),
-                view.get_property('longitude'))
-        self.labels.selection.emit('changed')
+            photo.set_location(lat, lon)
+        Widgets.button_sensitivity()
     
-    def revert_selected_photos(self, button=None):
-        """Discard any modifications to all selected photos."""
-        self.open_files([photo.filename for photo in modified & selected])
-    
-    def close_selected_photos(self, button=None):
-        """Discard all selected photos."""
-        for photo in selected.copy():
-            self.labels.layer.remove_marker(photo.label)
-            del photos[photo.filename]
-            modified.discard(photo)
-            self.liststore.remove(photo.iter)
-        self.labels.select_all.set_active(False)
-    
-    def save_all_files(self, widget=None):
+    def save_all_files(self, *ignore):
         """Ensure all loaded files are saved."""
-        self.progressbar.show()
+        Widgets.progressbar.show()
         total = len(modified)
         for i, photo in enumerate(list(modified), 1):
-            self.redraw_interface(i / total, basename(photo.filename))
+            Widgets.redraw_interface(i / total, basename(photo.filename))
             try:
                 photo.write()
             except Exception as inst:
-                self.status_message(str(inst))
-            else:
-                modified.discard(photo)
-                self.liststore.set_value(photo.iter, SUMMARY,
-                    photo.long_summary())
-        self.progressbar.hide()
-        self.labels.selection.emit('changed')
+                Widgets.status_message(str(inst))
+        Widgets.progressbar.hide()
+        Widgets.button_sensitivity()
     
-################################################################################
-# Data manipulation. These methods modify the loaded files in some way.
-################################################################################
+    def jump_to_photo(self, button):
+        """Center on the first selected photo."""
+        photo = selected.copy().pop()
+        if photo.positioned:
+            MapView.emit('realize')
+            MapView.center_on(photo.latitude, photo.longitude)
     
-    def time_offset_changed(self, widget):
-        """Update all photos each time the camera's clock is corrected."""
-        seconds = self.secbutton.get_value()
-        minutes = self.minbutton.get_value()
-        offset  = int((minutes * 60) + seconds)
-        if offset != metadata.delta:
-            metadata.delta = offset
-            if abs(seconds) == 60 and abs(minutes) != 60:
-                minutes += seconds / 60
-                self.secbutton.set_value(0)
-                self.minbutton.set_value(minutes)
-            for photo in photos.values():
-                auto_timestamp_comparison(photo)
-    
-    def modify_summary(self, photo):
-        """Insert the current photo summary into the liststore."""
-        modified.add(photo)
-        self.liststore.set_value(photo.iter, SUMMARY,
-            ('<b>%s</b>' % photo.long_summary()))
-    
-################################################################################
-# Dialogs. Various dialog-related methods for user interaction.
-################################################################################
-    
-    def update_preview(self, chooser, label, image):
+    def update_preview(self, chooser, image):
         """Display photo thumbnail and geotag data in file chooser."""
-        label.set_label(self.strings.preview)
         image.set_from_stock(Gtk.STOCK_FILE, Gtk.IconSize.DIALOG)
         try:
-            photo = Photograph(chooser.get_preview_filename(),
-                               lambda x: None, 300)
-            photo.read()
-        except IOError:
+            image.set_from_pixbuf(fetch_thumbnail(
+                chooser.get_preview_filename(), 300))
+        except (IOError, TypeError):
             return
-        image.set_from_pixbuf(photo.thumb)
-        label.set_label(
-            '\n'.join([photo.short_summary(), photo.maps_link()]))
     
-    def add_files_dialog(self, button, chooser):
+    def add_files_dialog(self, *ignore):
         """Display a file chooser, and attempt to load chosen files."""
-        response = chooser.run()
-        chooser.hide()
+        response = Widgets.open.run()
+        Widgets.open.hide()
+        Widgets.redraw_interface()
         if response == Gtk.ResponseType.OK:
-            self.open_files(chooser.get_filenames())
+            self.open_files(Widgets.open.get_filenames())
     
-    def confirm_quit_dialog(self, *args):
+    def confirm_quit_dialog(self, *ignore):
         """Teardown method, inform user of unsaved files, if any."""
-        if len(modified) == 0:
-            Gtk.main_quit()
+        if not modified:
+            self.quit()
             return True
-        dialog = get_obj('quit')
-        dialog.format_secondary_markup(self.strings.quit % len(modified))
-        response = dialog.run()
-        dialog.hide()
-        self.redraw_interface()
-        if response == Gtk.ResponseType.ACCEPT: self.save_all_files()
-        if response != Gtk.ResponseType.CANCEL: Gtk.main_quit()
+        Widgets.quit.format_secondary_markup(self.quit_message % len(modified))
+        response = Widgets.quit.run()
+        Widgets.quit.hide()
+        Widgets.redraw_interface()
+        if response == Gtk.ResponseType.ACCEPT:
+            self.save_all_files()
+        if response != Gtk.ResponseType.CANCEL:
+            self.quit()
         return True
-    
-################################################################################
-# Initialization and Gtk boilerplate/housekeeping type stuff and such.
-################################################################################
-    
-    def __init__(self):
-        self.progressbar = get_obj('progressbar')
-        self.status      = get_obj('status')
-        
-        self.strings = Struct({
-            'quit':    get_obj('quit').get_property('secondary-text'),
-            'preview': get_obj('preview_label').get_text()
-        })
-        
-        self.liststore = get_obj('loaded_photos')
-        self.liststore.set_sort_column_id(TIMESTAMP, Gtk.SortType.ASCENDING)
-        
-        cell_string = Gtk.CellRendererText()
-        cell_thumb  = Gtk.CellRendererPixbuf()
-        cell_thumb.set_property('stock-id', Gtk.STOCK_MISSING_IMAGE)
-        cell_thumb.set_property('ypad', 6)
-        cell_thumb.set_property('xpad', 6)
-        
-        column = Gtk.TreeViewColumn('Photos')
-        column.pack_start(cell_thumb, False)
-        column.add_attribute(cell_thumb, 'pixbuf', THUMB)
-        column.pack_start(cell_string, False)
-        column.add_attribute(cell_string, 'markup', SUMMARY)
-        column.set_sizing(Gtk.TreeViewColumnSizing.AUTOSIZE)
-        
-        get_obj('photos_view').append_column(column)
-        
-        self.drag      = DragController(self.open_files)
-        self.navigator = NavigationController()
-        self.search    = SearchController()
-        self.prefs     = PreferencesController()
-        self.labels    = LabelController()
-        self.actors    = ActorController()
-        
-        about = get_obj('about')
-        about.set_version(VERSION)
-        about.set_program_name(APPNAME)
-        
-        click_handlers = {
-            'open_button':       [self.add_files_dialog, get_obj('open')],
-            'save_button':       [self.save_all_files],
-            'clear_button':      [clear_all_gpx],
-            'close_button':      [self.close_selected_photos],
-            'revert_button':     [self.revert_selected_photos],
-            'about_button':      [lambda b, d: d.run() and d.hide(), about],
-            'apply_button':      [self.apply_selected_photos, map_view],
-            'select_all_button': [toggle_selected_photos, self.labels.selection]
-        }
-        for button, handler in click_handlers.items():
-            get_obj(button).connect('clicked', *handler)
-        
-        accel  = Gtk.AccelGroup()
-        window = get_obj('main')
-        window.resize(*gst.get('window-size'))
-        window.connect('delete_event', self.confirm_quit_dialog)
-        window.add_accel_group(accel)
-        window.show_all()
-        
-        save_size = lambda v, s, size: gst.set('window-size', size())
-        for prop in ['width', 'height']:
-            map_view.connect('notify::' + prop, save_size, window.get_size)
-        
-        map_source_button = get_obj('map_source_label').get_parent()
-        if map_source_button:
-            map_source_button.set_property('visible', False)
-        
-        accel.connect(Gdk.keyval_from_name('q'),
-            Gdk.ModifierType.CONTROL_MASK, 0, self.confirm_quit_dialog)
-        
-        self.labels.selection.emit('changed')
-        clear_all_gpx()
-        
-        metadata.delta = 0
-        self.secbutton, self.minbutton = get_obj('seconds'), get_obj('minutes')
-        gst.bind('offset-minutes', self.minbutton, 'value')
-        gst.bind('offset-seconds', self.secbutton, 'value')
-        for spinbutton in [ self.secbutton, self.minbutton ]:
-            spinbutton.connect('value-changed', self.time_offset_changed)
-        
-        get_obj('open').connect('update-preview', self.update_preview,
-            get_obj('preview_label'), get_obj('preview_image'))
-    
-    def redraw_interface(self, fraction=None, text=None):
-        """Tell Gtk to redraw the user interface, so it doesn't look hung.
-        
-        Primarily used to update the progressbar, but also for disappearing
-        some dialogs while things are processing in the background. Won't
-        modify the progressbar if called with no arguments.
-        """
-        if fraction is not None: self.progressbar.set_fraction(fraction)
-        if text is not None:     self.progressbar.set_text(str(text))
-        while Gtk.events_pending(): Gtk.main_iteration()
-    
-    def status_message(self, message):
-        """Display a message on the GtkStatusBar."""
-        self.status.push(self.status.get_context_id('msg'), message)
-    
-    def main(self, anim_start=200):
-        """Animate the crosshair and begin user interaction."""
-        if argv[1:]:
-            self.open_files([abspath(f) for f in argv[1:]])
-            anim_start = 10
-        self.actors.animate_in(anim_start)
-        Gtk.main()
 
