@@ -242,10 +242,9 @@ class Photograph(Coordinates):
     def write(self):
         """Save exif data to photo file on disk."""
         self.exif.set_gps_info(self.longitude, self.latitude, self.altitude)
+        self.exif.set_exif_tag_rational(
+            'Exif.GPSInfo.GPSAltitude', Fraction.from_float(self.altitude))
         self.exif['Exif.GPSInfo.GPSAltitudeRef'] = '0' if self.altitude >= 0 else '1'
-        self.exif['Exif.GPSInfo.GPSAltitude'] = str(
-            Fraction.from_float(self.altitude).limit_denominator(99999))
-        
         self.exif['Exif.GPSInfo.GPSMapDatum'] = 'WGS-84'
         self.exif[IPTC + 'City']          = self.names[0] or ''
         self.exif[IPTC + 'ProvinceState'] = self.names[1] or ''
