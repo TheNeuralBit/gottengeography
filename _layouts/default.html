@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<title>GottenGeography &mdash; {{ page.title }}</title>
+
+<meta name="author"
+      content="Robert Bruce Park" />
+<meta name="description"
+      content="GottenGeography is a photo geotagging application for the GNOME desktop." />
+<meta name="keywords"
+      content="photography,geotag,geotagging,python,gnome,linux,gtk3,geography,map,mapping" />
+<meta charset="utf-8" />
+
+<link rel="stylesheet"
+      href="/style.css"
+      type="text/css" />
+<link rel="author"
+      title="Robert Park"
+      href="mailto:rbpark@exolucere.ca" />
+
+</head>
+
+<body>
+
+<div id="body">
+<div id="header">
+<a href="/"><h1>GottenGeography</h1></a>
+<h2>{{ page.title }}</h2>
+</div>
+
+<img id="map" src="/img/header.png" height="200" />
+
+<div id="navigation">
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/vids">Videos</a></li>
+<li><a href="/shots">Screenshots</a></li>
+</ul>
+
+<ul>
+<li><a href="https://github.com/robru/gottengeography/wiki/Installation-Instructions">Download</a></li>
+<li><a href="https://github.com/robru/gottengeography/wiki">Wiki</a></li>
+<li><a href="https://github.com/robru/gottengeography/issues?sort=updated&state=open">Bugs</a></li>
+</ul>
+</div>
+
+<div id="content">
+{{ content }}
+</div>
+</div>
+
+<div id="footer">{% if page.date %}
+Written in {{ page.date | date: "%B, %Y" }}.
+{% else %}
+Updated on {{ site.time | date: "%A, %B %e, %Y" }}.
+{% endif %}</div>
+
+</body>
+</html>
