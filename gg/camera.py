@@ -36,7 +36,7 @@ from .territories import tz_regions, get_timezone
 class Camera(GObject.GObject):
     """Store per-camera configuration in GSettings.
     
-    >>> from common import Dummy as Photo
+    >>> from .common import Dummy as Photo
     >>> cam = Camera('unknown_camera')
     >>> cam.add_photo(Photo())
     >>> cam.num_photos

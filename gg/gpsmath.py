@@ -232,10 +232,10 @@ class Coordinates(GObject.GObject):
         
         >>> coord = Coordinates()
         >>> type(coord.modified_timeout)
-        <type 'NoneType'>
+        <class 'NoneType'>
         >>> coord.latitude = 10
         >>> type(coord.modified_timeout)
-        <type 'int'>
+        <class 'int'>
         """
         self.notify('positioned')
         self.notify('coords')
@@ -249,11 +249,11 @@ class Coordinates(GObject.GObject):
         >>> coord = Coordinates()
         >>> coord.latitude = 10
         >>> type(coord.modified_timeout)
-        <type 'int'>
+        <class 'int'>
         >>> coord.update_derived_properties()
         False
         >>> type(coord.modified_timeout)
-        <type 'NoneType'>
+        <class 'NoneType'>
         >>> coord.geoname
         'Yendi, Ghana'
         """

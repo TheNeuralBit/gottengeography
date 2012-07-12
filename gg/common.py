@@ -32,9 +32,10 @@ def singleton(cls):
     >>> id(Highlander()) == id(Highlander)
     True
     """
-    instance = cls()
-    instance.__call__ = lambda: instance
-    return instance
+    class single(cls):
+        def __call__(self):
+            return self
+    return single()
 
 
 def memoize(obj):

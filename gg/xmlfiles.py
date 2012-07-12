@@ -94,7 +94,7 @@ class XMLSimpleParser:
         self.parser.StartElementHandler = self.element_root
         
         try:
-            with open(filename) as xml:
+            with open(filename, 'rb') as xml:
                 self.parser.ParseFile(xml)
         except ExpatError:
             raise IOError
