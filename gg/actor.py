@@ -13,7 +13,6 @@ Custom map actors are defined here as well:
 True
 """
 
-from __future__ import division
 
 from gi.repository import GtkClutter
 GtkClutter.init([])
@@ -21,8 +20,8 @@ GtkClutter.init([])
 from gi.repository import Gtk, Champlain, Clutter
 from time import sleep
 
-from widgets import Widgets, MapView
-from common import Gst, singleton, memoize
+from .widgets import Widgets, MapView
+from .common import Gst, singleton, memoize
 
 START  = Clutter.BinAlignment.START
 CENTER = Clutter.BinAlignment.CENTER
@@ -161,7 +160,7 @@ class Box(Clutter.Box):
 
 def animate_in(anim=True):
     """Fade in all the map actors."""
-    for i in xrange(Gst.get_int('animation-steps') if anim else 1, 0, -1):
+    for i in range(Gst.get_int('animation-steps') if anim else 1, 0, -1):
         for actor in (Crosshair, Box, Scale):
             actor.set_opacity(256 - i)
         Widgets.redraw_interface()

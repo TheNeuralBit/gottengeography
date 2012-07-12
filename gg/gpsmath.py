@@ -3,7 +3,6 @@
 
 """Reverse geocoding and other mathematical calculations."""
 
-from __future__ import division
 
 from gi.repository import GLib, GObject
 from time import strftime, localtime
@@ -12,9 +11,9 @@ from gettext import gettext as _
 from os.path import join
 import fractions
 
-from territories import get_state, get_country
-from build_info import PKG_DATA_DIR
-from common import memoize
+from .territories import get_state, get_country
+from .build_info import PKG_DATA_DIR
+from .common import memoize
 
 
 def valid_coords(lat, lon):
@@ -66,7 +65,7 @@ class GeoCacheKey:
     def __str__(self):
         """Show the key being used.
         
-        >>> print GeoCacheKey(53.564, -113.564)
+        >>> print(GeoCacheKey(53.564, -113.564))
         53.56,-113.56
         """
         return self.key
@@ -189,13 +188,13 @@ class Coordinates(GObject.GObject):
         """Plaintext summary of metadata.
         
         >>> coord = Coordinates()
-        >>> print coord
+        >>> print(coord)
         <BLANKLINE>
         >>> coord.altitude = 456.7
         >>> coord.latitude = 10
         >>> coord.lookup_geodata()
         'Africa/Accra'
-        >>> print coord
+        >>> print(coord)
         Yendi, Ghana
         N 10.00000, E 0.00000
         456.7m above sea level

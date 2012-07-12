@@ -3,14 +3,13 @@
 
 """Define classes used for parsing GPX and KML XML files."""
 
-from __future__ import division
 
 from gi.repository import GtkClutter
 GtkClutter.init([])
 
 from xml.parsers.expat import ParserCreate, ExpatError
 from gi.repository import Champlain, Clutter, Gtk, Gdk
-from dateutil.parser import parse as parse_date
+#from dateutil.parser import parse as parse_date
 from collections import defaultdict, deque
 from re import compile as re_compile
 from gettext import gettext as _
@@ -18,11 +17,11 @@ from os.path import basename
 from calendar import timegm
 from time import clock
 
-from camera import Camera
-from gpsmath import Coordinates
-from common import staticmethod
-from widgets import Widgets, Builder, MapView
-from common import GSettings, Gst, Struct, memoize, points
+from .camera import Camera
+from .gpsmath import Coordinates
+from .common import staticmethod
+from .widgets import Widgets, Builder, MapView
+from .common import GSettings, Gst, Struct, memoize, points
 
 BOTTOM = Gtk.PositionType.BOTTOM
 RIGHT = Gtk.PositionType.RIGHT
@@ -319,11 +318,11 @@ class GPXFile(TrackFile):
     def element_end(self, name, state):
         """Collect and use all the parsed data."""
         try:
-            timestamp = timegm(map(int, split(state['time'])[0:6]))
+            timestamp = timegm(list(map(int, split(state['time'])[0:6])))
             lat = float(state['lat'])
             lon = float(state['lon'])
         except Exception as error:
-            print error
+            print(error)
             return
         
         self.tracks[timestamp] = self.append(lat, lon, state.get('ele'))
@@ -342,11 +341,11 @@ class TCXFile(TrackFile):
     def element_end(self, name, state):
         """Collect and use all the parsed data."""
         try:
-            timestamp = timegm(map(int, split(state['Time'])[0:6]))
+            timestamp = timegm(list(map(int, split(state['Time'])[0:6])))
             lat = float(state['LatitudeDegrees'])
             lon = float(state['LongitudeDegrees'])
         except Exception as error:
-            print error
+            print(error)
             return
         
         self.tracks[timestamp] = self.append(
@@ -390,7 +389,7 @@ class KMLFile(TrackFile):
             try:
                 timestamp = timegm(parse_date(state['when']).utctimetuple())
             except Exception as error:
-                print error
+                print(error)
                 return
             self.whens.append(timestamp)
         if name == 'gx:coord':
@@ -463,11 +462,11 @@ class CSVFile(TrackFile):
             if int(state[col.segment]) > len(self.polygons):
                 self.element_start('Segment')
             
-            timestamp = timegm(map(int, split(state[col.time])[0:6]))
+            timestamp = timegm(list(map(int, split(state[col.time])[0:6])))
             lat = float(state[col.latitude])
             lon = float(state[col.longitude])
         except Exception as error:
-            print error
+            print(error)
             return
         
         self.tracks[timestamp] = self.append(

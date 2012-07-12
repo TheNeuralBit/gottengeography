@@ -134,7 +134,7 @@ def test_demo_data():
         photo = Photograph(filename)
         photo.read()
         photo.update_derived_properties()
-        print photo.latitude, photo.longitude, photo.altitude
+        print(photo.latitude, photo.longitude, photo.altitude)
         assert photo not in modified
         assert photo.positioned
         assert photo.latitude

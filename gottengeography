@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # GottenGeography - Automagically geotags photos by comparing timestamps to GPX data
 # Copyright (C) 2010 Robert Park <rbpark@exolucere.ca>
@@ -23,10 +23,10 @@ def need(dependency):
     """Exit the program and tell the user what dependency was missing."""
     sys.exit('GottenGeography requires at least ' + dependency)
 
-try:
-    from dateutil.parser import parse
-except:
-    need('python-dateutil 1.5')
+#try:
+#    from dateutil.parser import parse
+#except:
+#    need('python-dateutil 1.5')
 
 try:
     import gi
@@ -47,13 +47,9 @@ except:
     need('libchamplain 0.12.2')
 
 try:
-    from pyexiv2.exif import ExifTag
-    from fractions import Fraction
-    # Fails for pyexiv2 0.2 which didn't support Fractions.
-    assert ExifTag('Exif.GPSInfo.GPSAltitude')._convert_to_string(
-        Fraction('1.6')) == '8/5'
+    from gi.repository import GExiv2
 except:
-    need('pyexiv2 0.3')
+    need('gexiv2 0.5 (with introspection support)')
 
 
 old_hook = sys.excepthook

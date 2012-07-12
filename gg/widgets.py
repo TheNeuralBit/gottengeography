@@ -13,7 +13,6 @@
 'Hello!'
 """
 
-from __future__ import division
 
 from gi.repository import GtkClutter
 GtkClutter.init([])
@@ -23,10 +22,10 @@ from gi.repository import Gdk, GdkPixbuf
 from gi.repository import Gtk, GLib
 from os.path import join
 
-from version import APPNAME, PACKAGE
-from build_info import PKG_DATA_DIR, REVISION
-from common import Gst, singleton, memoize
-from common import modified, selected
+from .version import APPNAME, PACKAGE
+from .build_info import PKG_DATA_DIR, REVISION
+from .common import Gst, singleton, memoize
+from .common import modified, selected
 
 CONTROL_MASK = Gdk.ModifierType.CONTROL_MASK
 SHIFT_MASK = Gdk.ModifierType.SHIFT_MASK
@@ -90,7 +89,7 @@ class Widgets(Builder):
         """
         self.loaded_photos.set_sort_column_id(3, Gtk.SortType.ASCENDING)
         
-        self.about.set_version(REVISION)
+        self.about.set_version(str(REVISION))
         self.about.set_program_name(APPNAME)
         self.about.set_logo(GdkPixbuf.Pixbuf.new_from_file_at_size(
             join(PKG_DATA_DIR, PACKAGE + '.svg'), 192, 192))

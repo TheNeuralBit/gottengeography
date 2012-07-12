@@ -10,12 +10,11 @@ The `points` dict maps epoch seconds to ChamplainCoordinate() instances. This
 is used to place photos on the map by looking up their timestamps.
 """
 
-from __future__ import division
 
 from gi.repository import GObject, Gio, GLib
 from functools import wraps
 
-from version import PACKAGE
+from .version import PACKAGE
 
 # These variables are used for sharing data between classes
 selected = set()
@@ -45,7 +44,7 @@ def memoize(obj):
     
     >>> @memoize
     ... def doubler(foo):
-    ...     print 'performing expensive calculation...'
+    ...     print('performing expensive calculation...')
     ...     return foo * 2
     >>> doubler(50)
     performing expensive calculation...
@@ -62,7 +61,7 @@ def memoize(obj):
     >>> class WidgetFactory:
     ...     @memoize
     ...     def get_by_name(self, name):
-    ...         print 'Making new widget named', name
+    ...         print('Making new widget named', name)
     ...         return '<<%s>>' % name
     >>> one = WidgetFactory()
     >>> one.get_by_name('bob')
@@ -89,7 +88,7 @@ def memoize(obj):
     2
     """
     cache = obj.cache = {}
-    obj.instances = cache.viewvalues()
+    obj.instances = cache.values()
     
     @wraps(obj)
     def memoizer(*args, **kwargs):
@@ -108,7 +107,7 @@ class staticmethod(object):
     ... class HasStatic:
     ...     @staticmethod
     ...     def do_something():
-    ...         print 'Invoked with no arguments.'
+    ...         print('Invoked with no arguments.')
     >>> HasStatic.do_something()
     Invoked with no arguments.
     

@@ -3,7 +3,6 @@
 
 """Control the behavior of ChamplainLabels."""
 
-from __future__ import division
 
 from gi.repository import GtkClutter
 GtkClutter.init([])
@@ -11,8 +10,8 @@ GtkClutter.init([])
 from gi.repository import GObject, Champlain, Clutter
 from os.path import basename
 
-from common import Binding, memoize, modified
-from widgets import Widgets, MarkerLayer
+from .common import Binding, memoize, modified
+from .widgets import Widgets, MarkerLayer
 
 
 def clicked(label, event):

@@ -3,16 +3,15 @@
 
 """Control how the map is navigated."""
 
-from __future__ import division
 
 from gi.repository import GtkClutter
 GtkClutter.init([])
 
 from gi.repository import Gdk
 
-from common import Gst
-from gpsmath import valid_coords
-from widgets import Widgets, MapView
+from .common import Gst
+from .gpsmath import valid_coords
+from .widgets import Widgets, MapView
 
 def move_by_arrow_keys(accel_group, acceleratable, keyval, modifier):
     """Move the map view by 5% of its length in the given direction."""

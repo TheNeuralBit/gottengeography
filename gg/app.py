@@ -3,9 +3,8 @@
 
 """Main application code that ties all the other modules together."""
 
-from __future__ import division
 
-from version import APPNAME, PACKAGE
+from .version import APPNAME, PACKAGE
 
 import gettext
 gettext.bindtextdomain(PACKAGE)
@@ -24,17 +23,17 @@ if not GLib.get_application_name():
 
 GtkClutter.init([])
 
-from camera import Camera
-from xmlfiles import TrackFile
-from gpsmath import Coordinates
-from widgets import Widgets, MapView
-from actor import CoordLabel, animate_in
-from photos import Photograph, fetch_thumbnail
-from navigation import go_back, move_by_arrow_keys
-from common import Gst, Binding, selected, modified
+from .camera import Camera
+from .xmlfiles import TrackFile
+from .gpsmath import Coordinates
+from .widgets import Widgets, MapView
+from .actor import CoordLabel, animate_in
+from .photos import Photograph, fetch_thumbnail
+from .navigation import go_back, move_by_arrow_keys
+from .common import Gst, Binding, selected, modified
 
-from drag import DragController
-from search import SearchController
+from .drag import DragController
+from .search import SearchController
 
 # Handy names for GtkListStore column numbers.
 PATH, SUMMARY, THUMB, TIMESTAMP = range(4)

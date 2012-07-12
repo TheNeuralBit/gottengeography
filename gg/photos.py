@@ -3,7 +3,6 @@
 
 """Class for loading and saving photographs."""
 
-from __future__ import division
 
 from gi.repository import GtkClutter
 GtkClutter.init([])
@@ -15,14 +14,14 @@ from os.path import basename
 from time import mktime
 from os import stat
 
-from label import Label
-from widgets import Widgets
-from xmlfiles import TrackFile
-from gpsmath import Coordinates
-from common import staticmethod
-from common import Gst, memoize
-from common import points, modified
-from camera import Camera, CameraView
+from .label import Label
+from .widgets import Widgets
+from .xmlfiles import TrackFile
+from .gpsmath import Coordinates
+from .common import staticmethod
+from .common import Gst, memoize
+from .common import points, modified
+from .camera import Camera, CameraView
 
 # Prefixes for common EXIF keys.
 IPTC = 'Iptc.Application2.'
@@ -100,14 +99,14 @@ class Photograph(Coordinates):
     >>> photo.timestamp = 999999999
     >>> photo.lookup_geodata()
     'Atlantic/St_Helena'
-    >>> print photo
+    >>> print(photo)
     <span size="larger">IMG_2411.JPG</span>
     <span style="italic" size="smaller">Georgetown, Ascension, Saint Helena
     2001-09-08 08:46:39 PM
     S 10.00000, W 10.00000
     10.2m below sea level</span>
     >>> modified.add(photo)
-    >>> print photo
+    >>> print(photo)
     <b><span size="larger">IMG_2411.JPG</span>
     <span style="italic" size="smaller">Georgetown, Ascension, Saint Helena
     2001-09-08 08:46:39 PM
@@ -215,7 +214,7 @@ class Photograph(Coordinates):
         
         # Get the camera info
         self.camera_info = {'Make': '', 'Model': ''}
-        keys = ['Exif.Image.' + key for key in self.camera_info.keys()
+        keys = ['Exif.Image.' + key for key in list(self.camera_info.keys())
                     + ['CameraSerialNumber']] + ['Exif.Photo.BodySerialNumber']
         for key in keys:
             try:

@@ -3,19 +3,18 @@
 
 """Control how the map is searched."""
 
-from __future__ import division
 
 from gi.repository import GtkClutter
 GtkClutter.init([])
 
 from os.path import join
 
-from territories import get_state, get_country
-from widgets import Widgets, MapView
-from build_info import PKG_DATA_DIR
+from .territories import get_state, get_country
+from .widgets import Widgets, MapView
+from .build_info import PKG_DATA_DIR
 
 # ListStore column names
-LOCATION, LATITUDE, LONGITUDE = range(3)
+LOCATION, LATITUDE, LONGITUDE = list(range(3))
 
 
 class SearchController():

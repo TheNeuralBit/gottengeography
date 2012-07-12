@@ -16,7 +16,6 @@ and if you want to see the camera in the camera list, you should load a photo
 taken by that camera.
 """
 
-from __future__ import division
 
 from gi.repository import GtkClutter
 GtkClutter.init([])
@@ -27,10 +26,10 @@ from gettext import gettext as _
 from time import tzset
 from os import environ
 
-from common import staticmethod
-from widgets import Builder, Widgets
-from common import GSettings, Binding, memoize
-from territories import tz_regions, get_timezone
+from .common import staticmethod
+from .widgets import Builder, Widgets
+from .common import GSettings, Binding, memoize
+from .territories import tz_regions, get_timezone
 
 
 @memoize
