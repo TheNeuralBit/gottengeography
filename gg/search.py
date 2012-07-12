@@ -14,7 +14,7 @@ from .widgets import Widgets, MapView
 from .build_info import PKG_DATA_DIR
 
 # ListStore column names
-LOCATION, LATITUDE, LONGITUDE = list(range(3))
+LOCATION, LATITUDE, LONGITUDE = range(3)
 
 
 class SearchController():
