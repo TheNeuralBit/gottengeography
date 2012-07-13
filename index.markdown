@@ -20,3 +20,5 @@ GottenGeography is a geotagging application written for the [GNOME desktop](http
 * Reverse geocode using a db dump of [GeoNames.org](http://www.geonames.org/export/web-services.html) geolocation data. Stores city, province/state, and country names in IPTC data automatically.
 
 * Automatically determine the timezone that your photos were taken in so that you don't have to specify it manually when you go travelling.
+
+* Available in five languages: English, German, French, Swedish, and Spanish.
