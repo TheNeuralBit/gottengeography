@@ -4,6 +4,7 @@
 """Main application code that ties all the other modules together."""
 
 
+from .build_info import REVISION
 from .version import APPNAME, PACKAGE
 
 import gettext
