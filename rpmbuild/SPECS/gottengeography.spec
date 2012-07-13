@@ -1,6 +1,6 @@
 Name: gottengeography
 Version: 2.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Source0: %{name}-%{version}.tar.gz
 License: GPLv3
 Group: Applications/Archiving
@@ -53,6 +53,9 @@ fi
 /usr/bin/gtk-update-icon-cache -f %{_datadir}/icons/hicolor &>/dev/null || :
 
 %changelog
+* Fri Jul 13 2012 Robert Park <rbpark@exolucere.ca> - 2.0-2
+- Add Spanish translation thanks to Jose Luis Tirado <joseluis.tirado@gmail.com>
+
 * Thu Jun 28 2012 Robert Park <rbpark@exolucere.ca> - 2.0-1
 - Major UI overhaul, allowing for per-camera and per-trackfile config
 - Added Mallard help docs with basic tutorial including screenshots
