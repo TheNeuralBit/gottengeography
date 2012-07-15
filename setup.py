@@ -34,14 +34,14 @@ class build_py(_build_py):
     Inspired by a distutils-sig posting by Wolodja Wentland in Sept 2009.
     """
     def build_module(self, module, module_file, package):
-        if ('%s/%s' % (package, module) == 'gg/build_info'):
+        if (module_file == 'gg/build_info.py'):
             try:
                 iobj = self.distribution.command_obj['install']
                 with open(module_file, 'w') as module_fp:
                     module_fp.write(build_info_template % (
                         iobj.prefix,
                         join(iobj.prefix, 'share', PACKAGE),
-                        Popen(['git', 'describe'],
+                        Popen(('git', 'describe'),
                             stdout=PIPE).communicate()[0].strip()
                     ))
             except KeyError:
@@ -60,7 +60,7 @@ class install_data(_install_data):
 setup(
     name=PACKAGE,
     version=VERSION,
-    description="Automagically geotag photos with GPX data.",
+    description='Automagically geotag photos with GPX data.',
     long_description=
 """GottenGeography is a GNOME application that aims to make it easy to record
 geotags into your photographs. If you have a GPS device, GottenGeography can
@@ -71,15 +71,15 @@ and then record those locations into the photos.
 """,
     author=AUTHOR,
     author_email=EMAIL,
-    url="http://gottengeography.ca/",
-    download_url="https://github.com/robru/gottengeography/downloads",
-    license="GPLv3",
+    url='http://gottengeography.ca',
+    download_url='https://github.com/robru/gottengeography/downloads',
+    license='GPLv3',
     packages=['gg'],
     scripts=['gottengeography'],
     data_files=data_files,
-    cmdclass = { 'build' : build_extra.build_extra,
-                 'build_i18n' :  build_i18n.build_i18n,
-                 'build_help' :  build_help.build_help,
+    cmdclass = { 'build': build_extra.build_extra,
+                 'build_i18n': build_i18n.build_i18n,
+                 'build_help': build_help.build_help,
                  'build_py': build_py,
                  'install_data': install_data }
 )
