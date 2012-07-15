@@ -5,7 +5,8 @@ from os import listdir
 from os.path import join, isdir
 from distutils.core import setup
 from subprocess import Popen, PIPE
-from DistUtilsExtra.command import *
+from DistUtilsExtra.command import build_extra, build_i18n
+from distutils.command.install_data import install_data as _install_data
 from distutils.command.build_py import build_py as _build_py
 
 from gg.version import *
@@ -56,6 +57,14 @@ class build_py(_build_py):
         
         _build_py.build_module(self, module, module_file, package)
 
+class install_data(_install_data):
+    """Compile GLib schemas so that our GSettings schema works."""
+    def run(self):
+        _install_data.run(self)
+        command = ('glib-compile-schemas', '/usr/share/glib-2.0/schemas/')
+        print(' '.join(command))
+        Popen(command, stdout=PIPE, stderr=PIPE).communicate()
+
 setup(
     name=PACKAGE,
     version=VERSION,
@@ -76,8 +85,9 @@ and then record those locations into the photos.
     packages=['gg'],
     scripts=['gottengeography'],
     data_files=data_files,
-    cmdclass = { "build" : build_extra.build_extra,
-                 "build_i18n" :  build_i18n.build_i18n,
-                 "build_py": build_py }
+    cmdclass = { 'build' : build_extra.build_extra,
+                 'build_i18n' :  build_i18n.build_i18n,
+                 'build_py': build_py,
+                 'install_data': install_data }
 )
 
