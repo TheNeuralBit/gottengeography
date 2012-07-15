@@ -5,7 +5,7 @@ from os import listdir
 from os.path import join, isdir
 from distutils.core import setup
 from subprocess import Popen, PIPE
-from DistUtilsExtra.command import build_extra, build_i18n
+from DistUtilsExtra.command import build_extra, build_i18n, build_help
 from distutils.command.install_data import install_data as _install_data
 from distutils.command.build_py import build_py as _build_py
 
@@ -19,14 +19,6 @@ data_files = [
     ('share/' + PACKAGE, ['data/cities.txt', 'data/trackfile.ui', 'data/camera.ui',
         'data/%s.ui' % PACKAGE, 'data/%s.svg' % PACKAGE])
 ]
-
-for helplang in listdir('help'):
-    data_files.append(('share/gnome/help/%s/%s' % (PACKAGE, helplang),
-                      [f for f in glob(join('help', helplang, '*'))
-                          if not f.endswith('figures')]))
-
-data_files.append(('share/gnome/help/%s/C/figures' % PACKAGE,
-    glob(join('help', 'C', 'figures', '*'))))
 
 build_info_template = """# -*- coding: UTF-8 -*-
 
@@ -87,6 +79,7 @@ and then record those locations into the photos.
     data_files=data_files,
     cmdclass = { 'build' : build_extra.build_extra,
                  'build_i18n' :  build_i18n.build_i18n,
+                 'build_help' :  build_help.build_help,
                  'build_py': build_py,
                  'install_data': install_data }
 )
