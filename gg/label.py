@@ -32,6 +32,8 @@ def clicked(label, event):
     else:
         Widgets.photos_selection.unselect_all()
         Widgets.photos_selection.select_iter(photo.iter)
+    Widgets.photos_view.scroll_to_cell(
+        Widgets.loaded_photos.get_path(photo.iter))
 
 
 def hover(label, event, factor):
