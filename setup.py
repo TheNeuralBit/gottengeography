@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from sys import argv
 from glob import glob
 from os import listdir
 from os.path import join, isdir
@@ -10,6 +11,14 @@ from distutils.command.install_data import install_data as _install_data
 from distutils.command.build_py import build_py as _build_py
 
 from gg.version import *
+
+# I would absolutely *LOVE* to be informed of a sexier way to do this,
+# preferably without hard-coding Ubuntu as a special case...
+try:
+    if 'Ubuntu\n' in Popen(('lsb_release', '-si'), stdout=PIPE).communicate():
+        argv.append('--install-layout=deb')
+except OSError:
+    pass
 
 data_files = [
     ('share/icons/hicolor/scalable/apps', ['data/%s.svg' % PACKAGE]),
