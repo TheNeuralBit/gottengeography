@@ -9,6 +9,7 @@ from subprocess import Popen, PIPE
 from DistUtilsExtra.command import build_extra, build_i18n, build_help
 from distutils.command.install_data import install_data as _install_data
 from distutils.command.build_py import build_py as _build_py
+from distutils.command.install import install
 
 from gg.version import *
 
@@ -58,6 +59,10 @@ class install_data(_install_data):
         print(' '.join(command))
         Popen(command, stdout=PIPE, stderr=PIPE).communicate()
 
+# Allow non-Ubuntu distros to ignore install_layout option from setup.cfg
+if not hasattr(install, 'install_layout'):
+    setattr(install, 'install_layout', None)
+
 setup(
     name=PACKAGE,
     version=VERSION,
@@ -82,6 +87,7 @@ and then record those locations into the photos.
                  'build_i18n': build_i18n.build_i18n,
                  'build_help': build_help.build_help,
                  'build_py': build_py,
+                 'install': install,
                  'install_data': install_data }
 )
 
