@@ -1,0 +1,95 @@
+gottengeography (2.0-precise1) precise; urgency=low
+
+  [ Robert Bruce Park ]
+  * Way too many changes to list here.
+  * New Spanish translation thanks to Jose Luis Tirado <joseluis.tirado@gmail.com>.
+
+  [ Marc Ordinas i Llopis ]
+  * Imported Upstream version 2.0
+
+ -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Fri, 13 Jul 2012 19:12:38 +0200
+
+gottengeography (1.2.1-precise1) precise; urgency=low
+
+  [ Robert Bruce Park ]
+  * Remember map sources in gconf. Closes #52
+  * Use GtkRadioMenuItems for the map source menu.
+  * String cleanup.
+  * Version 1.2.1!
+  * Move map source logic into PreferencesController.
+
+  [ Marc Ordinas i Llopis ]
+  * Use python-distutils-extra to manage i18n.
+
+  [ Robert Bruce Park ]
+  * Fix bug where lookup_geoname() sometimes fails.
+  * Allow provincestate to be None in pretty_geoname()
+  * Add geolocation to window titlebar. Closes #44.
+  * Drop bdist_rpm.
+  * Expand test suite to test the new window title feature.
+  * Add new test to cover the recent bugfix in lookup_geoname().
+  * Reduce redundancy in pretty_geoname() and test it better.
+  * Test for ability to change map sources.
+
+  [ Marc Ordinas i Llopis ]
+  * Imported Upstream version 1.2.1
+  * Added python-distutils-extra to Build-Depends.
+
+ -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Mon, 14 May 2012 11:04:01 +0200
+
+gottengeography (1.2-precise2) precise; urgency=low
+
+  [ Robert Bruce Park ]
+  * Change some strings.
+
+ -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Sat, 12 May 2012 13:20:57 +0200
+
+gottengeography (1.2-precise1) precise; urgency=low
+
+  [ Marc Ordinas i Llopis ]
+  * Add a combobox to select which map source to use.
+  * Imported Upstream version 1.2
+  * Moved GtkChamplain requirement to 0.12.2.
+
+  [ Robert Bruce Park ]
+  * Use glade better.
+  * Update README.
+  * Change the way dependencies are checked.
+  * UI tweaks.
+  * Update download URL.
+  * Long overdue refresh of the geonames.org DB dump.
+  * Change map source selector from ComboBox to GtkMenu.
+  * Complete drag & drop support. Closes #3.
+  * Version 1.2!
+
+ -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Fri, 11 May 2012 21:36:52 +0200
+
+gottengeography (1.1-precise3) precise; urgency=low
+
+  * Small changes for source distribution.
+
+ -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Tue, 08 May 2012 13:34:25 +0200
+
+gottengeography (1.1-precise2) precise; urgency=low
+
+  * Added missing dependency to gir1.2-gtkclutter-1.0.
+
+ -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Tue, 08 May 2012 11:26:33 +0200
+
+gottengeography (1.1-precise1) precise; urgency=low
+
+  [ Marc Ordinas i Llopis ]
+  * Add support for loading KML files.
+
+  [ Robert Bruce Park ]
+  * Added a check for the new dateutil dependency.
+  * Mention new KML support in README.
+  * Issue #3 Phase 1: Load files by drag & drop.
+  * Release version 1.1
+
+  [ Marc Ordinas i Llopis ]
+  * Initial upstream branch.
+  * Imported Upstream version 1.1
+  * Initial debian support.
+
+ -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Tue, 08 May 2012 00:38:19 +0200
