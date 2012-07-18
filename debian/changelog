@@ -1,3 +1,11 @@
+gottengeography (2.0-precise2) precise; urgency=low
+
+  [ Robert Bruce Park ]
+  * Added scrollbars to Cameras and GPS tabs.
+  * Fixed setup.py to allow correct installation on Ubuntu.
+
+ -- Robert Bruce Park (robru) <robru@gottengeography.ca>  Wed, 18 Jul 2012 17:11:10 +0600
+
 gottengeography (2.0-precise1) precise; urgency=low
 
   [ Robert Bruce Park ]
