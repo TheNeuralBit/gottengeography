@@ -9,22 +9,15 @@ from subprocess import Popen, PIPE
 from DistUtilsExtra.command import build_extra, build_i18n, build_help
 from distutils.command.install_data import install_data as _install_data
 from distutils.command.build_py import build_py as _build_py
+from distutils.command.install import install
 
 from gg.version import *
 
-# I would absolutely *LOVE* to be informed of a sexier way to do this,
-# preferably without hard-coding Ubuntu as a special case...
-try:
-    if 'Ubuntu\n' in Popen(('lsb_release', '-si'), stdout=PIPE).communicate():
-        argv.append('--install-layout=deb')
-except OSError:
-    pass
-
 data_files = [
-    ('share/icons/hicolor/scalable/apps', ['data/%s.svg' % PACKAGE]),
-    ('share/glib-2.0/schemas', ['data/ca.exolucere.%s.gschema.xml' % PACKAGE]),
-    ('share/applications', ['data/%s.desktop' % PACKAGE]),
-    ('share/doc/' + PACKAGE, ['README.md', 'AUTHORS', 'COPYING']),
+    ('/usr/share/icons/hicolor/scalable/apps', ['data/%s.svg' % PACKAGE]),
+    ('/usr/share/glib-2.0/schemas', ['data/ca.exolucere.%s.gschema.xml' % PACKAGE]),
+    ('/usr/share/applications', ['data/%s.desktop' % PACKAGE]),
+    ('share/doc/' + PACKAGE, ['README.md', 'AUTHORS', 'COPYING', 'THANKS']),
     ('share/' + PACKAGE, ['data/cities.txt', 'data/trackfile.ui', 'data/camera.ui',
         'data/%s.ui' % PACKAGE, 'data/%s.svg' % PACKAGE])
 ]
@@ -66,6 +59,10 @@ class install_data(_install_data):
         print(' '.join(command))
         Popen(command, stdout=PIPE, stderr=PIPE).communicate()
 
+# Allow non-Ubuntu distros to ignore install_layout option from setup.cfg
+if not hasattr(install, 'install_layout'):
+    setattr(install, 'install_layout', None)
+
 setup(
     name=PACKAGE,
     version=VERSION,
@@ -90,6 +87,7 @@ and then record those locations into the photos.
                  'build_i18n': build_i18n.build_i18n,
                  'build_help': build_help.build_help,
                  'build_py': build_py,
+                 'install': install,
                  'install_data': install_data }
 )
 
