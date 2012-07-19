@@ -1,15 +1,10 @@
 #!/usr/bin/env python
 
-from sys import argv
-from glob import glob
-from os import listdir
-from os.path import join, isdir
+from os.path import join
 from distutils.core import setup
 from subprocess import Popen, PIPE
 from DistUtilsExtra.command import build_extra, build_i18n, build_help
-from distutils.command.install_data import install_data as _install_data
 from distutils.command.build_py import build_py as _build_py
-from distutils.command.install import install
 
 from gg.version import *
 
@@ -51,18 +46,6 @@ class build_py(_build_py):
         
         _build_py.build_module(self, module, module_file, package)
 
-class install_data(_install_data):
-    """Compile GLib schemas so that our GSettings schema works."""
-    def run(self):
-        _install_data.run(self)
-        command = ('glib-compile-schemas', '/usr/share/glib-2.0/schemas/')
-        print(' '.join(command))
-        Popen(command, stdout=PIPE, stderr=PIPE).communicate()
-
-# Allow non-Ubuntu distros to ignore install_layout option from setup.cfg
-if not hasattr(install, 'install_layout'):
-    setattr(install, 'install_layout', None)
-
 setup(
     name=PACKAGE,
     version=VERSION,
@@ -86,8 +69,6 @@ and then record those locations into the photos.
     cmdclass = { 'build': build_extra.build_extra,
                  'build_i18n': build_i18n.build_i18n,
                  'build_help': build_help.build_help,
-                 'build_py': build_py,
-                 'install': install,
-                 'install_data': install_data }
+                 'build_py': build_py }
 )
 
