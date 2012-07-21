@@ -31,6 +31,8 @@ from .widgets import Builder, Widgets
 from .common import GSettings, Binding, memoize
 from .territories import tz_regions, get_timezone
 
+# Workaround for https://bugzilla.gnome.org/show_bug.cgi?id=679939
+gint = GObject.TYPE_INT
 
 @memoize
 class Camera(GObject.GObject):
@@ -64,8 +66,8 @@ class Camera(GObject.GObject):
     >>> environ['TZ'].startswith('UTC')
     True
     """
-    offset = GObject.property(type=int, minimum=-3600, maximum=3600)
-    utc_offset = GObject.property(type=int, minimum=-24, maximum=24)
+    offset = GObject.property(type=gint, minimum=-3600, maximum=3600)
+    utc_offset = GObject.property(type=gint, minimum=-24, maximum=24)
     found_timezone = GObject.property(type=str)
     timezone_method = GObject.property(type=str)
     timezone_region = GObject.property(type=str)
