@@ -23,10 +23,15 @@ def need(dependency):
     """Exit the program and tell the user what dependency was missing."""
     sys.exit('GottenGeography requires at least ' + dependency)
 
-#try:
-#    from dateutil.parser import parse
-#except:
-#    need('python-dateutil 1.5')
+try:
+    assert range(0) != []
+except:
+    need('Python 3')
+
+try:
+    from dateutil.parser import parse
+except:
+    need('python-dateutil 1.5')
 
 try:
     import gi
