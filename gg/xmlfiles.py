@@ -9,7 +9,7 @@ GtkClutter.init([])
 
 from xml.parsers.expat import ParserCreate, ExpatError
 from gi.repository import Champlain, Clutter, Gtk, Gdk
-#from dateutil.parser import parse as parse_date
+from dateutil.parser import parse as parse_date
 from collections import defaultdict, deque
 from re import compile as re_compile
 from gettext import gettext as _
