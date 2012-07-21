@@ -1,9 +1,11 @@
 Status
 ======
 
-Version 1.3 is released, and it's targetted for Fedora 17, meaning that Fedora 17 ships with everything needed to run GottenGeography. Users of other distros who want to run it will need to make sure they have libchamplain 0.12.2 or later, pyexiv2 0.3 or later, pygobject3 3.0.3 or later, Gtk 3.0, and Python 2.7.
+This is the gexiv2 branch of GottenGeography, which (at the time of this writing) depends upon unreleased upstream changes to gexiv2. This means if you want to test this, you'll need to compile gexiv2 from `git master` on your own, and make sure you `./configure --enable-introspection` otherwise you won't have the necessary features for this to work.
 
-Unfortunately Fedora 16 does not provide the necessary dependencies to run v1.3 and so users of Fedora 16 should be using v1.1.
+You'll also need to make sure you have the Python3 port of `dateutil`, which doesn't seem to be widely distributed yet, despite existing.
+
+Although this branch of GottenGeography will only run with Python3, I was careful to ensure that GExiv2's Python API is identical for both Python 2 and 3, so if you're writing your own app that needs to support both Python 2 and Python 3, using GExiv2 should cause absolutely no problems for you.
 
 GottenGeography
 ===============
@@ -16,7 +18,7 @@ It is currently able to:
 
 * Parse GPX, KML, TCX (xml) files and display the GPS tracks on the map, using [expat](http://docs.python.org/library/pyexpat.html). There is also support for CSV files.
 
-* Read pre-existing geotags inside photo EXIF data using [pyexiv2](http://tilloy.net/dev/pyexiv2/) and display markers on the map indicating where those photos were taken.
+* Read pre-existing geotags inside photo EXIF data using [gexiv2](http://redmine.yorba.org/projects/gexiv2/wiki) and display markers on the map indicating where those photos were taken.
 
 * Manually geotag images, using either of two methods: by clicking the 'apply' button, the selected photos are placed onto the center of the map, or by drag & drop. Photos can be dragged in from the file browser, or dragged from the left pane onto the map, or dragged around the map once they're already on the map. Any way you do it, GottenGeography will record where the photos were dragged to and store that location into the photos.
 
@@ -28,7 +30,7 @@ It is currently able to:
 
 * Extensive use of [GSettings](https://live.gnome.org/GnomeGoals/GSettingsMigration) to store program state, meaning that each time you launch GottenGeography, it remembers things like where on the map you were last browsing, what map you were using, what size the window was, etc.
 
-* Save EXIF/IPTC data into your photos using pyexiv2.
+* Save EXIF/IPTC data into your photos using gexiv2.
 
 You may be interested in hacking on GottenGeography if you enjoy writing Python code, have some experience with the [GObject Introspection](http://live.gnome.org/GObjectIntrospection), or are a huge GPS nerd like myself.
 
