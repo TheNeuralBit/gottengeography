@@ -81,7 +81,7 @@ class GeoCacheKey:
         """
         return hash(self.key)
     
-    def __cmp__(self, other):
+    def __eq__(self, other):
         """Different instances can compare equally.
         
         >>> GeoCacheKey(10.004, 10.004) == GeoCacheKey(9.996, 9.996)
@@ -89,7 +89,7 @@ class GeoCacheKey:
         >>> GeoCacheKey(10.004, 10.004) == GeoCacheKey(0, 0)
         False
         """
-        return cmp(self.key, other.key)
+        return self.key == other.key
 
 
 class Coordinates(GObject.GObject):
