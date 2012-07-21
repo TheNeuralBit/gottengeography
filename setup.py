@@ -22,7 +22,7 @@ build_info_template = """# -*- coding: UTF-8 -*-
 # Distutils installation details:
 PREFIX='%s'
 PKG_DATA_DIR='%s'
-REVISION='%s'
+REVISION='Version %s'
 """
 
 class build_py(_build_py): 
@@ -38,8 +38,7 @@ class build_py(_build_py):
                     module_fp.write(build_info_template % (
                         iobj.prefix,
                         join(iobj.prefix, 'share', PACKAGE),
-                        Popen(('git', 'describe'),
-                            stdout=PIPE).communicate()[0].strip()
+                        VERSION
                     ))
             except KeyError:
                 pass
