@@ -1,4 +1,4 @@
-gottengeography (2.0-3) unstable; urgency=low
+gottengeography (2.0-4) unstable; urgency=low
 
   [ Robert Bruce Park ]
   * This is now a debian package, not Ubuntu.
