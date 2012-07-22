@@ -5,7 +5,7 @@ gottengeography (2.0-4) unstable; urgency=low
 
  -- Robert Bruce Park <robru@gottengeography.ca>  Sun, 22 Jul 2012 17:31:20 +0600
 
-gottengeography (2.0-precise3) precise; urgency=low
+gottengeography (2.0-3) unstable; urgency=low
 
   [ Robert Bruce Park ]
   * Added scrollbars to Cameras and GPS tabs.
@@ -13,7 +13,7 @@ gottengeography (2.0-precise3) precise; urgency=low
 
  -- Robert Bruce Park <robru@gottengeography.ca>  Wed, 18 Jul 2012 17:11:10 +0600
 
-gottengeography (2.0-precise1) precise; urgency=low
+gottengeography (2.0-1) unstable; urgency=low
 
   [ Robert Bruce Park ]
   * Way too many changes to list here.
@@ -24,7 +24,7 @@ gottengeography (2.0-precise1) precise; urgency=low
 
  -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Fri, 13 Jul 2012 19:12:38 +0200
 
-gottengeography (1.2.1-precise1) precise; urgency=low
+gottengeography (1.2.1-1) unstable; urgency=low
 
   [ Robert Bruce Park ]
   * Remember map sources in gconf. Closes #52
@@ -52,14 +52,14 @@ gottengeography (1.2.1-precise1) precise; urgency=low
 
  -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Mon, 14 May 2012 11:04:01 +0200
 
-gottengeography (1.2-precise2) precise; urgency=low
+gottengeography (1.2-2) unstable; urgency=low
 
   [ Robert Bruce Park ]
   * Change some strings.
 
  -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Sat, 12 May 2012 13:20:57 +0200
 
-gottengeography (1.2-precise1) precise; urgency=low
+gottengeography (1.2-1) unstable; urgency=low
 
   [ Marc Ordinas i Llopis ]
   * Add a combobox to select which map source to use.
@@ -79,19 +79,19 @@ gottengeography (1.2-precise1) precise; urgency=low
 
  -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Fri, 11 May 2012 21:36:52 +0200
 
-gottengeography (1.1-precise3) precise; urgency=low
+gottengeography (1.1-3) unstable; urgency=low
 
   * Small changes for source distribution.
 
  -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Tue, 08 May 2012 13:34:25 +0200
 
-gottengeography (1.1-precise2) precise; urgency=low
+gottengeography (1.1-2) unstable; urgency=low
 
   * Added missing dependency to gir1.2-gtkclutter-1.0.
 
  -- Marc Ordinas i Llopis (marcoil) <mail@marcoil.org>  Tue, 08 May 2012 11:26:33 +0200
 
-gottengeography (1.1-precise1) precise; urgency=low
+gottengeography (1.1-1) unstable; urgency=low
 
   [ Marc Ordinas i Llopis ]
   * Add support for loading KML files.
