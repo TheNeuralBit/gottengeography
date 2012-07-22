@@ -1,5 +1,5 @@
 Subject: Collected Debian patches for GottenGeography
-Author: Marc Ordinas i Llopis <mail@marcoil.org>
+Author: Robert Bruce Park <robru@gottengeography.ca>
 
 The GottenGeography package is maintained in Git rather than maintaining
 patches as separate files, and separating the patches doesn't seem to
@@ -7,4 +7,4 @@ be worth the effort.  They are therefore all included in this single
 Debian patch.
 
 For full commit history and separated commits, see the packaging Git
-repository at https://github.com/marcoil/gottengeography/tree/debian .
+repository at https://github.com/robru/gottengeography/tree/debian .

@@ -1,3 +1,10 @@
+gottengeography (2.0-3) unstable; urgency=low
+
+  [ Robert Bruce Park ]
+  * This is now a debian package, not Ubuntu.
+
+ -- Robert Bruce Park <robru@gottengeography.ca>  Sun, 22 Jul 2012 17:31:20 +0600
+
 gottengeography (2.0-precise3) precise; urgency=low
 
   [ Robert Bruce Park ]
