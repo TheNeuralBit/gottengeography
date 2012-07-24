@@ -26,12 +26,12 @@ msgid "_Save All"
 msgstr "Guardar _todo"
 
 #: ../data/gottengeography.ui.h:1
-msgid "_Help…"
-msgstr "Ay_uda…"
+msgid "_Help"
+msgstr "Ay_uda"
 
 #: ../data/gottengeography.ui.h:1
-msgid "_About…"
-msgstr "A_cerca de…"
+msgid "_About"
+msgstr "A_cerca de"
 
 #: ../data/gottengeography.ui.h:1
 msgid "_Quit"
