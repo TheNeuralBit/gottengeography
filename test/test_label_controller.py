@@ -8,7 +8,7 @@ from gg.widgets import Widgets
 from gg.photos import Photograph
 from gg.label import Label
 
-from test import DEMOFILES, gui, random_coord
+from test import IMGFILES, DEMOFILES, gui, random_coord
 
 def test_creatability():
     """ChamplainLabels should exist"""
@@ -64,4 +64,22 @@ def test_clickability():
             assert other.get_scale() == (1, 1)
             assert not other.get_selected()
             assert other.get_property('opacity') == 64
+
+def test_visible_at_launch():
+    """Pre-tagged photos should have visible labels right off the bat."""
+    # Open, save, and close the combined jpg/gpx data
+    gui.open_files(DEMOFILES)
+    Widgets.save_button.emit('clicked')
+    Widgets.photos_selection.select_all()
+    Widgets.close_button.emit('clicked')
+    assert not Label.instances
+    assert not Photograph.instances
+    
+    # Reopen just the JPEGs and confirm labels are visible
+    for uri in IMGFILES:
+        Photograph.load_from_file(uri)
+    assert Label.instances
+    for label in Label.instances:
+        assert label.photo.positioned
+        assert label.get_property('visible')
 
