@@ -18,20 +18,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../data/gottengeography.ui.h:1
-msgid "_Open"
-msgstr "_Abrir"
+msgid "_Open…"
+msgstr "_Abrir…"
 
 #: ../data/gottengeography.ui.h:1
 msgid "_Save All"
 msgstr "Guardar _todo"
 
 #: ../data/gottengeography.ui.h:1
-msgid "_Help"
-msgstr "Ay_uda"
+msgid "_Help…"
+msgstr "Ay_uda…"
 
 #: ../data/gottengeography.ui.h:1
-msgid "_About"
-msgstr "A_cerca de"
+msgid "_About…"
+msgstr "A_cerca de…"
 
 #: ../data/gottengeography.ui.h:1
 msgid "_Quit"
