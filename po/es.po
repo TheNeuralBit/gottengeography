@@ -2,12 +2,12 @@
 # Copyright (C) 2010 2011 2012 Robert Park
 # This file is distributed under the same license as the GottenGeography package.
 # Robert Park <rbpark@exolucere.ca>, 2010 2011 2012
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gottengeography 2.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-13 09:15-0500\n"
+"Report-Msgid-Bugs-To: Robert Park <rbpark@exolucere.ca>\n"
+"POT-Creation-Date: 2012-07-13 08:26+0200\n"
 "PO-Revision-Date: 2012-07-13 08:29+0200\n"
 "Last-Translator: txelu <joseluis.tirado@gmail.com>\n"
 "Language-Team: Spanish\n"
@@ -16,6 +16,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_Open…"
+msgstr "_Abrir…"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_Save All"
+msgstr "Guardar _todo"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_Help"
+msgstr "Ay_uda"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_About"
+msgstr "A_cerca de"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_Quit"
+msgstr "_Salir"
 
 #: ../data/gottengeography.ui.h:1
 msgid "Load photos or GPS data (Ctrl O)"
@@ -31,7 +51,7 @@ msgstr "Volver a la última posición vista en el mapa (Ctrl Left)"
 
 #: ../data/gottengeography.ui.h:4
 msgid "Type the name of the city you would like to view."
-msgstr "Introduce el nombre de la ciudad que le gustaría ver."
+msgstr "Introduzca el nombre de la ciudad que le gustaría ver."
 
 #: ../data/gottengeography.ui.h:5
 msgid "Zoom the map out one step (Ctrl -)"
@@ -59,8 +79,7 @@ msgstr "Cerrar las fotos seleccionadas (Ctrl W)"
 
 #: ../data/gottengeography.ui.h:11
 msgid "Reload selected photos, losing all changes (Ctrl Z)"
-msgstr ""
-"Volver a cargar las fotos seleccionadas, perdiendo todos los cambios (Ctrl Z)"
+msgstr "Volver a cargar las fotos seleccionadas, perdiendo todos los cambios (Ctrl Z)"
 
 #: ../data/gottengeography.ui.h:12
 msgid "Center the map view on the selected photo (Ctrl J)"
@@ -100,8 +119,7 @@ msgid ""
 "\n"
 "This program is written in the Python programming language, and adds geotags "
 "to your photos. The name is an anagram of \"Python Geotagger.\""
-msgstr ""
-"GottenGeography: ¡Ve a abrir tu etiquetador!\n"
+msgstr "GottenGeography: ¡Ve a abrir tu etiquetador!\n"
 "\n"
 "Este programa está escrito en el lenguaje de programación Python, y añade "
 "geo-etiquetas a sus fotos. El nombre es un anagrama de \"Python Geotagger.\""
@@ -128,8 +146,8 @@ msgid ""
 "The changes you've made to %d of your photos will be permanently lost if you "
 "do not save."
 msgstr ""
-"Los cambios que ha hecho a %d de sus fotos se perderán para siempre si no "
-"los guarda."
+"Los cambios que ha hecho a %d de sus fotos se perderán para siempre si "
+"no los guarda."
 
 #: ../data/gottengeography.ui.h:28
 msgid "Close _without Saving"
@@ -155,58 +173,58 @@ msgstr "Especificar la zona horaria manualmente."
 msgid "Could not open: "
 msgstr "No se ha podido abrir: "
 
-#: ../gg/gpsmath.py:168
+#: ../gg/gpsmath.py:211
 msgid "N"
 msgstr "N"
 
-#: ../gg/gpsmath.py:168
+#: ../gg/gpsmath.py:211
 msgid "S"
 msgstr "S"
 
-#: ../gg/gpsmath.py:169
+#: ../gg/gpsmath.py:212
 msgid "E"
 msgstr "E"
 
-#: ../gg/gpsmath.py:169
+#: ../gg/gpsmath.py:212
 msgid "W"
 msgstr "O"
 
-#: ../gg/gpsmath.py:176
+#: ../gg/gpsmath.py:219
 msgid "m above sea level"
 msgstr "m sobre el nivel del mar"
 
-#: ../gg/gpsmath.py:177
+#: ../gg/gpsmath.py:220
 msgid "m below sea level"
 msgstr "m bajo el nivel del mar"
 
-#: ../gg/camera.py:91
+#: ../gg/camera.py:92
 msgid "Unknown Camera"
 msgstr "Cámara desconocida"
 
-#: ../gg/camera.py:207
+#: ../gg/camera.py:208
 #, python-format
 msgid "Add %dm, %ds to clock."
 msgstr "Añadir %dm, %ds al reloj."
 
-#: ../gg/camera.py:208
+#: ../gg/camera.py:209
 #, python-format
 msgid "Subtract %dm, %ds from clock."
 msgstr "Restar %dm, %ds del reloj."
 
-#: ../gg/camera.py:270
+#: ../gg/camera.py:271
 msgid "No photos loaded."
 msgstr "No hay fotos cargadas."
 
-#: ../gg/camera.py:271
+#: ../gg/camera.py:272
 msgid "One photo loaded."
 msgstr "Una foto cargada."
 
-#: ../gg/camera.py:272
+#: ../gg/camera.py:273
 #, python-format
 msgid "%d photos loaded."
 msgstr "%d fotos cargadas."
 
-#: ../gg/xmlfiles.py:209
+#: ../gg/xmlfiles.py:210
 #, python-format
 msgid "%d points loaded in %.2fs."
 msgstr "%d puntos cargados en %.2fs."

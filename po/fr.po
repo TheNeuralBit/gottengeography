@@ -18,6 +18,26 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ../data/gottengeography.ui.h:1
+msgid "_Open…"
+msgstr "_Ouvrir…"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_Save All"
+msgstr "_Tout enregistrer"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_Help"
+msgstr "Aid_e"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_About"
+msgstr "À _propos"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_Quit"
+msgstr "_Quitter"
+
+#: ../data/gottengeography.ui.h:1
 msgid "Load photos or GPS data (Ctrl O)"
 msgstr "Charge photos ou des données GPS (Ctrl O)"
 
