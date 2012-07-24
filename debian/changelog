@@ -1,3 +1,10 @@
+gottengeography (2.1-0) unstable; urgency=low
+
+  [ Robert Bruce Park ]
+  * Minor bugfix release, fixes some translations and fixes scrollbars
+
+ -- Robert Bruce Park <robru@gottengeography.ca>  Tue, 24 Jul 2012 03:00:25 +0600
+
 gottengeography (2.0-4) unstable; urgency=low
 
   [ Robert Bruce Park ]
