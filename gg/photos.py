@@ -162,6 +162,9 @@ class Photograph(Coordinates):
         instantiated together.
         """
         photo = Photograph(uri)
+        
+        Label(photo)
+        
         photo.read()
         
         Widgets.empty_camera_list.hide()
@@ -171,7 +174,6 @@ class Photograph(Coordinates):
         camera.add_photo(photo)
         
         CameraView(camera, camera_name)
-        Label(photo)
         
         # If the user has selected the lookup method, then the timestamp
         # was probably calculated incorrectly the first time (before the
