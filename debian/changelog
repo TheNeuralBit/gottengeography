@@ -1,3 +1,10 @@
+gottengeography (2.1-2) unstable; urgency=low
+
+  [ Robert Bruce Park ]
+  * Fix display of existing geotags on photo load.
+
+ -- Robert Bruce Park <robru@gottengeography.ca>  Tue, 24 Jul 2012 23:28:51 -0500
+
 gottengeography (2.1-1) unstable; urgency=low
 
   [ Robert Bruce Park ]
