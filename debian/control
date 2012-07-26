@@ -2,13 +2,13 @@ Source: gottengeography
 Section: graphics
 Priority: extra
 Maintainer: Robert Bruce Park <robru@gottengeography.ca>
-Build-Depends: debhelper (>= 8.0.0), python-support (>= 0.8.4), intltool,
+Build-Depends: debhelper (>= 8), python-support (>= 0.8.4), intltool,
  python-distutils-extra
 XS-Python-Version: >= 2.7
 Standards-Version: 3.9.3
 Homepage: http://gottengeography.ca
 Vcs-Git: git://github.com/robru/gottengeography.git
-Vcs-Browser: https://github.com/robru/gottengeography
+Vcs-Browser: https://github.com/robru/gottengeography/commits/debian
 
 Package: gottengeography
 Architecture: all
