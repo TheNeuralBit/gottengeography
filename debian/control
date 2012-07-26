@@ -2,8 +2,10 @@ Source: gottengeography
 Section: graphics
 Priority: extra
 Maintainer: Robert Bruce Park <robru@gottengeography.ca>
-Build-Depends: debhelper (>= 8), python-support (>= 0.8.4), intltool,
- python-distutils-extra
+Build-Depends: debhelper (>= 8),
+               intltool,
+               python-distutils-extra,
+               python-support (>= 0.8.4)
 XS-Python-Version: >= 2.7
 Standards-Version: 3.9.3
 Homepage: http://gottengeography.ca
@@ -12,9 +14,14 @@ Vcs-Browser: https://github.com/robru/gottengeography/commits/debian
 
 Package: gottengeography
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-pyexiv2, python-dateutil,
- python-gi, gir1.2-glib-2.0, gir1.2-gtkclutter-1.0,
- gir1.2-gtkchamplain-0.12 (>= 0.12.2)
+Depends: gir1.2-glib-2.0,
+         gir1.2-gtkchamplain-0.12 (>= 0.12.2),
+         gir1.2-gtkclutter-1.0,
+         python-dateutil,
+         python-gi,
+         python-pyexiv2,
+         ${misc:Depends},
+         ${python:Depends}
 XB-Python-Version: ${python:Versions}
 Description: Automagically geotag photos with GPX data.
  GottenGeography is a GNOME application that aims to make it easy to record
