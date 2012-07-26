@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 
+from sys import argv
 from os.path import join
 from distutils.core import setup
 from subprocess import Popen, PIPE
 from DistUtilsExtra.command import build_extra, build_i18n, build_help
+from distutils.command.install_data import install_data as _install_data
 from distutils.command.build_py import build_py as _build_py
+from distutils.command.install import install
 
 from gg.version import *
 
@@ -38,12 +41,40 @@ class build_py(_build_py):
                     module_fp.write(build_info_template % (
                         iobj.prefix,
                         join(iobj.prefix, 'share', PACKAGE),
-                        VERSION
+                        Popen(('git', 'describe'),
+                            stdout=PIPE).communicate()[0].strip()
                     ))
             except KeyError:
                 pass
         
         _build_py.build_module(self, module, module_file, package)
+
+root = False
+for arg in argv:
+    if arg.startswith('--root'):
+        root = True
+
+# If the --root option has been specified, then most likely we are installing
+# to a fakeroot, eg, when a debian package is being made. In this case, don't
+# override install_data at all. If --root has NOT been specified, eg, during
+# a default install to the user's system, then we need to override install_data
+# to call glib-compile-schemas. If we don't do this, then the program won't
+# actually run after it's been installed, because GSettings is quite fussy
+# about this.
+if root:
+    install_data = _install_data
+else:
+    class install_data(_install_data):
+        """Compile GLib schemas so that our GSettings schema works."""
+        def run(self):
+            _install_data.run(self)
+            command = ('glib-compile-schemas', '/usr/share/glib-2.0/schemas/')
+            print(' '.join(command))
+            Popen(command, stdout=PIPE, stderr=PIPE).communicate()
+
+# Allow non-Ubuntu distros to ignore install_layout option from setup.cfg
+if not hasattr(install, 'install_layout'):
+    setattr(install, 'install_layout', None)
 
 setup(
     name=PACKAGE,
@@ -68,6 +99,8 @@ and then record those locations into the photos.
     cmdclass = { 'build': build_extra.build_extra,
                  'build_i18n': build_i18n.build_i18n,
                  'build_help': build_help.build_help,
-                 'build_py': build_py }
+                 'build_py': build_py,
+                 'install': install,
+                 'install_data': install_data }
 )
 
