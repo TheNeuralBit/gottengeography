@@ -1,2 +1,4 @@
-include testsuite.sh
+include runtests.sh
+recursive-include test *
+recursive-include help *
 recursive-include po *

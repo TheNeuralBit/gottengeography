@@ -11,6 +11,11 @@ from distutils.command.install import install
 
 from gg.version import *
 
+root = False
+for arg in argv:
+    if arg.startswith('--root'):
+        root = True
+
 data_files = [
     ('/usr/share/icons/hicolor/scalable/apps', ['data/%s.svg' % PACKAGE]),
     ('/usr/share/glib-2.0/schemas', ['data/ca.exolucere.%s.gschema.xml' % PACKAGE]),
@@ -41,18 +46,13 @@ class build_py(_build_py):
                     module_fp.write(build_info_template % (
                         iobj.prefix,
                         join(iobj.prefix, 'share', PACKAGE),
-                        Popen(('git', 'describe'),
+                        VERSION if root else Popen(('git', 'describe'),
                             stdout=PIPE).communicate()[0].strip()
                     ))
             except KeyError:
                 pass
         
         _build_py.build_module(self, module, module_file, package)
-
-root = False
-for arg in argv:
-    if arg.startswith('--root'):
-        root = True
 
 # If the --root option has been specified, then most likely we are installing
 # to a fakeroot, eg, when a debian package is being made. In this case, don't
