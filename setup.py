@@ -49,13 +49,28 @@ class build_py(_build_py):
         
         _build_py.build_module(self, module, module_file, package)
 
-class install_data(_install_data):
-    """Compile GLib schemas so that our GSettings schema works."""
-    def run(self):
-        _install_data.run(self)
-        command = ('glib-compile-schemas', '/usr/share/glib-2.0/schemas/')
-        print(' '.join(command))
-        Popen(command, stdout=PIPE, stderr=PIPE).communicate()
+root = False
+for arg in argv:
+    if arg.startswith('--root'):
+        root = True
+
+# If the --root option has been specified, then most likely we are installing
+# to a fakeroot, eg, when a debian package is being made. In this case, don't
+# override install_data at all. If --root has NOT been specified, eg, during
+# a default install to the user's system, then we need to override install_data
+# to call glib-compile-schemas. If we don't do this, then the program won't
+# actually run after it's been installed, because GSettings is quite fussy
+# about this.
+if root:
+    install_data = _install_data
+else:
+    class install_data(_install_data):
+        """Compile GLib schemas so that our GSettings schema works."""
+        def run(self):
+            _install_data.run(self)
+            command = ('glib-compile-schemas', '/usr/share/glib-2.0/schemas/')
+            print(' '.join(command))
+            Popen(command, stdout=PIPE, stderr=PIPE).communicate()
 
 # Allow non-Ubuntu distros to ignore install_layout option from setup.cfg
 if not hasattr(install, 'install_layout'):
