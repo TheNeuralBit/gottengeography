@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
 from sys import argv
-from glob import glob
-from os import listdir
-from os.path import join, isdir
+from os.path import join
 from distutils.core import setup
 from subprocess import Popen, PIPE
 from DistUtilsExtra.command import build_extra, build_i18n, build_help
@@ -17,7 +15,7 @@ data_files = [
     ('/usr/share/icons/hicolor/scalable/apps', ['data/%s.svg' % PACKAGE]),
     ('/usr/share/glib-2.0/schemas', ['data/ca.exolucere.%s.gschema.xml' % PACKAGE]),
     ('/usr/share/applications', ['data/%s.desktop' % PACKAGE]),
-    ('share/doc/' + PACKAGE, ['README.md', 'AUTHORS', 'COPYING', 'THANKS']),
+    ('share/doc/' + PACKAGE, ['README.md', 'AUTHORS', 'THANKS']),
     ('share/' + PACKAGE, ['data/cities.txt', 'data/trackfile.ui', 'data/camera.ui',
         'data/%s.ui' % PACKAGE, 'data/%s.svg' % PACKAGE])
 ]
@@ -27,7 +25,7 @@ build_info_template = """# -*- coding: UTF-8 -*-
 # Distutils installation details:
 PREFIX='%s'
 PKG_DATA_DIR='%s'
-REVISION='%s'
+REVISION='Version %s'
 """
 
 class build_py(_build_py): 
