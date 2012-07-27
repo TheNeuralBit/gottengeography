@@ -11,10 +11,7 @@ from distutils.command.install import install
 
 from gg.version import *
 
-root = False
-for arg in argv:
-    if arg.startswith('--root'):
-        root = True
+root = '--root' in ' '.join(argv)
 
 data_files = [
     ('/usr/share/icons/hicolor/scalable/apps', ['data/%s.svg' % PACKAGE]),
