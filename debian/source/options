@@ -1,8 +1,10 @@
 extend-diff-ignore = "(^|/)demo($|/)"
 extend-diff-ignore = "(^|/)test($|/)"
-extend-diff-ignore = "(^|/)MANIFEST.in$"
+extend-diff-ignore = "(^|/)MANIFEST"
 extend-diff-ignore = "(^|/)runtests.sh$"
+extend-diff-ignore = "(^|/)gg/build_info.py$"
 extend-diff-ignore = "(^|/)po/POTFILES.in$"
 extend-diff-ignore = "(^|/)po/README.md$"
 extend-diff-ignore = "(^|/)po/initialize-pot.sh$"
+extend-diff-ignore = "(^|/)po/gottengeography.pot$"
 single-debian-patch
