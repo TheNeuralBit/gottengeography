@@ -19,8 +19,8 @@ msgstr ""
 "X-Poedit-Language: Swedish\n"
 
 #: ../data/gottengeography.ui.h:1
-msgid "_Open…"
-msgstr "_Öppna…"
+msgid "_Open..."
+msgstr "_Öppna..."
 
 #: ../data/gottengeography.ui.h:1
 msgid "_Save All"

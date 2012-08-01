@@ -19,8 +19,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: ../data/gottengeography.ui.h:1
-msgid "_Open…"
-msgstr "Ö_ffnen…"
+msgid "_Open..."
+msgstr "Ö_ffnen..."
 
 #: ../data/gottengeography.ui.h:1
 msgid "_Save All"
