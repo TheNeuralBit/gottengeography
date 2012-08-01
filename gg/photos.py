@@ -29,6 +29,38 @@ GPS  = 'Exif.GPSInfo.GPS'
 IPTC = 'Iptc.Application2.'
 
 
+# This defines the transformations used by the Exif.Image.Orientation tag.
+ROTATIONS = {
+    2: lambda thumb:
+        GdkPixbuf.Pixbuf.flip(thumb, False),
+    
+    3: lambda thumb:
+        GdkPixbuf.Pixbuf.rotate_simple(thumb,
+            GdkPixbuf.PixbufRotation.UPSIDEDOWN),
+    
+    4: lambda thumb:
+        GdkPixbuf.Pixbuf.flip(thumb, True),
+    
+    5: lambda thumb:
+        GdkPixbuf.Pixbuf.flip(
+            GdkPixbuf.Pixbuf.rotate_simple(thumb,
+                GdkPixbuf.PixbufRotation.CLOCKWISE), True),
+    
+    6: lambda thumb:
+        GdkPixbuf.Pixbuf.rotate_simple(thumb,
+            GdkPixbuf.PixbufRotation.CLOCKWISE),
+    
+    7: lambda thumb:
+        GdkPixbuf.Pixbuf.flip(
+            GdkPixbuf.Pixbuf.rotate_simple(thumb,
+                GdkPixbuf.PixbufRotation.CLOCKWISE), False),
+    
+    8: lambda thumb:
+        GdkPixbuf.Pixbuf.rotate_simple(thumb,
+            GdkPixbuf.PixbufRotation.COUNTERCLOCKWISE),
+}
+
+
 # This function is the embodiment of my applications core logic.
 # Everything else is just implementation details.
 def auto_timestamp_comparison(photo):
@@ -78,8 +110,8 @@ def fetch_exif(filename):
     exif.read()
     return exif
 
-def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size')):
-    """Load a photo's thumbnail from disk, avoiding EXIF data if possible.
+def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size'), orient=1):
+    """Load a photo's thumbnail from disk
     
     >>> fetch_thumbnail('gg/widgets.py')
     Traceback (most recent call last):
@@ -90,10 +122,15 @@ def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size')):
     #TODO: The above IOError is raise by pyexiv2 in fetch_exif,
     # I need to find a file that pyexiv2 thinks is an image, but has
     # no thumbnail and thus raises IOError here anyway.
+    exif = fetch_exif(filename)
     try:
-        return GdkPixbuf.Pixbuf.new_from_file_at_size(filename, size, size)
+        orient = exif['Exif.Image.Orientation'].value
+    except:
+        pass
+    
+    try:
+        thumb = GdkPixbuf.Pixbuf.new_from_file_at_size(filename, size, size)
     except GObject.GError:
-        exif = fetch_exif(filename)
         if len(exif.previews) > 0:
             data = exif.previews[-1].data
         elif len(exif.exif_thumbnail.data) > 0:
@@ -101,10 +138,11 @@ def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size')):
         else:
             raise IOError('%s: No thumbnail found.' % filename)
         
-        return GdkPixbuf.Pixbuf.new_from_stream_at_scale(
+        thumb = GdkPixbuf.Pixbuf.new_from_stream_at_scale(
             Gio.MemoryInputStream.new_from_data(data, None),
             size, size, True, None)
-
+    
+    return ROTATIONS.get(orient, lambda x: x)(thumb)
 
 @memoize
 class Photograph(Coordinates):
