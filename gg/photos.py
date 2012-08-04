@@ -8,7 +8,7 @@ from __future__ import division
 from gi.repository import GtkClutter
 GtkClutter.init([])
 
-from gi.repository import Gio, GObject, GdkPixbuf
+from gi.repository import Gdk, Gio, GObject, GdkPixbuf
 from pyexiv2 import ImageMetadata
 from os.path import basename
 from time import mktime
@@ -348,7 +348,10 @@ class Photograph(Coordinates):
         self.longitude = lon
     
     def get_large_preview(self):
-        return fetch_thumbnail(self.filename, 800)
+        """Return a GdkPixbuf that is 80% of the screen's shortest dimension."""
+        screen = Gdk.Screen.get_default()
+        return fetch_thumbnail(self.filename,
+            int(min(screen.get_width(), screen.get_height()) * 0.8))
     
     def update_liststore_summary(self, *ignore):
         """Update the text displayed in the GtkListStore."""
