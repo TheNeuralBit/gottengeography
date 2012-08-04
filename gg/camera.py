@@ -136,6 +136,16 @@ class Camera(GObject.GObject):
         tzset()
         self.offset_handler()
     
+    def get_offset_from_clock_photo(self, btn, hrs, mins, secs, utc, orig):
+        """Subtract the camera's clock from the photographed clock."""
+        delta_h = hrs.get_value_as_int()  - orig.tm_hour
+        delta_m = mins.get_value_as_int() - orig.tm_min
+        delta_s = secs.get_value_as_int() - orig.tm_sec
+        offset = (delta_h + float(utc.get_active_id())) * 3600
+        offset += delta_m * 60
+        offset += delta_s
+        self.offset = sorted([-3600, int(offset), 3600])[1]
+    
     def offset_handler(self, *ignore):
         """When the offset is changed, update the loaded photos."""
         for i, photo in enumerate(self.photos):
@@ -212,7 +222,8 @@ class CameraView(Gtk.Box):
         # https://bugzilla.gnome.org/show_bug.cgi?id=675582
         # Also, it seems SYNC_CREATE doesn't really work.
         scale.set_value(camera.offset)
-        Binding(scale.get_adjustment(), 'value', camera, 'offset')
+        Binding(scale.get_adjustment(), 'value', camera, 'offset',
+            flags=GObject.BindingFlags.BIDIRECTIONAL)
         
         utc = self.widgets.utc_offset
         utc.set_value(camera.utc_offset)

@@ -125,15 +125,24 @@ class Widgets(Builder):
         self.error_bar.connect('response',
             lambda widget, signal: widget.hide())
     
-    def show_large_preview(self, view, path, column):
+    def show_large_preview(self, view, path, column, handler_ids=set()):
         """Show the large preview window."""
         photo = selected.copy().pop()
         stamp = gmtime(photo.timestamp) #utc
+        
         self.clock_photo_hours.set_value(stamp.tm_hour)
         self.clock_photo_minutes.set_value(stamp.tm_min)
         self.clock_photo_seconds.set_value(stamp.tm_sec)
         self.clock_photo_tz.set_active_id('0')
         self.large_preview.set_from_pixbuf(photo.get_large_preview())
+        
+        while handler_ids:
+            self.clock_photo_button.disconnect(handler_ids.pop())
+        handler_ids.add(self.clock_photo_button.connect(
+            'clicked', photo.camera.get_offset_from_clock_photo,
+            self.clock_photo_hours, self.clock_photo_minutes,
+            self.clock_photo_seconds, self.clock_photo_tz, stamp))
+        
         self.large_preview_window.show_all()
     
     def update_highlights(self, selection):
