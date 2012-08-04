@@ -576,7 +576,7 @@
           <packing>
             <property name="left_attach">0</property>
             <property name="top_attach">0</property>
-            <property name="width">5</property>
+            <property name="width">6</property>
             <property name="height">1</property>
           </packing>
         </child>
@@ -598,6 +598,7 @@
           <object class="GtkSpinButton" id="clock_photo_hours">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="adjustment">adj_clock_hours</property>
           </object>
           <packing>
             <property name="left_attach">1</property>
@@ -610,6 +611,7 @@
           <object class="GtkSpinButton" id="clock_photo_minutes">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="adjustment">adj_clock_minutes</property>
           </object>
           <packing>
             <property name="left_attach">2</property>
@@ -622,6 +624,7 @@
           <object class="GtkSpinButton" id="clock_photo_seconds">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="adjustment">adj_clock_seconds</property>
           </object>
           <packing>
             <property name="left_attach">3</property>
@@ -666,6 +669,19 @@
           </object>
           <packing>
             <property name="left_attach">4</property>
+            <property name="top_attach">1</property>
+            <property name="width">1</property>
+            <property name="height">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="clock_photo_button">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Set Clock Offset!</property>
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="left_attach">5</property>
             <property name="top_attach">1</property>
             <property name="width">1</property>
             <property name="height">1</property>
@@ -904,6 +920,21 @@ Marc Ordinas i Llopis &lt;mail@marcoil.org&gt;</property>
       <action-widget response="-6">quit_cancel</action-widget>
       <action-widget response="-3">quit_save</action-widget>
     </action-widgets>
+  </object>
+  <object class="GtkAdjustment" id="adj_clock_hours">
+    <property name="upper">24</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_clock_minutes">
+    <property name="upper">60</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="adj_clock_seconds">
+    <property name="upper">60</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">1</property>
   </object>
   <object class="GtkListStore" id="loaded_photos">
     <columns>

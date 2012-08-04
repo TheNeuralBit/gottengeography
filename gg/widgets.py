@@ -22,6 +22,7 @@ from gi.repository import GtkChamplain, Champlain
 from gi.repository import Gdk, GdkPixbuf
 from gi.repository import Gtk, GLib
 from os.path import join
+from time import gmtime
 
 from version import APPNAME, PACKAGE
 from build_info import PKG_DATA_DIR, REVISION
@@ -126,9 +127,14 @@ class Widgets(Builder):
     
     def show_large_preview(self, view, path, column):
         """Show the large preview window."""
+        photo = selected.copy().pop()
+        stamp = gmtime(photo.timestamp)
+        self.clock_photo_hours.set_value(stamp.tm_hour)
+        self.clock_photo_minutes.set_value(stamp.tm_min)
+        self.clock_photo_seconds.set_value(stamp.tm_sec)
+        self.clock_photo_tz.set_active(12)
+        self.large_preview.set_from_pixbuf(photo.get_large_preview())
         self.large_preview_window.show_all()
-        self.large_preview.set_from_pixbuf(
-            selected.copy().pop().get_large_preview())
     
     def update_highlights(self, selection):
         """Ensure only the selected labels are highlighted."""
