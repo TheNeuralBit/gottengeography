@@ -113,13 +113,22 @@ class Widgets(Builder):
         
         self.loaded_photos.connect('row-inserted', photo_pane_visibility)
         self.loaded_photos.connect('row-deleted', photo_pane_visibility)
-        self.photos_view.connect('button-press-event', self.photoview_pressed)
-        self.photos_view.connect('button-release-event', self.photoview_released)
         self.photos_selection.connect('changed', self.update_highlights)
         self.photos_selection.connect('changed', self.button_sensitivity)
+        self.photos_view.connect('button-press-event', self.photoview_pressed)
+        self.photos_view.connect('button-release-event', self.photoview_released)
+        self.photos_view.connect('row-activated', self.show_large_preview)
+        self.large_preview_window.connect('delete_event',
+            lambda *ignore: self.large_preview_window.hide())
         
         self.error_bar.connect('response',
             lambda widget, signal: widget.hide())
+    
+    def show_large_preview(self, view, path, column):
+        """Show the large preview window."""
+        self.large_preview_window.show_all()
+        self.large_preview.set_from_pixbuf(
+            selected.copy().pop().get_large_preview())
     
     def update_highlights(self, selection):
         """Ensure only the selected labels are highlighted."""

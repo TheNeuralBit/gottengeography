@@ -347,6 +347,9 @@ class Photograph(Coordinates):
         self.latitude  = lat
         self.longitude = lon
     
+    def get_large_preview(self):
+        return fetch_thumbnail(self.filename, 800)
+    
     def update_liststore_summary(self, *ignore):
         """Update the text displayed in the GtkListStore."""
         if self.iter is not None:
