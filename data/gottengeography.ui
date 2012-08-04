@@ -640,31 +640,46 @@
             <property name="entry_text_column">0</property>
             <property name="id_column">1</property>
             <items>
-              <item>UTC +12</item>
-              <item>UTC +11</item>
-              <item>UTC +10</item>
-              <item>UTC +9</item>
-              <item>UTC +8</item>
-              <item>UTC +7</item>
-              <item>UTC +6</item>
-              <item>UTC +5</item>
-              <item>UTC +4</item>
-              <item>UTC +3</item>
-              <item>UTC +2</item>
-              <item>UTC +1</item>
-              <item>UTC</item>
-              <item>UTC -1</item>
-              <item>UTC -2</item>
-              <item>UTC -3</item>
-              <item>UTC -4</item>
-              <item>UTC -5</item>
-              <item>UTC -6</item>
-              <item>UTC -7</item>
-              <item>UTC -8</item>
-              <item>UTC -9</item>
-              <item>UTC -10</item>
-              <item>UTC -11</item>
-              <item>UTC -12</item>
+              <item id="-12">UTC -12:00</item>
+              <item id="-11">UTC -11:00</item>
+              <item id="-10">UTC -10:00</item>
+              <item id="-9.5">UTC -9:30</item>
+              <item id="-9">UTC -9:00</item>
+              <item id="-8">UTC -8:00</item>
+              <item id="-7">UTC -7:00</item>
+              <item id="-6">UTC -6:00</item>
+              <item id="-5">UTC -5:00</item>
+              <item id="-4.5">UTC -4:30</item>
+              <item id="-4">UTC -4:00</item>
+              <item id="-3.5">UTC -3:30</item>
+              <item id="-3">UTC -3:00</item>
+              <item id="-2">UTC -2:00</item>
+              <item id="-1">UTC -1:00</item>
+              <item id="0">UTC</item>
+              <item id="1">UTC +1:00</item>
+              <item id="2">UTC +2:00</item>
+              <item id="3">UTC +3:00</item>
+              <item id="3.5">UTC +3:30</item>
+              <item id="4">UTC +4:00</item>
+              <item id="4.5">UTC +4:30</item>
+              <item id="5">UTC +5:00</item>
+              <item id="5.5">UTC +5:30</item>
+              <item id="5.75">UTC +5:45</item>
+              <item id="6">UTC +6:00</item>
+              <item id="6.5">UTC +6:30</item>
+              <item id="7">UTC +7:00</item>
+              <item id="8">UTC +8:00</item>
+              <item id="8.75">UTC +8:45</item>
+              <item id="9">UTC +9:00</item>
+              <item id="9.5">UTC +9:30</item>
+              <item id="10">UTC +10:00</item>
+              <item id="10.5">UTC +10:30</item>
+              <item id="11">UTC +11:00</item>
+              <item id="11.5">UTC +11:30</item>
+              <item id="12">UTC +12:00</item>
+              <item id="12.75">UTC +12:45</item>
+              <item id="13">UTC +13:00</item>
+              <item id="14">UTC +14:00</item>
             </items>
           </object>
           <packing>
