@@ -119,7 +119,7 @@ class Widgets(Builder):
         self.photos_view.connect('button-release-event', self.photoview_released)
         self.photos_view.connect('row-activated', self.show_large_preview)
         self.large_preview_window.connect('delete_event',
-            lambda *ignore: self.large_preview_window.hide())
+            lambda *ignore: self.large_preview_window.hide_on_delete())
         
         self.error_bar.connect('response',
             lambda widget, signal: widget.hide())
