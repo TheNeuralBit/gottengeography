@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gottengeography 2.0\n"
 "Report-Msgid-Bugs-To: Robert Park <rbpark@exolucere.ca>\n"
-"POT-Creation-Date: 2012-07-13 08:26+0200\n"
-"PO-Revision-Date: 2012-07-13 08:29+0200\n"
-"Last-Translator: txelu <joseluis.tirado@gmail.com>\n"
+"POT-Creation-Date: 2012-08-06 09:40+0200\n"
+"PO-Revision-Date: 2012-08-06 10:28+0100\n"
+"Last-Translator: Jose Luis Tirado <joseluis.tirado@gmail.com>\n"
 "Language-Team: Spanish\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -110,46 +110,45 @@ msgid "GPS"
 msgstr "GPS"
 
 #: ../data/gottengeography.ui.h:19
+msgid "Is this a photo of a clock? Type the displayed time here:"
+msgstr "¿Es una foto de un reloj? Introduzca aquí la hora que muestra:"
+
+#: ../data/gottengeography.ui.h:20
+msgid "Set Clock Offset!"
+msgstr "Establecer diferencia de horas"
+
+#: ../data/gottengeography.ui.h:21
 msgid "Open Files"
 msgstr "Abrir archivos"
 
-#: ../data/gottengeography.ui.h:20
+#: ../data/gottengeography.ui.h:22
 msgid ""
 "GottenGeography: Go open thy tagger!\n"
 "\n"
-"This program is written in the Python programming language, and adds geotags "
-"to your photos. The name is an anagram of \"Python Geotagger.\""
-msgstr "GottenGeography: ¡Ve a abrir tu etiquetador!\n"
+"This program is written in the Python programming language, and adds geotags to your photos. The name is an anagram of \"Python Geotagger.\""
+msgstr ""
+"GottenGeography: ¡Ve a abrir tu etiquetador!\n"
 "\n"
-"Este programa está escrito en el lenguaje de programación Python, y añade "
-"geo-etiquetas a sus fotos. El nombre es un anagrama de \"Python Geotagger.\""
+"Este programa está escrito en el lenguaje de programación Python, y añade geo-etiquetas a sus fotos. El nombre es un anagrama de \"Python Geotagger.\""
 
-#: ../data/gottengeography.ui.h:23
+#: ../data/gottengeography.ui.h:25
 msgid "GottenGeography Wiki"
 msgstr "Wiki de GottenGeography"
 
-#: ../data/gottengeography.ui.h:24
+#: ../data/gottengeography.ui.h:26
 msgid "Robert Park <rbpark@exolucere.ca>"
 msgstr "Jose Luis Tirado <joseluis.tirado@gmail.com>"
 
-#: ../data/gottengeography.ui.h:25
-msgid ""
-"<span weight=\"bold\" size=\"larger\">Save changes to your photos before "
-"closing?</span>"
-msgstr ""
-"<span weight=\"bold\" size=\"larger\">¿Guardar los cambios a sus fotos antes "
-"de cerrar?</span>"
-
 #: ../data/gottengeography.ui.h:27
-#, no-c-format
-msgid ""
-"The changes you've made to %d of your photos will be permanently lost if you "
-"do not save."
-msgstr ""
-"Los cambios que ha hecho a %d de sus fotos se perderán para siempre si "
-"no los guarda."
+msgid "<span weight=\"bold\" size=\"larger\">Save changes to your photos before closing?</span>"
+msgstr "<span weight=\"bold\" size=\"larger\">¿Guardar los cambios a sus fotos antes de cerrar?</span>"
 
-#: ../data/gottengeography.ui.h:28
+#: ../data/gottengeography.ui.h:29
+#, no-c-format
+msgid "The changes you've made to %d of your photos will be permanently lost if you do not save."
+msgstr "Los cambios que ha hecho a %d de sus fotos se perderán para siempre si no los guarda."
+
+#: ../data/gottengeography.ui.h:30
 msgid "Close _without Saving"
 msgstr "_Cerrar sin guardar"
 
@@ -201,25 +200,25 @@ msgstr "m bajo el nivel del mar"
 msgid "Unknown Camera"
 msgstr "Cámara desconocida"
 
-#: ../gg/camera.py:208
+#: ../gg/camera.py:218
 #, python-format
 msgid "Add %dm, %ds to clock."
 msgstr "Añadir %dm, %ds al reloj."
 
-#: ../gg/camera.py:209
+#: ../gg/camera.py:219
 #, python-format
 msgid "Subtract %dm, %ds from clock."
 msgstr "Restar %dm, %ds del reloj."
 
-#: ../gg/camera.py:271
+#: ../gg/camera.py:282
 msgid "No photos loaded."
 msgstr "No hay fotos cargadas."
 
-#: ../gg/camera.py:272
+#: ../gg/camera.py:283
 msgid "One photo loaded."
 msgstr "Una foto cargada."
 
-#: ../gg/camera.py:273
+#: ../gg/camera.py:284
 #, python-format
 msgid "%d photos loaded."
 msgstr "%d fotos cargadas."
@@ -228,3 +227,4 @@ msgstr "%d fotos cargadas."
 #, python-format
 msgid "%d points loaded in %.2fs."
 msgstr "%d puntos cargados en %.2fs."
+
