@@ -137,15 +137,18 @@ class Camera(GObject.GObject):
         tzset()
         self.offset_handler()
     
-    def get_offset_from_clock_photo(self, btn, hrs, mins, secs, utc, orig):
+    def get_offset_from_clock_photo(self, btn, orig, tz):
         """Subtract the camera's clock from the photographed clock."""
-        delta_h = hrs.get_value_as_int()  - orig.tm_hour + float(utc.get_active_id())
-        delta_m = mins.get_value_as_int() - orig.tm_min
-        delta_s = secs.get_value_as_int() - orig.tm_sec
-        offset  = delta_h * 3600
-        offset += delta_m * 60
-        offset += delta_s
-        self.offset = sorted([-3600, int(offset), 3600])[1]
+        delta_s = Widgets.clock_photo_seconds.get_value_as_int() - orig.tm_sec
+        delta_m = Widgets.clock_photo_minutes.get_value_as_int() - orig.tm_min
+        delta_h = Widgets.clock_photo_hours.get_value_as_int() - orig.tm_hour
+        delta_h += float(Widgets.clock_photo_tz.get_active_id())
+        self.offset = delta_m * 60 + delta_s
+        
+        utc_offset = int(tz[1:3]) + int(tz[-2:]) / 60
+        utc_offset *= -1 if tz.startswith('-') else 1
+        self.utc_offset = str(utc_offset + delta_h)
+        self.timezone_method = 'offset'
     
     def offset_handler(self, *ignore):
         """When the offset is changed, update the loaded photos."""
@@ -228,7 +231,8 @@ class CameraView(Gtk.Box):
         
         utc = self.widgets.utc_offset
         utc.set_active_id(camera.utc_offset)
-        Binding(utc, 'active-id', camera, 'utc-offset')
+        Binding(utc, 'active-id', camera, 'utc-offset',
+            flags=GObject.BindingFlags.BIDIRECTIONAL)
         
         # These two ComboBoxTexts are used for choosing the timezone manually.
         # They're hidden to reduce clutter when not needed.
@@ -239,8 +243,8 @@ class CameraView(Gtk.Box):
         
         for setting in ('region', 'city', 'method'):
             name = 'timezone_' + setting
-            Binding(self.widgets[name], 'active-id',
-                            camera, name.replace('_', '-'))
+            Binding(self.widgets[name], 'active-id', camera, name.replace('_', '-'),
+                flags=GObject.BindingFlags.BIDIRECTIONAL)
         
         region_combo.connect('changed', self.region_handler, cities_combo)
         region_combo.set_active_id(camera.timezone_region)

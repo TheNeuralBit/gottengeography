@@ -21,8 +21,8 @@ GtkClutter.init([])
 from gi.repository import GtkChamplain, Champlain
 from gi.repository import Gdk, GdkPixbuf
 from gi.repository import Gtk, GLib
+from time import gmtime, strftime
 from os.path import join
-from time import gmtime
 
 from version import APPNAME, PACKAGE
 from build_info import PKG_DATA_DIR, REVISION
@@ -140,8 +140,7 @@ class Widgets(Builder):
             self.clock_photo_button.disconnect(handler_ids.pop())
         handler_ids.add(self.clock_photo_button.connect(
             'clicked', photo.camera.get_offset_from_clock_photo,
-            self.clock_photo_hours, self.clock_photo_minutes,
-            self.clock_photo_seconds, self.clock_photo_tz, stamp))
+            stamp, strftime('%z')))
         
         self.large_preview_window.show_all()
     
