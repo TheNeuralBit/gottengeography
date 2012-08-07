@@ -66,7 +66,7 @@ class Camera(GObject.GObject):
     True
     """
     offset = GObject.property(type=int, minimum=-3600, maximum=3600)
-    utc_offset = GObject.property(type=int, minimum=-24, maximum=24)
+    utc_offset = GObject.property(type=str)
     found_timezone = GObject.property(type=str)
     timezone_method = GObject.property(type=str)
     timezone_region = GObject.property(type=str)
@@ -127,7 +127,8 @@ class Camera(GObject.GObject):
             # if no timezone has actually been found yet.
             environ['TZ'] = self.found_timezone
         elif self.timezone_method == 'offset':
-            environ['TZ'] = 'UTC%+d' % -self.utc_offset
+            minutes, hours = split_float(-float(self.utc_offset))
+            environ['TZ'] = 'UTC%+d:%02d' % (hours, abs(minutes) * 60)
         elif self.timezone_method == 'custom' and \
              self.timezone_region and self.timezone_city:
             environ['TZ'] = '/'.join(
@@ -138,10 +139,10 @@ class Camera(GObject.GObject):
     
     def get_offset_from_clock_photo(self, btn, hrs, mins, secs, utc, orig):
         """Subtract the camera's clock from the photographed clock."""
-        delta_h = hrs.get_value_as_int()  - orig.tm_hour
+        delta_h = hrs.get_value_as_int()  - orig.tm_hour + float(utc.get_active_id())
         delta_m = mins.get_value_as_int() - orig.tm_min
         delta_s = secs.get_value_as_int() - orig.tm_sec
-        offset = (delta_h + float(utc.get_active_id())) * 3600
+        offset  = delta_h * 3600
         offset += delta_m * 60
         offset += delta_s
         self.offset = sorted([-3600, int(offset), 3600])[1]
@@ -226,8 +227,8 @@ class CameraView(Gtk.Box):
             flags=GObject.BindingFlags.BIDIRECTIONAL)
         
         utc = self.widgets.utc_offset
-        utc.set_value(camera.utc_offset)
-        Binding(utc.get_adjustment(), 'value', camera, 'utc-offset')
+        utc.set_active_id(camera.utc_offset)
+        Binding(utc, 'active-id', camera, 'utc-offset')
         
         # These two ComboBoxTexts are used for choosing the timezone manually.
         # They're hidden to reduce clutter when not needed.

@@ -133,7 +133,7 @@ class Widgets(Builder):
         self.clock_photo_hours.set_value(stamp.tm_hour)
         self.clock_photo_minutes.set_value(stamp.tm_min)
         self.clock_photo_seconds.set_value(stamp.tm_sec)
-        self.clock_photo_tz.set_active_id('0')
+        self.clock_photo_tz.set_active_id('0.0')
         self.large_preview.set_from_pixbuf(photo.get_large_preview())
         
         while handler_ids:
