@@ -143,6 +143,7 @@ class Widgets(Builder):
             stamp, strftime('%z')))
         
         self.large_preview_window.show_all()
+        self.large_preview_window.present()
     
     def update_highlights(self, selection):
         """Ensure only the selected labels are highlighted."""
