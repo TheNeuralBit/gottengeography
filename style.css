@@ -50,6 +50,10 @@ body {
     width: 500px;
 }
 
+.post {
+    margin-bottom: 3em;
+}
+
 #navigation {
     border: 1px solid #bca;
     background-color: #ffe;
