@@ -1,0 +1,240 @@
+# Hebrew translation for gottengeography
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the gottengeography package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gottengeography\n"
+"Report-Msgid-Bugs-To: Robert Bruce Park <robru@gottengeography.ca>\n"
+"POT-Creation-Date: 2012-08-16 22:37-0500\n"
+"PO-Revision-Date: 2012-08-17 03:39+0000\n"
+"Last-Translator: Launchpad Translations Administrators <Unknown>\n"
+"Language-Team: Hebrew <he@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-17 03:44+0000\n"
+"X-Generator: Launchpad (build 15810)\n"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_Open..."
+msgstr "_פתיחה..."
+
+#: ../data/gottengeography.ui.h:2
+msgid "_Save All"
+msgstr "_שמירת הכול"
+
+#: ../data/gottengeography.ui.h:3
+msgid "_Help"
+msgstr "ע_זרה"
+
+#: ../data/gottengeography.ui.h:4
+msgid "_About"
+msgstr "על _אודות"
+
+#: ../data/gottengeography.ui.h:5
+msgid "_Quit"
+msgstr "י_ציאה"
+
+#: ../data/gottengeography.ui.h:6
+msgid "Load photos or GPS data (Ctrl O)"
+msgstr "טעינת תמונות או נתוני GPS‏ (ctrl O)"
+
+#: ../data/gottengeography.ui.h:7
+msgid "Change map view (Google opens in your browser)"
+msgstr "החלפת תצוגת המפה (Google נפתח בדפדפן שלך)"
+
+#: ../data/gottengeography.ui.h:8
+msgid "Return to the previous location viewed on map (Ctrl Left)"
+msgstr "חזרה למירום הקודם שהוצג במפה (Ctrl שמאלה)"
+
+#: ../data/gottengeography.ui.h:9
+msgid "Type the name of the city you would like to view."
+msgstr "נא להזין את שם העיר שברצונך לראות."
+
+#: ../data/gottengeography.ui.h:10
+msgid "Zoom the map out one step (Ctrl -)"
+msgstr "התרחקות מהמפה בדרגה אחת (Ctrl -‎)"
+
+#: ../data/gottengeography.ui.h:11
+msgid "Enhance! (Ctrl +)"
+msgstr "שיפור! (Ctrl +‎)"
+
+#: ../data/gottengeography.ui.h:12
+msgid "Learn how to use GottenGeography (Ctrl ?)"
+msgstr "לימוד על אופן השימוש ב־GottenGeography‏ (Ctrl ?‎)"
+
+#: ../data/gottengeography.ui.h:13
+msgid "About GottenGeography"
+msgstr "על אודות GottenGeography"
+
+#: ../data/gottengeography.ui.h:14
+msgid "Drag files here to load."
+msgstr "יש לגרור לכאן קבצים כדי לטעון"
+
+#: ../data/gottengeography.ui.h:15
+msgid "Close selected photos (Ctrl W)"
+msgstr "סגירת התמונות הנבחרות (Ctrl W)"
+
+#: ../data/gottengeography.ui.h:16
+msgid "Reload selected photos, losing all changes (Ctrl Z)"
+msgstr "טעינת התמונות הנבחרות מחדש תוך איבוד כל השינויים (Ctrl Z)"
+
+#: ../data/gottengeography.ui.h:17
+msgid "Center the map view on the selected photo (Ctrl J)"
+msgstr "מירכוז המפה על התמונה הנבחרת (Ctrl J)"
+
+#: ../data/gottengeography.ui.h:18
+msgid "Save all photos (Ctrl S)"
+msgstr "שמירת כל התמונות (Ctrl S)"
+
+#: ../data/gottengeography.ui.h:19
+msgid "Save All"
+msgstr "שמירת הכול"
+
+#: ../data/gottengeography.ui.h:20
+msgid "Place selected photos onto center of map (Ctrl Enter)"
+msgstr "הצבת התמונות הנבחרות במרכז המפה (Ctrl Enter)"
+
+#: ../data/gottengeography.ui.h:21
+msgid "Photos"
+msgstr "תמונות"
+
+#: ../data/gottengeography.ui.h:22
+msgid "Cameras"
+msgstr "מצלמות"
+
+#: ../data/gottengeography.ui.h:23
+msgid "GPS"
+msgstr "GPS"
+
+#: ../data/gottengeography.ui.h:24
+msgid "Is this a photo of a clock? Type the displayed time here:"
+msgstr "זאת תמונה של שעון? נא לרשום את השעה המוצגת להלן:"
+
+#: ../data/gottengeography.ui.h:25
+msgid "Set Clock Offset!"
+msgstr "הגדרת היסט השעון!"
+
+#: ../data/gottengeography.ui.h:26
+msgid "Open Files"
+msgstr "פתיחת קבצים"
+
+#: ../data/gottengeography.ui.h:27
+msgid ""
+"GottenGeography: Go open thy tagger!\n"
+"\n"
+"This program is written in the Python programming language, and adds geotags "
+"to your photos. The name is an anagram of \"Python Geotagger.\""
+msgstr ""
+"GottenGeography: יאללה לתיוגים!\n"
+"\n"
+"תכנית זו נכתבה בשפת התכנות פיית׳ון והיא מיועדת להוספת תיוג גאוגרפי לתמונות "
+"שלך. השם הוא אנגרמה על צמד המילים \"Python Geotagger.\""
+
+#: ../data/gottengeography.ui.h:30
+msgid "GottenGeography Wiki"
+msgstr "הוויקי של GottenGeography"
+
+#: ../data/gottengeography.ui.h:31
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Yaron https://launchpad.net/~sh-yaron"
+
+#: ../data/gottengeography.ui.h:32
+msgid ""
+"<span weight=\"bold\" size=\"larger\">Save changes to your photos before "
+"closing?</span>"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">האם לשמור את השינויים לתמונות שלך בטרם "
+"הסגירה?</span>"
+
+#: ../data/gottengeography.ui.h:34
+#, no-c-format
+msgid ""
+"The changes you've made to %d of your photos will be permanently lost if you "
+"do not save."
+msgstr "השינויים שערכת ל־%d מהתמונות שלך יאבדו לצמיתות אלמלא יישמרו."
+
+#: ../data/gottengeography.ui.h:35
+msgid "Close _without Saving"
+msgstr "_סגירה ללא שמירה"
+
+#: ../data/camera.ui.h:1
+msgid "Use the system timezone."
+msgstr "שימוש באזור הזמן של המערכת."
+
+#: ../data/camera.ui.h:2
+msgid "Use the local timezone."
+msgstr "שימוש באזור הזמן המקומי."
+
+#: ../data/camera.ui.h:3
+msgid "Specify a UTC offset manually."
+msgstr "הגדרת ההיסט מ־UTC ידנית."
+
+#: ../data/camera.ui.h:4
+msgid "Specify the timezone manually."
+msgstr "הגדרת אזור הזמן ידנית."
+
+#: ../gg/app.py:179
+msgid "Could not open: "
+msgstr "לא ניתן לפתוח: "
+
+#: ../gg/gpsmath.py:211
+msgid "N"
+msgstr "צפ׳"
+
+#: ../gg/gpsmath.py:211
+msgid "S"
+msgstr "דר׳"
+
+#: ../gg/gpsmath.py:212
+msgid "E"
+msgstr "מז׳"
+
+#: ../gg/gpsmath.py:212
+msgid "W"
+msgstr "מע׳"
+
+#: ../gg/gpsmath.py:219
+msgid "m above sea level"
+msgstr "מטרים מעל פני הים"
+
+#: ../gg/gpsmath.py:220
+msgid "m below sea level"
+msgstr "מטרים מתחת לפני הים"
+
+#: ../gg/camera.py:92
+msgid "Unknown Camera"
+msgstr "מצלמה בלתי ידועה"
+
+#: ../gg/camera.py:222
+#, python-format
+msgid "Add %dm, %ds to clock."
+msgstr "הוספת %d דקות ו־%d שניות לשעון."
+
+#: ../gg/camera.py:223
+#, python-format
+msgid "Subtract %dm, %ds from clock."
+msgstr "חיסור %d דקות ו־%d שניות לשעון."
+
+#: ../gg/camera.py:287
+msgid "No photos loaded."
+msgstr "לא נטענו תמונות."
+
+#: ../gg/camera.py:288
+msgid "One photo loaded."
+msgstr "נטענה תמונה אחת."
+
+#: ../gg/camera.py:289
+#, python-format
+msgid "%d photos loaded."
+msgstr "נטענו %d תמונות."
+
+#: ../gg/xmlfiles.py:210
+#, python-format
+msgid "%d points loaded in %.2fs."
+msgstr "%d נטענו תוך %.2f שניות."
+

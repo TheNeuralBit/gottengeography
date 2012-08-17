@@ -1,0 +1,243 @@
+# Catalan translation for gottengeography
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the gottengeography package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gottengeography\n"
+"Report-Msgid-Bugs-To: Robert Bruce Park <robru@gottengeography.ca>\n"
+"POT-Creation-Date: 2012-08-16 22:37-0500\n"
+"PO-Revision-Date: 2012-08-17 03:39+0000\n"
+"Last-Translator: Launchpad Translations Administrators <Unknown>\n"
+"Language-Team: Catalan <ca@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-17 03:44+0000\n"
+"X-Generator: Launchpad (build 15810)\n"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_Open..."
+msgstr "_Obrir..."
+
+#: ../data/gottengeography.ui.h:2
+msgid "_Save All"
+msgstr "De_sa-ho tot"
+
+#: ../data/gottengeography.ui.h:3
+msgid "_Help"
+msgstr "Ajuda (_H)"
+
+#: ../data/gottengeography.ui.h:4
+msgid "_About"
+msgstr "Qu_ant a"
+
+#: ../data/gottengeography.ui.h:5
+msgid "_Quit"
+msgstr "Surt (_Q)"
+
+#: ../data/gottengeography.ui.h:6
+msgid "Load photos or GPS data (Ctrl O)"
+msgstr "Carrega fotos o dades des del GPS (Ctrl O)"
+
+#: ../data/gottengeography.ui.h:7
+msgid "Change map view (Google opens in your browser)"
+msgstr "Canvia vista del mapa (Google s'obri al seu navegador)"
+
+#: ../data/gottengeography.ui.h:8
+msgid "Return to the previous location viewed on map (Ctrl Left)"
+msgstr "Tornar a la última posició vista al mapa (Ctrl Esquerra)"
+
+#: ../data/gottengeography.ui.h:9
+msgid "Type the name of the city you would like to view."
+msgstr "Introduïsca el nom de la ciutat que li agradaria vore."
+
+#: ../data/gottengeography.ui.h:10
+msgid "Zoom the map out one step (Ctrl -)"
+msgstr "Reduir zoom un nivell (Ctrl -)"
+
+#: ../data/gottengeography.ui.h:11
+msgid "Enhance! (Ctrl +)"
+msgstr "Millorar! (Ctrl +)"
+
+#: ../data/gottengeography.ui.h:12
+msgid "Learn how to use GottenGeography (Ctrl ?)"
+msgstr "Aprén com usar GottenGeography (Ctrl ?)"
+
+#: ../data/gottengeography.ui.h:13
+msgid "About GottenGeography"
+msgstr "Sobre GottenGeography"
+
+#: ../data/gottengeography.ui.h:14
+msgid "Drag files here to load."
+msgstr "Arrossegue fitxers ací per carregar-los."
+
+#: ../data/gottengeography.ui.h:15
+msgid "Close selected photos (Ctrl W)"
+msgstr "Tanca les fotos seleccionades (Ctrl W)"
+
+#: ../data/gottengeography.ui.h:16
+msgid "Reload selected photos, losing all changes (Ctrl Z)"
+msgstr ""
+"Tornar a carregar les fotos seleccionades, perdent tots els canvis (Ctrl Z)"
+
+#: ../data/gottengeography.ui.h:17
+msgid "Center the map view on the selected photo (Ctrl J)"
+msgstr "Centra la vista del mapa a la foto seleccionada (Ctrl J)"
+
+#: ../data/gottengeography.ui.h:18
+msgid "Save all photos (Ctrl S)"
+msgstr "Desa totes les fotos (Ctrl S)"
+
+#: ../data/gottengeography.ui.h:19
+msgid "Save All"
+msgstr "Desa-ho Tot"
+
+#: ../data/gottengeography.ui.h:20
+msgid "Place selected photos onto center of map (Ctrl Enter)"
+msgstr "Situa les fotos seleccionades al centre del mapa (Ctrl Intro)"
+
+#: ../data/gottengeography.ui.h:21
+msgid "Photos"
+msgstr "Fotos"
+
+#: ../data/gottengeography.ui.h:22
+msgid "Cameras"
+msgstr "Càmeres"
+
+#: ../data/gottengeography.ui.h:23
+msgid "GPS"
+msgstr "GPS"
+
+#: ../data/gottengeography.ui.h:24
+msgid "Is this a photo of a clock? Type the displayed time here:"
+msgstr "És la foto d'un rellotge? Introduïsca ací l'hora que mostra:"
+
+#: ../data/gottengeography.ui.h:25
+msgid "Set Clock Offset!"
+msgstr "Establir diferència d'hores!"
+
+#: ../data/gottengeography.ui.h:26
+msgid "Open Files"
+msgstr "Obre fitxers"
+
+#: ../data/gottengeography.ui.h:27
+msgid ""
+"GottenGeography: Go open thy tagger!\n"
+"\n"
+"This program is written in the Python programming language, and adds geotags "
+"to your photos. The name is an anagram of \"Python Geotagger.\""
+msgstr ""
+"GottenGeography: Vaja a obrir la seua etiquetadora!\n"
+"\n"
+"Este programa esta escrit amb el llenguatge de programació Python, i afegís "
+"geo-etiquetes a les seues fotos. El nom és un anagrama de \"Python "
+"Geotagger.\""
+
+#: ../data/gottengeography.ui.h:30
+msgid "GottenGeography Wiki"
+msgstr "Wiki de GottenGeography"
+
+#: ../data/gottengeography.ui.h:31
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  VPablo https://launchpad.net/~villumar"
+
+#: ../data/gottengeography.ui.h:32
+msgid ""
+"<span weight=\"bold\" size=\"larger\">Save changes to your photos before "
+"closing?</span>"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">Desa els canvis a les seues fotos "
+"abans de tancar?</span>"
+
+#: ../data/gottengeography.ui.h:34
+#, no-c-format
+msgid ""
+"The changes you've made to %d of your photos will be permanently lost if you "
+"do not save."
+msgstr ""
+"Els canvis que ha fet a %d de les seues fotos es perdran per sempre si no "
+"els desa."
+
+#: ../data/gottengeography.ui.h:35
+msgid "Close _without Saving"
+msgstr "_Tanca sense desar"
+
+#: ../data/camera.ui.h:1
+msgid "Use the system timezone."
+msgstr "Usa la zona horària del sistema."
+
+#: ../data/camera.ui.h:2
+msgid "Use the local timezone."
+msgstr "Usa la zona horària local."
+
+#: ../data/camera.ui.h:3
+msgid "Specify a UTC offset manually."
+msgstr "Especifica un desplaçament UTC manualment."
+
+#: ../data/camera.ui.h:4
+msgid "Specify the timezone manually."
+msgstr "Especifica la zona horària manualment."
+
+#: ../gg/app.py:179
+msgid "Could not open: "
+msgstr "No s'ha pogut obrir: "
+
+#: ../gg/gpsmath.py:211
+msgid "N"
+msgstr "N"
+
+#: ../gg/gpsmath.py:211
+msgid "S"
+msgstr "S"
+
+#: ../gg/gpsmath.py:212
+msgid "E"
+msgstr "E"
+
+#: ../gg/gpsmath.py:212
+msgid "W"
+msgstr "W"
+
+#: ../gg/gpsmath.py:219
+msgid "m above sea level"
+msgstr "m sobre el nivell del mar"
+
+#: ../gg/gpsmath.py:220
+msgid "m below sea level"
+msgstr "m baix el nivell del mar"
+
+#: ../gg/camera.py:92
+msgid "Unknown Camera"
+msgstr "Càmera desconeguda"
+
+#: ../gg/camera.py:222
+#, python-format
+msgid "Add %dm, %ds to clock."
+msgstr "Afegir %dm, %ds al rellotge."
+
+#: ../gg/camera.py:223
+#, python-format
+msgid "Subtract %dm, %ds from clock."
+msgstr "Restar %dm, %ds del rellotge."
+
+#: ../gg/camera.py:287
+msgid "No photos loaded."
+msgstr "No hi ha fotos carregades."
+
+#: ../gg/camera.py:288
+msgid "One photo loaded."
+msgstr "Una foto carregada."
+
+#: ../gg/camera.py:289
+#, python-format
+msgid "%d photos loaded."
+msgstr "%d fotos carregades."
+
+#: ../gg/xmlfiles.py:210
+#, python-format
+msgid "%d points loaded in %.2fs."
+msgstr "%d punts carregats a %.2fs."

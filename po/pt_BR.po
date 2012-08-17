@@ -1,0 +1,242 @@
+# Brazilian Portuguese translation for gottengeography
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the gottengeography package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gottengeography\n"
+"Report-Msgid-Bugs-To: Robert Bruce Park <robru@gottengeography.ca>\n"
+"POT-Creation-Date: 2012-08-16 22:37-0500\n"
+"PO-Revision-Date: 2012-08-17 03:40+0000\n"
+"Last-Translator: Fábio Nogueira <deb-user-ba@ubuntu.com>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-17 03:44+0000\n"
+"X-Generator: Launchpad (build 15810)\n"
+
+#: ../data/gottengeography.ui.h:1
+msgid "_Open..."
+msgstr "_Abrir..."
+
+#: ../data/gottengeography.ui.h:2
+msgid "_Save All"
+msgstr "_Salvar todos"
+
+#: ../data/gottengeography.ui.h:3
+msgid "_Help"
+msgstr "_Ajuda"
+
+#: ../data/gottengeography.ui.h:4
+msgid "_About"
+msgstr "_Sobre"
+
+#: ../data/gottengeography.ui.h:5
+msgid "_Quit"
+msgstr "_Sair"
+
+#: ../data/gottengeography.ui.h:6
+msgid "Load photos or GPS data (Ctrl O)"
+msgstr "Carregar fotos ou dados do GPS (Ctrl O)"
+
+#: ../data/gottengeography.ui.h:7
+msgid "Change map view (Google opens in your browser)"
+msgstr "Mudar visualização do mapa (O Google será aberto no seu navegador)"
+
+#: ../data/gottengeography.ui.h:8
+msgid "Return to the previous location viewed on map (Ctrl Left)"
+msgstr "Retornar para a localização anterior vista no mapa (Ctrl Esquerda)"
+
+#: ../data/gottengeography.ui.h:9
+msgid "Type the name of the city you would like to view."
+msgstr "Digite o nome da cidade que você deseja visualizar."
+
+#: ../data/gottengeography.ui.h:10
+msgid "Zoom the map out one step (Ctrl -)"
+msgstr "Reduzir o mapa (Ctrl -)"
+
+#: ../data/gottengeography.ui.h:11
+msgid "Enhance! (Ctrl +)"
+msgstr "Ampliar mapa (Ctrl +)"
+
+#: ../data/gottengeography.ui.h:12
+msgid "Learn how to use GottenGeography (Ctrl ?)"
+msgstr "Aprenda como usar o GottenGeography (Ctrl ?)"
+
+#: ../data/gottengeography.ui.h:13
+msgid "About GottenGeography"
+msgstr "Sobre o GottenGeography"
+
+#: ../data/gottengeography.ui.h:14
+msgid "Drag files here to load."
+msgstr "Arraste arquivos aqui para carregar."
+
+#: ../data/gottengeography.ui.h:15
+msgid "Close selected photos (Ctrl W)"
+msgstr "Fechar fotos selecionadas (Ctrl W)"
+
+#: ../data/gottengeography.ui.h:16
+msgid "Reload selected photos, losing all changes (Ctrl Z)"
+msgstr "Recarregar fotos selecionadas, perdendo todas as alterações (Ctrl Z)"
+
+#: ../data/gottengeography.ui.h:17
+msgid "Center the map view on the selected photo (Ctrl J)"
+msgstr "Centralizar a visualização do mapa na foto selecionada (Ctrl J)"
+
+#: ../data/gottengeography.ui.h:18
+msgid "Save all photos (Ctrl S)"
+msgstr "Salvar todas as fotos (Ctrl S)"
+
+#: ../data/gottengeography.ui.h:19
+msgid "Save All"
+msgstr "Salvar tudo"
+
+#: ../data/gottengeography.ui.h:20
+msgid "Place selected photos onto center of map (Ctrl Enter)"
+msgstr "Colocar fotos selecionadas no centro do mapa (Ctrl Enter)"
+
+#: ../data/gottengeography.ui.h:21
+msgid "Photos"
+msgstr "Fotos"
+
+#: ../data/gottengeography.ui.h:22
+msgid "Cameras"
+msgstr "Câmeras"
+
+#: ../data/gottengeography.ui.h:23
+msgid "GPS"
+msgstr "GPS"
+
+#: ../data/gottengeography.ui.h:24
+msgid "Is this a photo of a clock? Type the displayed time here:"
+msgstr "Está é uma foto do momento? Digite aqui o tempo exibido:"
+
+#: ../data/gottengeography.ui.h:25
+msgid "Set Clock Offset!"
+msgstr "Definir hora de deslocamento!"
+
+#: ../data/gottengeography.ui.h:26
+msgid "Open Files"
+msgstr "Abrir arquivos"
+
+#: ../data/gottengeography.ui.h:27
+msgid ""
+"GottenGeography: Go open thy tagger!\n"
+"\n"
+"This program is written in the Python programming language, and adds geotags "
+"to your photos. The name is an anagram of \"Python Geotagger.\""
+msgstr ""
+"GottenGeography: Abra o seu etiquetador!\n"
+"\n"
+"Este programa é escrito na linguagem de programação Python, e acrescenta "
+"geotags nas suas fotos. O nome é um anagrama de \"Python Geotagger.\""
+
+#: ../data/gottengeography.ui.h:30
+msgid "GottenGeography Wiki"
+msgstr "Wiki do GottenGeography"
+
+#: ../data/gottengeography.ui.h:31
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Fábio Nogueira https://launchpad.net/~fnogueira"
+
+#: ../data/gottengeography.ui.h:32
+msgid ""
+"<span weight=\"bold\" size=\"larger\">Save changes to your photos before "
+"closing?</span>"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">Salvar as alterações nas fotos antes "
+"de fechar?</span>"
+
+#: ../data/gottengeography.ui.h:34
+#, no-c-format
+msgid ""
+"The changes you've made to %d of your photos will be permanently lost if you "
+"do not save."
+msgstr ""
+"As modificações que você realizou na(s) %d de sua(s) foto(s) serão perdidas "
+"permanentemente se você não salvar."
+
+#: ../data/gottengeography.ui.h:35
+msgid "Close _without Saving"
+msgstr "Fechar _sem salvar"
+
+#: ../data/camera.ui.h:1
+msgid "Use the system timezone."
+msgstr "Utilizar o fuso horário do sistema."
+
+#: ../data/camera.ui.h:2
+msgid "Use the local timezone."
+msgstr "Utilizar o fuso horário local."
+
+#: ../data/camera.ui.h:3
+msgid "Specify a UTC offset manually."
+msgstr "Especifar um deslocamento UTC manualmente."
+
+#: ../data/camera.ui.h:4
+msgid "Specify the timezone manually."
+msgstr "Especificar o fuso horário manualmente."
+
+#: ../gg/app.py:179
+msgid "Could not open: "
+msgstr "Não foi possível abrir: "
+
+#: ../gg/gpsmath.py:211
+msgid "N"
+msgstr "N"
+
+#: ../gg/gpsmath.py:211
+msgid "S"
+msgstr "S"
+
+#: ../gg/gpsmath.py:212
+msgid "E"
+msgstr "L"
+
+#: ../gg/gpsmath.py:212
+msgid "W"
+msgstr "O"
+
+#: ../gg/gpsmath.py:219
+msgid "m above sea level"
+msgstr "metro(s) acima do nível do mar"
+
+#: ../gg/gpsmath.py:220
+msgid "m below sea level"
+msgstr "metro(s) abaixo do nível do mar"
+
+#: ../gg/camera.py:92
+msgid "Unknown Camera"
+msgstr "Câmera desconhecida"
+
+#: ../gg/camera.py:222
+#, python-format
+msgid "Add %dm, %ds to clock."
+msgstr "Adicionar %dm, %ds ao relógio."
+
+#: ../gg/camera.py:223
+#, python-format
+msgid "Subtract %dm, %ds from clock."
+msgstr "Subtrair %dm, %ds do relógio."
+
+#: ../gg/camera.py:287
+msgid "No photos loaded."
+msgstr "Nenhuma foto carregada."
+
+#: ../gg/camera.py:288
+msgid "One photo loaded."
+msgstr "Uma foto carregada."
+
+#: ../gg/camera.py:289
+#, python-format
+msgid "%d photos loaded."
+msgstr "%d foto(s) carregada(s)."
+
+#: ../gg/xmlfiles.py:210
+#, python-format
+msgid "%d points loaded in %.2fs."
+msgstr "%d pontos carregados em %.2fs."
+
