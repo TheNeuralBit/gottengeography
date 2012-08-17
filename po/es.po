@@ -136,7 +136,7 @@ msgid "GottenGeography Wiki"
 msgstr "Wiki de GottenGeography"
 
 #: ../data/gottengeography.ui.h:26
-msgid "Robert Park <rbpark@exolucere.ca>"
+msgid "translator-credits"
 msgstr "Jose Luis Tirado <joseluis.tirado@gmail.com>"
 
 #: ../data/gottengeography.ui.h:27

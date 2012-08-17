@@ -130,7 +130,7 @@ msgid "GottenGeography Wiki"
 msgstr "GottenGeography Wiki"
 
 #: ../data/gottengeography.ui.h:24
-msgid "Robert Park <rbpark@exolucere.ca>"
+msgid "translator-credits"
 msgstr "Robert Park <rbpark@exolucere.ca>"
 
 #: ../data/gottengeography.ui.h:25

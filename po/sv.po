@@ -131,7 +131,7 @@ msgid "GottenGeography Wiki"
 msgstr "GottenGeographys wikisida"
 
 #: ../data/gottengeography.ui.h:24
-msgid "Robert Park <rbpark@exolucere.ca>"
+msgid "translator-credits"
 msgstr "Daniel Nylander <po@danielnylander.se>"
 
 #: ../data/gottengeography.ui.h:25

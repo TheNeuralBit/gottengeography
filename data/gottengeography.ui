@@ -820,7 +820,7 @@ along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</pro
     <property name="authors">Robert Park &lt;rbpark@exolucere.ca&gt;
 Marc Ordinas i Llopis &lt;mail@marcoil.org&gt;</property>
     <property name="documenters">Robert Park &lt;rbpark@exolucere.ca&gt;</property>
-    <property name="translator_credits" translatable="yes">Robert Park &lt;rbpark@exolucere.ca&gt;</property>
+    <property name="translator_credits" translatable="yes">translator-credits</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox1">
         <property name="visible">True</property>
