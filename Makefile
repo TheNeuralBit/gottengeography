@@ -1,6 +1,9 @@
 # Author: Robert Park <robru@gottengeography.ca>, (C) 2012
 # Copyright: See COPYING file included with this distribution.
 
+build:
+	python setup.py build
+
 check:
 	nosetests-2.7 --with-doctest -v
 
