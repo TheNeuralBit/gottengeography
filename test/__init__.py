@@ -8,10 +8,10 @@ from time import tzset
 
 from gg.app import GottenGeography, startup
 from gg.common import Gst, modified, selected
-from gg.widgets import Widgets, MapView
 from gg.build_info import PKG_DATA_DIR
 from gg.xmlfiles import TrackFile
 from gg.photos import Photograph
+from gg.widgets import Widgets
 from gg.camera import Camera
 
 DEMOFILES = [abspath(join(PKG_DATA_DIR, '..', 'demo', f))
@@ -47,4 +47,3 @@ def teardown():
     system('git checkout demo')
     for key in Gst.list_keys():
         Gst.reset(key)
-

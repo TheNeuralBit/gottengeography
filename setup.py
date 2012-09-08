@@ -9,7 +9,7 @@ from distutils.command.install_data import install_data as _install_data
 from distutils.command.build_py import build_py as _build_py
 from distutils.command.install import install
 
-from gg.version import *
+from gg.version import PACKAGE, VERSION, AUTHOR, EMAIL
 
 root = '--root' in ' '.join(argv)
 
@@ -30,9 +30,9 @@ PKG_DATA_DIR='%s'
 REVISION='Version %s'
 """
 
-class build_py(_build_py): 
+class build_py(_build_py):
     """Clobber gg/build_info.py with the real package data dir.
-    
+
     Inspired by a distutils-sig posting by Wolodja Wentland in Sept 2009.
     """
     def build_module(self, module, module_file, package):
@@ -48,7 +48,7 @@ class build_py(_build_py):
                     ))
             except KeyError:
                 pass
-        
+
         _build_py.build_module(self, module, module_file, package)
 
 # If the --root option has been specified, then most likely we are installing
@@ -100,4 +100,3 @@ and then record those locations into the photos.
                  'install': install,
                  'install_data': install_data }
 )
-

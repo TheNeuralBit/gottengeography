@@ -30,12 +30,12 @@ from urlparse import urlparse
 from urllib import unquote
 
 from widgets import Widgets, MapView
-from common import selected, modified
 from photos import Photograph
+from common import selected
 
 class DragController():
     """Control the drag & drop behavior."""
-    
+
     def __init__(self, open_files):
         # Drag source definitons
         photos_view = Widgets.photos_view
@@ -43,52 +43,51 @@ class DragController():
             [], Gdk.DragAction.COPY)
         photos_view.drag_source_add_text_targets()
         photos_view.connect('drag-data-get', self.photo_drag_start)
-        
+
         # Drag destination defintions
         notebook = Widgets.photo_camera_gps
         notebook.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
         notebook.drag_dest_add_text_targets()
         notebook.connect('drag-data-received', self.photo_drag_end, False)
-        
+
         container = Widgets.map_container
         container.drag_dest_set(Gtk.DestDefaults.ALL, [], Gdk.DragAction.COPY)
         container.drag_dest_add_text_targets()
         container.connect('drag-data-received', self.photo_drag_end, True)
-        
+
         self.external_drag = True
         self.selection = photos_view.get_selection()
         self.open_files = open_files
-    
+
     def photo_drag_start(self, widget, drag_context, data, info, time):
         """Allow dragging more than one photo."""
         self.external_drag = False # Don't reload files from disk
         data.set_text('\n'.join([photo.filename for photo in selected]), -1)
-    
+
     def photo_drag_end(self, widget, drag_context, x, y,
                        data, info, time, on_map):
         """Respond to drops and position photos accordingly.
-        
+
         This method allows photos to be dropped in from the photo
         pane or any other drag source, such as the file browser.
         """
         if not data.get_text():
             return
-        
+
         lat, lon = MapView.y_to_latitude(y), MapView.x_to_longitude(x)
-        
+
         files = [unquote(urlparse(s).path.strip()) for s in
                  data.get_text().split('\n') if s]
-        
+
         if self.external_drag:
             self.open_files(files)
         self.external_drag = True
-        
+
         if on_map:
             for filename in files:
                 photo = Photograph.cache.get(filename)
                 if photo is not None:
                     photo.manual = True
                     photo.set_location(lat, lon)
-        
-        self.selection.emit('changed')
 
+        self.selection.emit('changed')
