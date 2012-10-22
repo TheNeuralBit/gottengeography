@@ -1,4 +1,4 @@
-# Ukrainian translation for gottengeography
+# Uyghur translation for gottengeography
 # Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the gottengeography package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
@@ -6,11 +6,11 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gottengeography\n"
-"Report-Msgid-Bugs-To: Robert Bruce Park <robru@gottengeography.ca>\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-08-16 22:37-0500\n"
-"PO-Revision-Date: 2012-08-17 13:02+0000\n"
-"Last-Translator: Robert Bruce Park <robert.park@canonical.com>\n"
-"Language-Team: Ukrainian <uk@li.org>\n"
+"PO-Revision-Date: 2012-08-27 02:34+0000\n"
+"Last-Translator: Sahran <Unknown>\n"
+"Language-Team: Uyghur <ug@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,95 +19,92 @@ msgstr ""
 
 #: ../data/gottengeography.ui.h:1
 msgid "_Open..."
-msgstr "_Відкрити..."
+msgstr "ئاچ(_O)…"
 
 #: ../data/gottengeography.ui.h:2
 msgid "_Save All"
-msgstr "Зб_ерегти все"
+msgstr "ھەممىسىنى ساقلا(_S)"
 
 #: ../data/gottengeography.ui.h:3
 msgid "_Help"
-msgstr "_Довідка"
+msgstr "ياردەم(_H)"
 
 #: ../data/gottengeography.ui.h:4
 msgid "_About"
-msgstr "_Про програму"
+msgstr "ھەققىدە(_A)"
 
 #: ../data/gottengeography.ui.h:5
 msgid "_Quit"
-msgstr "Ви_йти"
+msgstr "چېكىن(_Q)"
 
 #: ../data/gottengeography.ui.h:6
 msgid "Load photos or GPS data (Ctrl O)"
-msgstr "Завантажити фотографії або дані GPS (Ctrl O)"
+msgstr "سۈرەتلەرنى ياكى GPS سانلىق-مەلۇماتلىرىنى يۈكلەيدۇ(Ctrl O)"
 
 #: ../data/gottengeography.ui.h:7
 msgid "Change map view (Google opens in your browser)"
-msgstr ""
-"Змінити режим перегляду карти (буде відкрито сторінку Google у ваші програмі "
-"для перегляду інтернету)"
+msgstr "خەرىتە كۆرۈنۈشىنى ئۆزگەرتىدۇ(گۇگىل توركۆرگۈڭىزدە ئېچىلىدۇ)"
 
 #: ../data/gottengeography.ui.h:8
 msgid "Return to the previous location viewed on map (Ctrl Left)"
-msgstr ""
-"Повернутися до попереднього місця, яке переглядалося на карті (Ctrl ←)"
+msgstr "خەرىتىدىكى ھېلى كۆرگەن ئورۇنغا قايتىپ كېلىدۇ(Ctrl Left)"
 
 #: ../data/gottengeography.ui.h:9
 msgid "Type the name of the city you would like to view."
-msgstr "Введіть назву міста, карту якого ви хочете переглянути."
+msgstr "كۆرگۈڭىز كەلگەن شەھەرنىڭ ئىسمىنى كىرگۈزۈڭ."
 
 #: ../data/gottengeography.ui.h:10
 msgid "Zoom the map out one step (Ctrl -)"
-msgstr "Зменшити масштаб карти на один крок (Ctrl -)"
+msgstr "بىر قەدەمدىلا خەرىتىنى كىچىكلىتىدۇ (Ctrl -)"
 
 #: ../data/gottengeography.ui.h:11
 msgid "Enhance! (Ctrl +)"
-msgstr "Збільшити! (Ctrl +)"
+msgstr "چوڭايت!(Ctrl +)"
 
 #: ../data/gottengeography.ui.h:12
 msgid "Learn how to use GottenGeography (Ctrl ?)"
-msgstr "Отримати довідку щодо користування GottenGeography (Ctrl ?)"
+msgstr "گوتتېن جۇغراپىيىسىنى (GottenGeography)  ئىشلىتىشنى ئۆگىنىش(Ctrl ?)"
 
 #: ../data/gottengeography.ui.h:13
 msgid "About GottenGeography"
-msgstr "Про GottenGeography"
+msgstr "گوتتېن جۇغراپىيىسى (GottenGeography) ھەققىدە"
 
 #: ../data/gottengeography.ui.h:14
 msgid "Drag files here to load."
-msgstr "Перетягніть сюди файли для завантаження."
+msgstr "سۈرەتلەرنى بۇ يەرگە سۆرەپ كېلىپ يۈكلەڭ."
 
 #: ../data/gottengeography.ui.h:15
 msgid "Close selected photos (Ctrl W)"
-msgstr "Закрити позначені фотографії (Ctrl W)"
+msgstr "تاللانغان سۈرەتلەرنى ياپىدۇ(Ctrl W)"
 
 #: ../data/gottengeography.ui.h:16
 msgid "Reload selected photos, losing all changes (Ctrl Z)"
 msgstr ""
-"Перезавантажити позначені фотографії, відкинути всі внесені зміни (Ctrl Z)"
+"تاللانغان سۈرەتلەرنى قايتا يۈكلەيدۇ، ھەممە ئۆزگەرتىشلەر يوقىلىدۇ(Ctrl Z)"
 
 #: ../data/gottengeography.ui.h:17
 msgid "Center the map view on the selected photo (Ctrl J)"
-msgstr "Розмістити центр перегляду карти за позначеною фотографією (Ctrl J)"
+msgstr "تاللانغان سۈرەتتە خەرىتە كۆرۈنۈشىنى ئوتتۇرىغا توغرىلايدۇ(Ctrl J)"
 
 #: ../data/gottengeography.ui.h:18
 msgid "Save all photos (Ctrl S)"
-msgstr "Зберегти всі фотографії (Ctrl S)"
+msgstr "بارلىق سۈرەتلەرنى ساقلايدۇ(Ctrl S)"
 
 #: ../data/gottengeography.ui.h:19
 msgid "Save All"
-msgstr "Зберегти все"
+msgstr "ھەممىنى ساقلا"
 
 #: ../data/gottengeography.ui.h:20
 msgid "Place selected photos onto center of map (Ctrl Enter)"
-msgstr "Розташувати позначені фотографії у центрі карти (Ctrl Enter)"
+msgstr "تاللانغان سۈرەتنى خەرىتىنىڭ ئوتتۇرىسىغا قويىدۇ(Ctrl Enter)"
 
 #: ../data/gottengeography.ui.h:21
 msgid "Photos"
-msgstr "Фотографії"
+msgstr "سۈرەتلەر"
 
 #: ../data/gottengeography.ui.h:22
 msgid "Cameras"
-msgstr "Фотоапарати"
+msgstr "كامېرالار"
 
 #: ../data/gottengeography.ui.h:23
 msgid "GPS"
@@ -115,15 +112,15 @@ msgstr "GPS"
 
 #: ../data/gottengeography.ui.h:24
 msgid "Is this a photo of a clock? Type the displayed time here:"
-msgstr "Це фотографія годинника? Вкажіть показаний час:"
+msgstr "بۇ بىر پارچە سائەت سۈرەتمۇ؟ بۇ جايغا كۆرسىتىدىغان ۋاقىتنى كىرگۈزۈڭ:"
 
 #: ../data/gottengeography.ui.h:25
 msgid "Set Clock Offset!"
-msgstr "Вкажіть часовий пояс годинника!"
+msgstr "سائەتنىڭ ۋاقىت پەرقى تەڭشىكى:"
 
 #: ../data/gottengeography.ui.h:26
 msgid "Open Files"
-msgstr "Відкрити файли"
+msgstr "ھۆججەت ئاچ"
 
 #: ../data/gottengeography.ui.h:27
 msgid ""
@@ -132,30 +129,29 @@ msgid ""
 "This program is written in the Python programming language, and adds geotags "
 "to your photos. The name is an anagram of \"Python Geotagger.\""
 msgstr ""
-"GottenGeography: ваша відкрита програма для розмічування карти!\n"
+"گوتتېن جۇغراپىيەسى: ھەييارلىقىڭىزنى باشلاڭ!\n"
 "\n"
-"Цю програму було написано мовою програмування Python. Вона здатна додавати "
-"мітки геопозиціювання до ваших фотографій. Назва програми є анаграмою "
-"словосполучення «Python Geotagger»."
+"بۇ پىروگرامما Python پىروگرامما تىلىدا يېزىلدى، سۈرەتلىرىڭىزگە جۇغراپىيە "
+"بەلگىسى قوشىدۇ. ئۇنىڭ ئاتى \"Python Geotagger.\""
 
 #: ../data/gottengeography.ui.h:30
 msgid "GottenGeography Wiki"
-msgstr "Вікі GottenGeography"
+msgstr "گوتتېن جۇغراپىيىسى (GottenGeography) ۋىكىسى"
 
 #: ../data/gottengeography.ui.h:31
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Robert Bruce Park https://launchpad.net/~robru\n"
-"  Yuri Chornoivan https://launchpad.net/~yurchor-gmail"
+"  Gheyret T.Kenji https://launchpad.net/~gheyretkenji\n"
+"  Sahran https://launchpad.net/~sahran"
 
 #: ../data/gottengeography.ui.h:32
 msgid ""
 "<span weight=\"bold\" size=\"larger\">Save changes to your photos before "
 "closing?</span>"
 msgstr ""
-"<span weight=\"bold\" size=\"larger\">Зберегти зміни у ваших фотографіях до "
-"завершення роботи програми?</span>"
+"<span weight=\"bold\" size=\"larger\">تاقاشتىن ئىلگىرى سۈرەت "
+"ئۆزگەرتىشلىرىڭىزنى ساقلامدۇ؟</span>"
 
 #: ../data/gottengeography.ui.h:34
 #, no-c-format
@@ -163,84 +159,84 @@ msgid ""
 "The changes you've made to %d of your photos will be permanently lost if you "
 "do not save."
 msgstr ""
-"Зміни, внесені вами до %d фотографій, буде втрачено, якщо ви не збережете їх."
+"ئەگەر ساقلىمىسىڭىز، %d غا ئېلىپ بارغان ئۆزگەرتىشلىرىڭىز مەڭگۈلۈك يوقىلىدۇ."
 
 #: ../data/gottengeography.ui.h:35
 msgid "Close _without Saving"
-msgstr "Закрити _без збереження"
+msgstr "ساقلىماي ياپ(_W)"
 
 #: ../data/camera.ui.h:1
 msgid "Use the system timezone."
-msgstr "Використовувати часовий пояс системи."
+msgstr "سىستېما ۋاقىت رايونى(timezone) نى ئىشلىتىدۇ."
 
 #: ../data/camera.ui.h:2
 msgid "Use the local timezone."
-msgstr "Використовувати місцевий часовий пояс."
+msgstr "يەرلىك ۋاقىت رايونى(timezone) نى ئىشلىتىدۇ."
 
 #: ../data/camera.ui.h:3
 msgid "Specify a UTC offset manually."
-msgstr "Вказати зсув відносно всесвітнього часу (UTC) вручну."
+msgstr "قولدا UTC ۋاقىت رايون پەرقىنى بەلگىلەيدۇ."
 
 #: ../data/camera.ui.h:4
 msgid "Specify the timezone manually."
-msgstr "Вказати часовий пояс вручну."
+msgstr "ۋاقىت رايونى(timezone) نى قولدا بەلگىلەيدۇ."
 
 #: ../gg/app.py:179
 msgid "Could not open: "
-msgstr "Не вдалося відкрити: "
+msgstr "ئاچالمىدى: "
 
 #: ../gg/gpsmath.py:211
 msgid "N"
-msgstr "Пн"
+msgstr "شىمال"
 
 #: ../gg/gpsmath.py:211
 msgid "S"
-msgstr "Пд"
+msgstr "جەنۇپ"
 
 #: ../gg/gpsmath.py:212
 msgid "E"
-msgstr "Сх"
+msgstr "شەرق"
 
 #: ../gg/gpsmath.py:212
 msgid "W"
-msgstr "Зх"
+msgstr "غەرپ"
 
 #: ../gg/gpsmath.py:219
 msgid "m above sea level"
-msgstr "м над рівнем моря"
+msgstr "دېڭىز يۈزىدىن ئېگىزلىكى مېتىر"
 
 #: ../gg/gpsmath.py:220
 msgid "m below sea level"
-msgstr "м під рівнем моря"
+msgstr "دېڭىز يۈزىدىن تۆۋەنلىكى مېتىر"
 
 #: ../gg/camera.py:92
 msgid "Unknown Camera"
-msgstr "Невідомий фотоапарат"
+msgstr "يوچۇن كامېرا"
 
 #: ../gg/camera.py:222
 #, python-format
 msgid "Add %dm, %ds to clock."
-msgstr "Додати до часу годинника %d хв %d с."
+msgstr "%dm، %ds نى سائەتكە قوشىدۇ."
 
 #: ../gg/camera.py:223
 #, python-format
 msgid "Subtract %dm, %ds from clock."
-msgstr "Відняти від часу годинника %d хв %d с."
+msgstr "%dm، %ds نى سائەتتىن چىقىرىۋېتىدۇ."
 
 #: ../gg/camera.py:287
 msgid "No photos loaded."
-msgstr "Не завантажено жодної фотографії."
+msgstr "ھېچقانداق سۈرەت يۈكلەنمىدى."
 
 #: ../gg/camera.py:288
 msgid "One photo loaded."
-msgstr "Завантажено одну фотографію."
+msgstr "بىر سۈرەت يۈكلەندى."
 
 #: ../gg/camera.py:289
 #, python-format
 msgid "%d photos loaded."
-msgstr "Завантажено %d фотографій."
+msgstr "%d سۈرەت يۈكلەندى."
 
 #: ../gg/xmlfiles.py:210
 #, python-format
 msgid "%d points loaded in %.2fs."
-msgstr "Завантажено %d позицій за %.2f с."
+msgstr "%d نۇقتا يۈكلەندى،  %.2fs دا."

@@ -1,106 +1,101 @@
-# GottenGeography translation template.
-# Copyright (C) 2010 Robert Park
-# This file is distributed under the same license as the GottenGeography package.
-# Robert Park <rbpark@exolucere.ca>, 2010
+# English (United Kingdom) translation for gottengeography
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the gottengeography package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gottengeography 2.0\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: gottengeography\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-08-16 22:37-0500\n"
-"PO-Revision-Date: 2012-08-25 13:42+0000\n"
-"Last-Translator: Jerome Portal <portal.j@hotmail.fr>\n"
-"Language-Team: French\n"
+"PO-Revision-Date: 2012-08-17 03:39+0000\n"
+"Last-Translator: Launchpad Translations Administrators <Unknown>\n"
+"Language-Team: English (United Kingdom) <en_GB@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-08-31 05:15+0000\n"
 "X-Generator: Launchpad (build 15887)\n"
-"Language: fr\n"
 
 #: ../data/gottengeography.ui.h:1
 msgid "_Open..."
-msgstr "_Ouvrir..."
+msgstr "_Open…"
 
 #: ../data/gottengeography.ui.h:2
 msgid "_Save All"
-msgstr "_Tout enregistrer"
+msgstr "_Save All"
 
 #: ../data/gottengeography.ui.h:3
 msgid "_Help"
-msgstr "Aid_e"
+msgstr "_Help"
 
 #: ../data/gottengeography.ui.h:4
 msgid "_About"
-msgstr "À _propos"
+msgstr "_About"
 
 #: ../data/gottengeography.ui.h:5
 msgid "_Quit"
-msgstr "_Quitter"
+msgstr "_Quit"
 
 #: ../data/gottengeography.ui.h:6
 msgid "Load photos or GPS data (Ctrl O)"
-msgstr "Charger des photos ou des données GPS (Ctrl + O)"
+msgstr "Load photos or GPS data (Ctrl O)"
 
 #: ../data/gottengeography.ui.h:7
 msgid "Change map view (Google opens in your browser)"
-msgstr "Changer vue sur la carte (Google s'ouvre dans votre navigateur)"
+msgstr "Change map view (Google opens in your browser)"
 
 #: ../data/gottengeography.ui.h:8
 msgid "Return to the previous location viewed on map (Ctrl Left)"
-msgstr ""
-"Retourner à l'endroit précédemment consulté sur la carte (Ctrl + Gauche)"
+msgstr "Return to the previous location viewed on map (Ctrl Left)"
 
 #: ../data/gottengeography.ui.h:9
 msgid "Type the name of the city you would like to view."
-msgstr "Tapez le nom de la ville que vous souhaitez consulter."
+msgstr "Type the name of the city you would like to view."
 
 #: ../data/gottengeography.ui.h:10
 msgid "Zoom the map out one step (Ctrl -)"
-msgstr "Zoom sur la carte d'un cran (Ctrl -)"
+msgstr "Zoom the map out one step (Ctrl -)"
 
 #: ../data/gottengeography.ui.h:11
 msgid "Enhance! (Ctrl +)"
-msgstr "Améliorer! (Ctrl +)"
+msgstr "Enhance! (Ctrl +)"
 
 #: ../data/gottengeography.ui.h:12
 msgid "Learn how to use GottenGeography (Ctrl ?)"
-msgstr "Apprenez à utiliser GottenGeography (Ctrl ?)"
+msgstr "Learn how to use GottenGeography (Ctrl ?)"
 
 #: ../data/gottengeography.ui.h:13
 msgid "About GottenGeography"
-msgstr "À propos de GottenGeography"
+msgstr "About GottenGeography"
 
 #: ../data/gottengeography.ui.h:14
 msgid "Drag files here to load."
-msgstr "Glissez des fichiers ici pour les charger."
+msgstr "Drag files here to load."
 
 #: ../data/gottengeography.ui.h:15
 msgid "Close selected photos (Ctrl W)"
-msgstr "Fermer les photos sélectionnées (Ctrl + W)"
+msgstr "Close selected photos (Ctrl W)"
 
 #: ../data/gottengeography.ui.h:16
 msgid "Reload selected photos, losing all changes (Ctrl Z)"
-msgstr ""
-"Recharger les photos sélectionnées, en perdant toutes les modifications "
-"(Ctrl + Z)"
+msgstr "Reload selected photos, losing all changes (Ctrl Z)"
 
 #: ../data/gottengeography.ui.h:17
 msgid "Center the map view on the selected photo (Ctrl J)"
-msgstr "Voir la photo sélectionnée (Ctrl J)"
+msgstr "Centre the map view on the selected photo (Ctrl J)"
 
 #: ../data/gottengeography.ui.h:18
 msgid "Save all photos (Ctrl S)"
-msgstr "Enregistrer toutes les photos (Ctrl + S)"
+msgstr "Save all photos (Ctrl S)"
 
 #: ../data/gottengeography.ui.h:19
 msgid "Save All"
-msgstr "Enregistrer tout"
+msgstr "Save All"
 
 #: ../data/gottengeography.ui.h:20
 msgid "Place selected photos onto center of map (Ctrl Enter)"
-msgstr ""
-"Insérer des photos sélectionnées sur le centre de la carte (Ctrl Enter)"
+msgstr "Place selected photos onto centre of map (Ctrl Enter)"
 
 #: ../data/gottengeography.ui.h:21
 msgid "Photos"
@@ -108,7 +103,7 @@ msgstr "Photos"
 
 #: ../data/gottengeography.ui.h:22
 msgid "Cameras"
-msgstr "Appareils photo"
+msgstr "Cameras"
 
 #: ../data/gottengeography.ui.h:23
 msgid "GPS"
@@ -116,15 +111,15 @@ msgstr "GPS"
 
 #: ../data/gottengeography.ui.h:24
 msgid "Is this a photo of a clock? Type the displayed time here:"
-msgstr "Est-ce la photo d'une horloge ? Renseignez l'heure affichée ici :"
+msgstr "Is this a photo of a clock? Type the displayed time here:"
 
 #: ../data/gottengeography.ui.h:25
 msgid "Set Clock Offset!"
-msgstr "Donner le décalage horaire !"
+msgstr "Set Clock Offset!"
 
 #: ../data/gottengeography.ui.h:26
 msgid "Open Files"
-msgstr "Ouvrir des fichiers"
+msgstr "Open Files"
 
 #: ../data/gottengeography.ui.h:27
 msgid ""
@@ -133,6 +128,10 @@ msgid ""
 "This program is written in the Python programming language, and adds geotags "
 "to your photos. The name is an anagram of \"Python Geotagger.\""
 msgstr ""
+"GottenGeography: Go open thy tagger!\n"
+"\n"
+"This program is written in the Python programming language, and adds geotags "
+"to your photos. The name is an anagram of \"Python Geotagger.\""
 
 #: ../data/gottengeography.ui.h:30
 msgid "GottenGeography Wiki"
@@ -141,21 +140,18 @@ msgstr "GottenGeography Wiki"
 #: ../data/gottengeography.ui.h:31
 msgid "translator-credits"
 msgstr ""
-"Robert Park <rbpark@exolucere.ca>\n"
-"Pylyglot.org\n"
-"\n"
 "Launchpad Contributions:\n"
-"  Jerome Portal https://launchpad.net/~portal-j\n"
+"  Anthony Harrington https://launchpad.net/~untaintableangel\n"
 "  Robert Bruce Park https://launchpad.net/~robru\n"
-"  Stanislas Michalak https://launchpad.net/~stanislas-michalak"
+"  Vibhav Pant https://launchpad.net/~vibhavp"
 
 #: ../data/gottengeography.ui.h:32
 msgid ""
 "<span weight=\"bold\" size=\"larger\">Save changes to your photos before "
 "closing?</span>"
 msgstr ""
-"<span weight=\"bold\" size=\"larger\">Voulez-vous enregistrer les "
-"modifications avant la fermeture?</span>"
+"<span weight=\"bold\" size=\"larger\">Save changes to your photos before "
+"closing?</span>"
 
 #: ../data/gottengeography.ui.h:34
 #, no-c-format
@@ -163,32 +159,32 @@ msgid ""
 "The changes you've made to %d of your photos will be permanently lost if you "
 "do not save."
 msgstr ""
-"Les modifications que vous avez apportées à %d de vos photos seront "
-"définitivement perdus si vous ne sauvegardez pas."
+"The changes you've made to %d of your photos will be permanently lost if you "
+"do not save."
 
 #: ../data/gottengeography.ui.h:35
 msgid "Close _without Saving"
-msgstr "Fermer _sans enregistrer"
+msgstr "Close _without Saving"
 
 #: ../data/camera.ui.h:1
 msgid "Use the system timezone."
-msgstr "Utiliser le fuseau horaire du système."
+msgstr "Use the system timezone."
 
 #: ../data/camera.ui.h:2
 msgid "Use the local timezone."
-msgstr "Utiliser le fuseau horaire local."
+msgstr "Use the local timezone."
 
 #: ../data/camera.ui.h:3
 msgid "Specify a UTC offset manually."
-msgstr "Spécifiez le décalage UTC manuellement."
+msgstr "Specify a UTC offset manually."
 
 #: ../data/camera.ui.h:4
 msgid "Specify the timezone manually."
-msgstr "Spécifiez le fuseau horaire manuellement."
+msgstr "Specify the timezone manually."
 
 #: ../gg/app.py:179
 msgid "Could not open: "
-msgstr "Impossible d'ouvrir: "
+msgstr "Could not open: "
 
 #: ../gg/gpsmath.py:211
 msgid "N"
@@ -200,7 +196,7 @@ msgstr "S"
 
 #: ../gg/gpsmath.py:212
 msgid "E"
-msgstr "O"
+msgstr "E"
 
 #: ../gg/gpsmath.py:212
 msgid "W"
@@ -208,40 +204,40 @@ msgstr "W"
 
 #: ../gg/gpsmath.py:219
 msgid "m above sea level"
-msgstr "mètres au-dessus du niveau des mers"
+msgstr "m above sea level"
 
 #: ../gg/gpsmath.py:220
 msgid "m below sea level"
-msgstr "mètres au-dessous du niveau des mers"
+msgstr "m below sea level"
 
 #: ../gg/camera.py:92
 msgid "Unknown Camera"
-msgstr "Caméra Inconnu"
+msgstr "Unknown Camera"
 
 #: ../gg/camera.py:222
 #, python-format
 msgid "Add %dm, %ds to clock."
-msgstr "Ajouter %dm, %ds à l'horloge."
+msgstr "Add %dm, %ds to clock."
 
 #: ../gg/camera.py:223
 #, python-format
 msgid "Subtract %dm, %ds from clock."
-msgstr "Soustraire %dm, %ds de l'horloge."
+msgstr "Subtract %dm, %ds from clock."
 
 #: ../gg/camera.py:287
 msgid "No photos loaded."
-msgstr "Pas de photos."
+msgstr "No photos loaded."
 
 #: ../gg/camera.py:288
 msgid "One photo loaded."
-msgstr "Une photo."
+msgstr "One photo loaded."
 
 #: ../gg/camera.py:289
 #, python-format
 msgid "%d photos loaded."
-msgstr "%d photos."
+msgstr "%d photos loaded."
 
 #: ../gg/xmlfiles.py:210
 #, python-format
 msgid "%d points loaded in %.2fs."
-msgstr "%d points de chargement dans les %.2f secondes."
+msgstr "%d points loaded in %.2fs."

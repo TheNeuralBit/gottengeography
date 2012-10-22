@@ -1,114 +1,109 @@
-# GottenGeography translation template.
-# Copyright (C) 2010 Robert Park
-# This file is distributed under the same license as the GottenGeography package.
-# Robert Park <rbpark@exolucere.ca>, 2010
+# Malay translation for gottengeography
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the gottengeography package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gottengeography 2.0\n"
-"Report-Msgid-Bugs-To: \n"
+"Project-Id-Version: gottengeography\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-08-16 22:37-0500\n"
-"PO-Revision-Date: 2012-08-25 13:42+0000\n"
-"Last-Translator: Jerome Portal <portal.j@hotmail.fr>\n"
-"Language-Team: French\n"
+"PO-Revision-Date: 2012-08-22 12:53+0000\n"
+"Last-Translator: abuyop <Unknown>\n"
+"Language-Team: Malay <ms@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2012-08-31 05:15+0000\n"
 "X-Generator: Launchpad (build 15887)\n"
-"Language: fr\n"
 
 #: ../data/gottengeography.ui.h:1
 msgid "_Open..."
-msgstr "_Ouvrir..."
+msgstr "_Buka..."
 
 #: ../data/gottengeography.ui.h:2
 msgid "_Save All"
-msgstr "_Tout enregistrer"
+msgstr "_Simpan Semua"
 
 #: ../data/gottengeography.ui.h:3
 msgid "_Help"
-msgstr "Aid_e"
+msgstr "Bant_uan"
 
 #: ../data/gottengeography.ui.h:4
 msgid "_About"
-msgstr "À _propos"
+msgstr "Perih_al"
 
 #: ../data/gottengeography.ui.h:5
 msgid "_Quit"
-msgstr "_Quitter"
+msgstr "_Keluar"
 
 #: ../data/gottengeography.ui.h:6
 msgid "Load photos or GPS data (Ctrl O)"
-msgstr "Charger des photos ou des données GPS (Ctrl + O)"
+msgstr "Muat foto atau data GPS (Ctrl O)"
 
 #: ../data/gottengeography.ui.h:7
 msgid "Change map view (Google opens in your browser)"
-msgstr "Changer vue sur la carte (Google s'ouvre dans votre navigateur)"
+msgstr "Ubah paparan peta (Google dibuka dalam pelayar anda)"
 
 #: ../data/gottengeography.ui.h:8
 msgid "Return to the previous location viewed on map (Ctrl Left)"
-msgstr ""
-"Retourner à l'endroit précédemment consulté sur la carte (Ctrl + Gauche)"
+msgstr "Kembali ke lokasi dilihat terdahulu didalam peta (Ctrl Kiri)"
 
 #: ../data/gottengeography.ui.h:9
 msgid "Type the name of the city you would like to view."
-msgstr "Tapez le nom de la ville que vous souhaitez consulter."
+msgstr "Taip nama banda yang anda hendak lihat."
 
 #: ../data/gottengeography.ui.h:10
 msgid "Zoom the map out one step (Ctrl -)"
-msgstr "Zoom sur la carte d'un cran (Ctrl -)"
+msgstr "Zum keluar peta sebanyak satu langkah (Ctrl -)"
 
 #: ../data/gottengeography.ui.h:11
 msgid "Enhance! (Ctrl +)"
-msgstr "Améliorer! (Ctrl +)"
+msgstr "Pertingkatkan! (Ctrl +)"
 
 #: ../data/gottengeography.ui.h:12
 msgid "Learn how to use GottenGeography (Ctrl ?)"
-msgstr "Apprenez à utiliser GottenGeography (Ctrl ?)"
+msgstr "Pelajari bagaimana hendak guna GottenGeography (Ctrl ?)"
 
 #: ../data/gottengeography.ui.h:13
 msgid "About GottenGeography"
-msgstr "À propos de GottenGeography"
+msgstr "Perihal GottenGeography"
 
 #: ../data/gottengeography.ui.h:14
 msgid "Drag files here to load."
-msgstr "Glissez des fichiers ici pour les charger."
+msgstr "Seret fail disini untuk dimuatkan"
 
 #: ../data/gottengeography.ui.h:15
 msgid "Close selected photos (Ctrl W)"
-msgstr "Fermer les photos sélectionnées (Ctrl + W)"
+msgstr "Tutup foto terpilih (Ctrl W)"
 
 #: ../data/gottengeography.ui.h:16
 msgid "Reload selected photos, losing all changes (Ctrl Z)"
-msgstr ""
-"Recharger les photos sélectionnées, en perdant toutes les modifications "
-"(Ctrl + Z)"
+msgstr "Muat semula foto terpilih, hilang semua perubahan (Ctrl Z)"
 
 #: ../data/gottengeography.ui.h:17
 msgid "Center the map view on the selected photo (Ctrl J)"
-msgstr "Voir la photo sélectionnée (Ctrl J)"
+msgstr "Tengahkan paparan peta pada foto terpilih (Ctrl J)"
 
 #: ../data/gottengeography.ui.h:18
 msgid "Save all photos (Ctrl S)"
-msgstr "Enregistrer toutes les photos (Ctrl + S)"
+msgstr "Simpan semua foto (Ctrl S)"
 
 #: ../data/gottengeography.ui.h:19
 msgid "Save All"
-msgstr "Enregistrer tout"
+msgstr "Simpan Semua"
 
 #: ../data/gottengeography.ui.h:20
 msgid "Place selected photos onto center of map (Ctrl Enter)"
-msgstr ""
-"Insérer des photos sélectionnées sur le centre de la carte (Ctrl Enter)"
+msgstr "Letak foto terpilih ke pusat peta (Ctrl Enter)"
 
 #: ../data/gottengeography.ui.h:21
 msgid "Photos"
-msgstr "Photos"
+msgstr "Foto"
 
 #: ../data/gottengeography.ui.h:22
 msgid "Cameras"
-msgstr "Appareils photo"
+msgstr "Kamera"
 
 #: ../data/gottengeography.ui.h:23
 msgid "GPS"
@@ -116,15 +111,15 @@ msgstr "GPS"
 
 #: ../data/gottengeography.ui.h:24
 msgid "Is this a photo of a clock? Type the displayed time here:"
-msgstr "Est-ce la photo d'une horloge ? Renseignez l'heure affichée ici :"
+msgstr "Adakah ini foto jam? Taipkan masa paparan disini:"
 
 #: ../data/gottengeography.ui.h:25
 msgid "Set Clock Offset!"
-msgstr "Donner le décalage horaire !"
+msgstr "Tetapkan Ofset Jam!"
 
 #: ../data/gottengeography.ui.h:26
 msgid "Open Files"
-msgstr "Ouvrir des fichiers"
+msgstr "Buka Fail"
 
 #: ../data/gottengeography.ui.h:27
 msgid ""
@@ -133,29 +128,28 @@ msgid ""
 "This program is written in the Python programming language, and adds geotags "
 "to your photos. The name is an anagram of \"Python Geotagger.\""
 msgstr ""
+"GottenGeography: Pergi buka pengetag anda!\n"
+"\n"
+"Program ini ditulis dalam bahasa pengaturcaraan Python, dan tambah geotag "
+"kedalam foto anda. Namanya adalah anagram dari \"Python Geotagger\"."
 
 #: ../data/gottengeography.ui.h:30
 msgid "GottenGeography Wiki"
-msgstr "GottenGeography Wiki"
+msgstr "Wiki GottenGeography"
 
 #: ../data/gottengeography.ui.h:31
 msgid "translator-credits"
 msgstr ""
-"Robert Park <rbpark@exolucere.ca>\n"
-"Pylyglot.org\n"
-"\n"
 "Launchpad Contributions:\n"
-"  Jerome Portal https://launchpad.net/~portal-j\n"
-"  Robert Bruce Park https://launchpad.net/~robru\n"
-"  Stanislas Michalak https://launchpad.net/~stanislas-michalak"
+"  abuyop https://launchpad.net/~abuyop"
 
 #: ../data/gottengeography.ui.h:32
 msgid ""
 "<span weight=\"bold\" size=\"larger\">Save changes to your photos before "
 "closing?</span>"
 msgstr ""
-"<span weight=\"bold\" size=\"larger\">Voulez-vous enregistrer les "
-"modifications avant la fermeture?</span>"
+"<span weight=\"bold\" size=\"larger\">Simpan perubahan ke foto anda sebelum "
+"ditutup?</span>"
 
 #: ../data/gottengeography.ui.h:34
 #, no-c-format
@@ -163,36 +157,36 @@ msgid ""
 "The changes you've made to %d of your photos will be permanently lost if you "
 "do not save."
 msgstr ""
-"Les modifications que vous avez apportées à %d de vos photos seront "
-"définitivement perdus si vous ne sauvegardez pas."
+"Perubahan yang anda buat pada %d foto anda akan hilang secara kekal jika "
+"anda tidak simpan."
 
 #: ../data/gottengeography.ui.h:35
 msgid "Close _without Saving"
-msgstr "Fermer _sans enregistrer"
+msgstr "Tutup tan_pa Menyimpan"
 
 #: ../data/camera.ui.h:1
 msgid "Use the system timezone."
-msgstr "Utiliser le fuseau horaire du système."
+msgstr "Guna zon waktu sistem."
 
 #: ../data/camera.ui.h:2
 msgid "Use the local timezone."
-msgstr "Utiliser le fuseau horaire local."
+msgstr "Guna zon waktu setempat."
 
 #: ../data/camera.ui.h:3
 msgid "Specify a UTC offset manually."
-msgstr "Spécifiez le décalage UTC manuellement."
+msgstr "Nyatakan ofset UTC secara manual."
 
 #: ../data/camera.ui.h:4
 msgid "Specify the timezone manually."
-msgstr "Spécifiez le fuseau horaire manuellement."
+msgstr "Nyatakan zon waktu secara manual."
 
 #: ../gg/app.py:179
 msgid "Could not open: "
-msgstr "Impossible d'ouvrir: "
+msgstr "Tidak dapat buka: "
 
 #: ../gg/gpsmath.py:211
 msgid "N"
-msgstr "N"
+msgstr "U"
 
 #: ../gg/gpsmath.py:211
 msgid "S"
@@ -200,48 +194,48 @@ msgstr "S"
 
 #: ../gg/gpsmath.py:212
 msgid "E"
-msgstr "O"
+msgstr "T"
 
 #: ../gg/gpsmath.py:212
 msgid "W"
-msgstr "W"
+msgstr "B"
 
 #: ../gg/gpsmath.py:219
 msgid "m above sea level"
-msgstr "mètres au-dessus du niveau des mers"
+msgstr "m atas aras laut"
 
 #: ../gg/gpsmath.py:220
 msgid "m below sea level"
-msgstr "mètres au-dessous du niveau des mers"
+msgstr "m bawah aras laut"
 
 #: ../gg/camera.py:92
 msgid "Unknown Camera"
-msgstr "Caméra Inconnu"
+msgstr "Kamera Tidak Diketahui"
 
 #: ../gg/camera.py:222
 #, python-format
 msgid "Add %dm, %ds to clock."
-msgstr "Ajouter %dm, %ds à l'horloge."
+msgstr "Tambah %dm, %ds pada jam."
 
 #: ../gg/camera.py:223
 #, python-format
 msgid "Subtract %dm, %ds from clock."
-msgstr "Soustraire %dm, %ds de l'horloge."
+msgstr "Tolak %dm, %ds dari jam."
 
 #: ../gg/camera.py:287
 msgid "No photos loaded."
-msgstr "Pas de photos."
+msgstr "Tiada foto dimuatkan."
 
 #: ../gg/camera.py:288
 msgid "One photo loaded."
-msgstr "Une photo."
+msgstr "Satu foto dimuatkan."
 
 #: ../gg/camera.py:289
 #, python-format
 msgid "%d photos loaded."
-msgstr "%d photos."
+msgstr "%d foto dimuatkan."
 
 #: ../gg/xmlfiles.py:210
 #, python-format
 msgid "%d points loaded in %.2fs."
-msgstr "%d points de chargement dans les %.2f secondes."
+msgstr "%d mata dimuatkan dalam %.2fs."
