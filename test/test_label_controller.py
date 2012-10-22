@@ -14,13 +14,13 @@ def test_creatability():
     """ChamplainLabels should exist"""
     lat = random_coord(90)
     lon = random_coord(180)
-    
+
     label = Label(Photograph('demo/IMG_2411.JPG'))
     label.set_location(lat, lon)
     assert isinstance(label, Champlain.Label)
     assert label.get_name() == 'demo/IMG_2411.JPG'
     assert label.get_text() == 'IMG_2411.JPG'
-    
+
     assert label.get_latitude() == lat
     assert label.get_longitude() == lon
     label.photo.destroy()
@@ -46,7 +46,7 @@ def test_clickability():
         label.emit('button-press', Clutter.Event())
         for button in ('save', 'revert', 'close'):
             assert Widgets[button + '_button'].get_sensitive()
-        
+
         assert Widgets.photos_selection.iter_is_selected(label.photo.iter)
         assert Widgets.photos_selection.count_selected_rows() == 1
         assert label.photo in selected
@@ -54,7 +54,7 @@ def test_clickability():
         assert label.get_scale() == (1.1, 1.1)
         assert label.get_selected()
         assert label.get_property('opacity') == 255
-        
+
         # Make sure the Labels that we didn't click on are deselected.
         for other in Label.instances:
             if other.get_name() == label.get_name():
@@ -64,6 +64,7 @@ def test_clickability():
             assert other.get_scale() == (1, 1)
             assert not other.get_selected()
             assert other.get_property('opacity') == 64
+<<<<<<< HEAD
 
 def test_visible_at_launch():
     """Pre-tagged photos should have visible labels right off the bat."""
@@ -83,3 +84,5 @@ def test_visible_at_launch():
         assert label.photo.positioned
         assert label.get_property('visible')
 
+=======
+>>>>>>> gexiv2

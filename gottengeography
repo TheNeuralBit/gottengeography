@@ -1,32 +1,30 @@
-#!/usr/bin/python
+#!/usr/bin/python3
+# -*-python-*-
 
-# GottenGeography - Automagically geotags photos by comparing timestamps to GPX data
-# Copyright (C) 2010 Robert Park <rbpark@exolucere.ca>
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# Author: Robert Park <rbpark@exolucere.ca>, (C) 2010
+# Copyright: See COPYING file included with this distribution.
+
 
 from gi.repository import Gtk
 import sys
+
 
 def need(dependency):
     """Exit the program and tell the user what dependency was missing."""
     sys.exit('GottenGeography requires at least ' + dependency)
 
+
+try:
+    assert sys.version_info > (3, 1)
+except:
+    need('Python 3.2')
+
+
 try:
     from dateutil.parser import parse
 except:
     need('python-dateutil 1.5')
+
 
 try:
     import gi
@@ -35,25 +33,23 @@ try:
 except:
     need('Gtk 3.0 (via pygobject3 3.0.3)')
 
+
 try:
     from gi.repository import Champlain
     # Raises AttributeError with libchamplain 0.8 or earlier.
     Champlain.PathLayer
-    
+
     # Raises TypeError with libchamplain 0.12.0
     [source.get_id() for source in
         Champlain.MapSourceFactory.dup_default().get_registered()]
 except:
     need('libchamplain 0.12.2')
 
+
 try:
-    from pyexiv2.exif import ExifTag
-    from fractions import Fraction
-    # Fails for pyexiv2 0.2 which didn't support Fractions.
-    assert ExifTag('Exif.GPSInfo.GPSAltitude')._convert_to_string(
-        Fraction('1.6')) == '8/5'
+    from gi.repository import GExiv2
 except:
-    need('pyexiv2 0.3')
+    need('gexiv2 0.5 (with introspection support)')
 
 
 old_hook = sys.excepthook
@@ -69,6 +65,6 @@ sys.excepthook = new_hook
 # If we got this far, it looks like we have everything we need!
 # Time to launch the app.
 
+
 from gg.app import GottenGeography
 GottenGeography(not sys.argv[1:]).run(sys.argv)
-

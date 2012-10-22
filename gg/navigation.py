@@ -3,16 +3,16 @@
 
 """Control how the map is navigated."""
 
-from __future__ import division
 
 from gi.repository import GtkClutter
 GtkClutter.init([])
 
 from gi.repository import Gdk
 
-from common import Gst
-from gpsmath import valid_coords
-from widgets import Widgets, MapView
+from gg.common import Gst
+from gg.gpsmath import valid_coords
+from gg.widgets import Widgets, MapView
+
 
 def move_by_arrow_keys(accel_group, acceleratable, keyval, modifier):
     """Move the map view by 5% of its length in the given direction."""
@@ -27,6 +27,7 @@ def move_by_arrow_keys(accel_group, acceleratable, keyval, modifier):
     if valid_coords(lat, lon):
         MapView.center_on(lat, lon)
 
+
 def remember_location(view):
     """Add current location to history stack."""
     history = list(Gst.get('history'))
@@ -35,6 +36,7 @@ def remember_location(view):
     if history[-1] != location:
         history.append(location)
     Gst.set_history(history[-30:])
+
 
 def go_back(*ignore):
     """Return the map view to where the user last set it."""
@@ -48,16 +50,18 @@ def go_back(*ignore):
     else:
         Gst.reset('history')
 
+
 def zoom_button_sensitivity(view, signal, in_sensitive, out_sensitive):
     """Ensure zoom buttons are only sensitive when they need to be."""
     zoom = view.get_zoom_level()
     out_sensitive(view.get_min_zoom_level() != zoom)
     in_sensitive( view.get_max_zoom_level() != zoom)
 
+
 for prop in ('latitude', 'longitude', 'zoom-level'):
     Gst.bind(prop, MapView, prop)
+
 
 MapView.connect('notify::zoom-level', zoom_button_sensitivity,
     Widgets.zoom_in_button.set_sensitive, Widgets.zoom_out_button.set_sensitive)
 MapView.connect('realize', remember_location)
-

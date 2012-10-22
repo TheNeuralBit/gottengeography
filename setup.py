@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 
+<<<<<<< HEAD
 from os.path import join
 from sys import argv, exit
+=======
+from glob import glob
+from os import listdir
+from os.path import join, isdir
+>>>>>>> gexiv2
 from distutils.core import setup
 from subprocess import Popen, PIPE
 from DistUtilsExtra.command import build_extra, build_i18n, build_help
@@ -34,6 +40,17 @@ data_files = [
         'data/%s.ui' % PACKAGE, 'data/%s.svg' % PACKAGE])
 ]
 
+<<<<<<< HEAD
+=======
+for helplang in listdir('help'):
+    data_files.append(('share/gnome/help/%s/%s' % (PACKAGE, helplang),
+                      [f for f in glob(join('help', helplang, '*'))
+                          if not f.endswith('figures')]))
+
+data_files.append(('share/gnome/help/%s/C/figures' % PACKAGE,
+    glob(join('help', 'C', 'figures', '*'))))
+
+>>>>>>> gexiv2
 build_info_template = """# -*- coding: UTF-8 -*-
 
 # Distutils installation details:
@@ -48,7 +65,11 @@ class build_py(_build_py):
     Inspired by a distutils-sig posting by Wolodja Wentland in Sept 2009.
     """
     def build_module(self, module, module_file, package):
+<<<<<<< HEAD
         if (module_file == 'gg/build_info.py'):
+=======
+        if ('%s/%s' % (package, module) == 'gg/build_info'):
+>>>>>>> gexiv2
             try:
                 iobj = self.distribution.command_obj['install']
                 with open(module_file, 'w') as module_fp:

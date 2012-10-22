@@ -17,6 +17,10 @@ def test_search():
     entry.set_text('edm')
     assert len(gui.search.results) == 24
 
+<<<<<<< HEAD
+=======
+    get_title = Widgets.main.get_title
+>>>>>>> gexiv2
     for result in gui.search.results:
         gui.search.search_completed(entry,
                                     gui.search.results,

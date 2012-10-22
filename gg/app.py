@@ -3,9 +3,9 @@
 
 """Main application code that ties all the other modules together."""
 
-from __future__ import division
 
-from version import APPNAME, PACKAGE
+from gg.build_info import REVISION
+from gg.version import APPNAME, PACKAGE
 
 import gettext
 gettext.bindtextdomain(PACKAGE)
@@ -24,17 +24,17 @@ if not GLib.get_application_name():
 
 GtkClutter.init([])
 
-from camera import Camera
-from xmlfiles import TrackFile
-from gpsmath import Coordinates
-from widgets import Widgets, MapView
-from actor import CoordLabel, animate_in
-from photos import Photograph, fetch_thumbnail
-from navigation import go_back, move_by_arrow_keys
-from common import Gst, Binding, selected, modified
+from gg.camera import Camera
+from gg.xmlfiles import TrackFile
+from gg.gpsmath import Coordinates
+from gg.widgets import Widgets, MapView
+from gg.actor import CoordLabel, animate_in
+from gg.photos import Photograph, fetch_thumbnail
+from gg.navigation import go_back, move_by_arrow_keys
+from gg.common import Gst, Binding, selected, modified
 
-from drag import DragController
-from search import SearchController
+from gg.drag import DragController
+from gg.search import SearchController
 
 # Handy names for GtkListStore column numbers.
 PATH, SUMMARY, THUMB, TIMESTAMP = range(4)
@@ -44,7 +44,7 @@ PATH, SUMMARY, THUMB, TIMESTAMP = range(4)
 
 def command_line(self, commands):
     """Open the files passed in at the commandline.
-    
+
     This method collects any commandline arguments from any invocation of
     GottenGeography and reports them to the primary instance for opening.
     """
@@ -57,10 +57,10 @@ def command_line(self, commands):
 def startup(self):
     """Display the primary window and connect some signals."""
     self.quit_message = Widgets.quit.get_property('secondary-text')
-    
+
     self.drag   = DragController(self.open_files)
     self.search = SearchController()
-    
+
     center = Coordinates()
     Binding(MapView, 'latitude', center)
     Binding(MapView, 'longitude', center)
@@ -68,9 +68,9 @@ def startup(self):
     Binding(center, 'geoname', Widgets.main, 'title')
     Binding(center, 'coords', CoordLabel, 'text')
     center.timeout_seconds = 10 # Only update titlebar every 10 seconds
-    
+
     screen = Gdk.Screen.get_default()
-    
+
     app_menu = ('open', 'save', 'help', 'about', 'quit')
     click_handlers = {
         'open':
@@ -107,56 +107,56 @@ def startup(self):
             action.connect('activate', handler)
             self.add_action(action)
     self.set_app_menu(Widgets.appmenu)
-    
+
     Widgets.zoom_in_button.connect('clicked', lambda *x: MapView.zoom_in())
     Widgets.zoom_out_button.connect('clicked', lambda *x: MapView.zoom_out())
     Widgets.back_button.connect('clicked', go_back)
-    
+
     Widgets.open.connect('update-preview', self.update_preview, Widgets.preview)
-    
+
     accel = Gtk.AccelGroup()
     for key in [ 'Left', 'Right', 'Up', 'Down' ]:
         accel.connect(Gdk.keyval_from_name(key),
             Gdk.ModifierType.MOD1_MASK, 0, move_by_arrow_keys)
-    
+
     Widgets.main.add_accel_group(accel)
     Widgets.main.connect('delete_event', self.confirm_quit_dialog)
     self.add_window(Widgets.main)
-    
+
     save_size = lambda v, s, size: Gst.set_window_size(size())
     for prop in ['width', 'height']:
         MapView.connect('notify::' + prop, save_size, Widgets.main.get_size)
-    
+
     Widgets.button_sensitivity()
-    
+
     Gst.connect('changed::thumbnail-size', Photograph.resize_all_photos)
-    
+
     Widgets.launch()
     animate_in(self.do_fade_in)
 
 
 class GottenGeography(Gtk.Application):
     """Provides a graphical interface to automagically geotag photos.
-    
+
     Just load your photos, and load a GPX file, and GottenGeography will
     automatically cross-reference the timestamps on the photos to the timestamps
     in the GPX to determine the three-dimensional coordinates of each photo.
     """
-    
+
     def __init__(self, do_fade_in=True):
         Gtk.Application.__init__(
             self, application_id='ca.exolucere.' + APPNAME,
             flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
-        
+
         self.connect('activate', lambda *ignore: Widgets.main.present())
         self.connect('command-line', command_line)
         self.connect('startup', startup)
-        
+
         self.do_fade_in = do_fade_in
-    
+
     def open_files(self, files):
         """Attempt to load all of the specified files.
-        
+
         >>> len(Photograph.instances)
         0
         >>> GottenGeography().open_files(
@@ -177,7 +177,7 @@ class GottenGeography(Gtk.Application):
                 invalid.append(basename(name))
         if invalid:
             Widgets.status_message(_('Could not open: ') + ', '.join(invalid))
-        
+
         # Ensure camera has found correct timezone regardless of the order
         # that the GPX/KML files were loaded in.
         likely_zone = TrackFile.query_all_timezones()
@@ -186,7 +186,7 @@ class GottenGeography(Gtk.Application):
         Camera.timezone_handler_all()
         Widgets.progressbar.hide()
         Widgets.button_sensitivity()
-    
+
     def apply_selected_photos(self, button):
         """Manually apply map center coordinates to selected photos."""
         lat, lon = MapView.get_center_latitude(), MapView.get_center_longitude()
@@ -194,7 +194,7 @@ class GottenGeography(Gtk.Application):
             photo.manual = True
             photo.set_location(lat, lon)
         Widgets.button_sensitivity()
-    
+
     def save_all_files(self, *ignore):
         """Ensure all loaded files are saved."""
         Widgets.progressbar.show()
@@ -207,14 +207,14 @@ class GottenGeography(Gtk.Application):
                 Widgets.status_message(str(inst))
         Widgets.progressbar.hide()
         Widgets.button_sensitivity()
-    
+
     def jump_to_photo(self, button):
         """Center on the first selected photo."""
         photo = selected.copy().pop()
         if photo.positioned:
             MapView.emit('realize')
             MapView.center_on(photo.latitude, photo.longitude)
-    
+
     def update_preview(self, chooser, image):
         """Display photo thumbnail and geotag data in file chooser."""
         image.set_from_stock(Gtk.STOCK_FILE, Gtk.IconSize.DIALOG)
@@ -223,7 +223,7 @@ class GottenGeography(Gtk.Application):
                 chooser.get_preview_filename(), 300))
         except (IOError, TypeError):
             return
-    
+
     def add_files_dialog(self, *ignore):
         """Display a file chooser, and attempt to load chosen files."""
         response = Widgets.open.run()
@@ -231,7 +231,7 @@ class GottenGeography(Gtk.Application):
         Widgets.redraw_interface()
         if response == Gtk.ResponseType.OK:
             self.open_files(Widgets.open.get_filenames())
-    
+
     def confirm_quit_dialog(self, *ignore):
         """Teardown method, inform user of unsaved files, if any."""
         if not modified:
@@ -246,4 +246,3 @@ class GottenGeography(Gtk.Application):
         if response != Gtk.ResponseType.CANCEL:
             self.quit()
         return True
-

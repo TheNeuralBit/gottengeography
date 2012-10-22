@@ -20,18 +20,16 @@ Note that the code controlling dragging ChamplainLabels around within the map
 is defined in label.py
 """
 
-from __future__ import division
 
 from gi.repository import GtkClutter
 GtkClutter.init([])
 
 from gi.repository import Gtk, Gdk
-from urlparse import urlparse
-from urllib import unquote
+from urllib.parse import urlparse, unquote
 
-from widgets import Widgets, MapView
-from photos import Photograph
-from common import selected
+from gg.widgets import Widgets, MapView
+from gg.common import selected, modified
+from gg.photos import Photograph
 
 class DragController():
     """Control the drag & drop behavior."""
