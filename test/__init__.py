@@ -47,4 +47,3 @@ def teardown():
     system('git checkout demo')
     for key in Gst.list_keys():
         Gst.reset(key)
-

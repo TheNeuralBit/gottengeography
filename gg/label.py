@@ -16,7 +16,7 @@ from .widgets import Widgets, MarkerLayer
 
 def clicked(label, event):
     """When a ChamplainLabel is clicked, select it in the GtkListStore.
-    
+
     The interface defined by this method is consistent with the behavior of
     the GtkListStore itself in the sense that a normal click will select
     just one item, but Ctrl+clicking allows you to select multiple.
@@ -41,7 +41,7 @@ def hover(label, event, factor):
 @memoize
 class Label(Champlain.Label):
     """Extend Champlain.Label to add itself to the map."""
-    
+
     def __init__(self, photo):
         Champlain.Label.__init__(self)
         self.photo = photo
@@ -56,13 +56,13 @@ class Label(Champlain.Label):
         self.connect('drag-finish',
             lambda *ignore: modified.add(photo)
                 and photo.disable_auto_position())
-        
+
         for prop in ('latitude', 'longitude'):
             Binding(photo, prop, self, flags=GObject.BindingFlags.BIDIRECTIONAL)
         Binding(photo, 'positioned', self, 'visible')
-        
+
         MarkerLayer.add_marker(self)
-    
+
     def set_highlight(self, highlight, transparent):
         """Set the highlightedness of the given ChamplainLabel."""
         if self.get_property('visible'):
@@ -72,10 +72,9 @@ class Label(Champlain.Label):
             self.set_opacity(64 if transparent and not highlight else 255)
             if highlight:
                 self.raise_top()
-    
+
     def destroy(self):
         """Remove from map and unload."""
         del Label.cache[self.photo]
         self.unmap()
         Champlain.Label.destroy(self)
-

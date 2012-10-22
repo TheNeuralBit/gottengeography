@@ -64,7 +64,7 @@ get_country  = countries.get
 
 def get_state(country, state):
     \"\"\"Returns the name of a province/state given a Geonames.org admin1code.
-    
+
     >>> get_country('CA')
     'Canada'
     >>> get_country('MT')

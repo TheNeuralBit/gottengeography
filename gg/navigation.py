@@ -59,4 +59,3 @@ for prop in ('latitude', 'longitude', 'zoom-level'):
 MapView.connect('notify::zoom-level', zoom_button_sensitivity,
     Widgets.zoom_in_button.set_sensitive, Widgets.zoom_out_button.set_sensitive)
 MapView.connect('realize', remember_location)
-

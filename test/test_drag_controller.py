@@ -15,7 +15,7 @@ def test_drags_from_external_source():
     data = Struct({'get_text': lambda: '\n'.join(DEMOFILES)})
     assert len(Photograph.instances) == 0
     assert len(points) == 0
-    
+
     gui.drag.photo_drag_end(None, None, 20, 20, data,
                             None, None, True)
     assert len(Photograph.instances) == 6
@@ -51,4 +51,3 @@ def test_drags_from_liststore():
         assert len(photo.geoname) > 5
         assert photo.latitude != old[0]
         assert photo.longitude != old[1]
-

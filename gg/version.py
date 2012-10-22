@@ -12,4 +12,3 @@ VERSION='1.3'
 
 AUTHOR='Robert Park'
 EMAIL='rbpark@exolucere.ca'
-

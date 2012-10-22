@@ -20,7 +20,7 @@ LOCATION, LATITUDE, LONGITUDE = range(3)
 class SearchController():
     """Controls the behavior for searching the map."""
     last_search = None
-    
+
     def __init__(self):
         """Make the search box and insert it into the window."""
         self.search = None
@@ -36,13 +36,13 @@ class SearchController():
         entry.connect('icon-release', lambda entry, i, e: entry.set_text(''))
         entry.connect('icon-release', lambda *ignore: entry.emit('grab_focus'))
         entry.connect('activate', self.repeat_last_search, self.results)
-    
+
     def load_results(self, entry, append, searched=set()):
         """Load a few search results based on what's been typed.
-        
+
         Requires at least three letters typed, and is careful not to load
         duplicate results.
-        
+
         The searched argument persists across calls to this method, and should
         not be passed as an argument unless your intention is to trigger the
         loading of duplicate results.
@@ -61,7 +61,7 @@ class SearchController():
                                                    get_country(country)) if s]),
                             float(lat),
                             float(lon)))
-    
+
     def search_completed(self, entry, model, itr):
         """Go to the selected location."""
         self.last_search = itr.copy()
@@ -70,9 +70,8 @@ class SearchController():
         Widgets.redraw_interface()
         MapView.center_on(*model.get(itr, LATITUDE, LONGITUDE))
         MapView.set_zoom_level(11)
-    
+
     def repeat_last_search(self, entry, model):
         """Snap back to the last-searched location when user hits enter key."""
         if self.last_search is not None:
             self.search_completed(entry, model, self.last_search)
-
