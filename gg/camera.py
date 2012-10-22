@@ -235,10 +235,6 @@ class CameraView(Gtk.Box):
 
         Binding(scale.get_adjustment(), 'value', camera, 'offset')
 
-        utc = self.widgets.utc_offset
-        utc.set_value(camera.utc_offset)
-        Binding(utc.get_adjustment(), 'value', camera, 'utc-offset')
-
         # These two ComboBoxTexts are used for choosing the timezone manually.
         # They're hidden to reduce clutter when not needed.
         region_combo = self.widgets.timezone_region

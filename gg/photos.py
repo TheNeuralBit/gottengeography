@@ -105,9 +105,13 @@ def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size'), orient=1):
     >>> type(fetch_thumbnail('demo/IMG_2411.JPG'))
     <class 'gi.repository.GdkPixbuf.Pixbuf'>
     """
-    exif = fetch_exif(filename)
     try:
-        orient = exif['Exif.Image.Orientation'].value
+        exif = GExiv2.Metadata(filename)
+    except GObject.GError:
+        raise IOError('%s: No thumbnail found.' % filename)
+
+    try:
+        orient = int(exif['Exif.Image.Orientation'])
     except:
         pass
 
@@ -115,7 +119,7 @@ def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size'), orient=1):
         thumb = GdkPixbuf.Pixbuf.new_from_file_at_size(filename, size, size)
     except GObject.GError:
         try:
-            data = GExiv2.Metadata(filename).get_preview_image().get_data()
+            data = exif.get_preview_image().get_data()
         except GObject.GError:
             raise IOError('%s: No thumbnail found.' % filename)
 
