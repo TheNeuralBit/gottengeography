@@ -44,7 +44,7 @@ try:
     from gi.repository import Champlain
     # Raises AttributeError with libchamplain 0.8 or earlier.
     Champlain.PathLayer
-    
+
     # Raises TypeError with libchamplain 0.12.0
     [source.get_id() for source in
         Champlain.MapSourceFactory.dup_default().get_registered()]
@@ -72,4 +72,3 @@ sys.excepthook = new_hook
 
 from gg.app import GottenGeography
 GottenGeography(not sys.argv[1:]).run(sys.argv)
-
