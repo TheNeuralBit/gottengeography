@@ -8,6 +8,7 @@ from gg.common import points
 
 from test import gui, setup, teardown
 
+
 def test_mytracks():
     """Test that we can read the output from Google's MyTracks app"""
     teardown()
@@ -31,6 +32,7 @@ def test_mytracks():
     assert omega.lon == -97.136677
     assert omega.ele == 195.6999969482422
 
+
 def test_invalid_altitude():
     """Ensure that we can still read CSVs if the altitude data is corrupted"""
     teardown()
@@ -46,6 +48,7 @@ def test_invalid_altitude():
     for point in points.values():
         assert type(point.ele) is float
         assert point.ele == 0.0
+
 
 def test_minimal():
     """The minimal amount of CSV data should be valid"""

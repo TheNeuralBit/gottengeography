@@ -1,4 +1,4 @@
-# Author: Robert Park <rbpark@exolucere.ca>, (C) 2010
+# Author: Robert Park <robru@gottengeography.ca>, (C) 2010
 # Copyright: See COPYING file included with this distribution.
 
 """Define classes used for parsing GPX and KML XML files."""

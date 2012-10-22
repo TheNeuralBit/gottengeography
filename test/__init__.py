@@ -14,24 +14,29 @@ from gg.photos import Photograph
 from gg.widgets import Widgets
 from gg.camera import Camera
 
+
 DEMOFILES = [abspath(join(PKG_DATA_DIR, '..', 'demo', f))
              for f in listdir('./demo/')]
 GPXFILES = [f for f in DEMOFILES if f.endswith('gpx')]
 IMGFILES = [f for f in DEMOFILES if f.endswith('JPG')]
 
+
 gui = GottenGeography(do_fade_in=False)
 gui.register(None)
 startup(gui)
 
+
 def random_coord(maximum=180):
     """Generate a random number -maximum <= x <= maximum."""
     return (random() * maximum * 2) - maximum
+
 
 def setup():
     """Start from a clean slate."""
     system('git checkout demo')
     environ['TZ'] = 'America/Edmonton'
     tzset()
+
 
 def teardown():
     """Clean it all up."""

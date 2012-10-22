@@ -62,7 +62,7 @@ however I am not affiliated in any way with EarlyInnovations. Please
 don't sue me, etc.
 
 If you have any questions, feel free to [give me a
-shout](mailto:rbpark@exolucere.ca).
+shout](mailto:robru@gottengeography.ca).
 
 Testing
 -------
@@ -80,4 +80,4 @@ Mountain Standard Time timezone, you'll have to choose "use the local
 timezone" on the Cameras tab, and that will give correct results
 regardless of what timezone your computer is set to.
 
-Happy Tagging! --[Robert](mailto:r@robru.ca)
+Happy Tagging! --[Robert](mailto:robru@gottengeography.ca)

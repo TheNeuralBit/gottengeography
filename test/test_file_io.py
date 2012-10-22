@@ -10,6 +10,7 @@ from gg.common import points, selected, modified
 from test import gui, teardown, setup
 from test import GPXFILES, IMGFILES
 
+
 def test_demo_data():
     """Load the demo data and ensure that we're reading it in properly"""
     teardown()

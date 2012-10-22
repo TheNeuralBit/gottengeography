@@ -8,6 +8,7 @@ from gg.navigation import move_by_arrow_keys
 
 from test import Gst, random_coord
 
+
 def test_history():
     """The history should keep track of where we go"""
     coords = [[
@@ -25,6 +26,7 @@ def test_history():
 
     assert coords[0][0] - Gst.get('history')[-1][0] < 1e-6
     assert coords[0][1] - Gst.get('history')[-1][1] < 1e-6
+
 
 def test_zoom_buttons():
     """Zoom buttons function correctly"""
@@ -60,6 +62,7 @@ def test_zoom_buttons():
     assert zoom_out.get_sensitive()
     assert not zoom_in.get_sensitive()
     assert MapView.get_max_zoom_level() == MapView.get_zoom_level()
+
 
 def test_arrow_keys():
     """The user can navigate by arrow keys"""

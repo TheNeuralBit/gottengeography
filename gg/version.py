@@ -1,4 +1,4 @@
-# Author: Robert Park <rbpark@exolucere.ca>, (C) 2011
+# Author: Robert Park <robru@gottengeography.ca>, (C) 2011
 # Copyright: See COPYING file included with this distribution.
 #
 # Package version data.
@@ -11,4 +11,4 @@ PACKAGE='gottengeography'
 VERSION='2.4'
 
 AUTHOR='Robert Park'
-EMAIL='r@robru.ca'
+EMAIL='robru@gottengeography.ca'

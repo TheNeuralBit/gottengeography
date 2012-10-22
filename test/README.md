@@ -4,4 +4,4 @@ You'll need Nose in order to run these tests:
 
 Then you can run the tests with this command:
 
-    $ nosetests
+    $ ./setup.py nose

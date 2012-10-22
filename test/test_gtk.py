@@ -5,6 +5,7 @@ from gg.widgets import Widgets, MapView
 
 from test import Gst
 
+
 def test_gtk_builder():
     """GtkBuilder should be creating some widgets for us"""
     assert Widgets.loaded_photos.get_n_columns() == 4
@@ -16,6 +17,7 @@ def test_gtk_builder():
     assert Widgets.error_message is Widgets['error_message']
     assert Widgets.photos_selection is \
         Widgets.get_object('photos_view').get_selection()
+
 
 def test_gsettings():
     """GSettings should be storing data correctly"""

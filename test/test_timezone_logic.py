@@ -8,6 +8,7 @@ from gg.photos import Photograph
 from test import GPXFILES, IMGFILES
 from test import gui, setup, teardown
 
+
 def test_timezone_lookups():
     """Ensure that the timezone can be discovered from the map"""
     # Be very careful to reset everything so that we're sure that
@@ -36,6 +37,7 @@ def test_timezone_lookups():
     photo = list(Photograph.instances).pop()
     assert photo.latitude == 53.530476
     assert photo.longitude == -113.450635
+
 
 def test_manual_timezone():
     """The wrong timezone will clamp the photo to the end of the track"""

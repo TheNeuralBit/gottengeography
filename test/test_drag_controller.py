@@ -10,6 +10,7 @@ from gg.label import Label
 from test import setup, teardown
 from test import gui, DEMOFILES, random_coord
 
+
 def test_drags_from_external_source():
     """Make sure that we can load photos dragged in"""
     data = Struct({'get_text': lambda: '\n'.join(DEMOFILES)})
@@ -20,6 +21,7 @@ def test_drags_from_external_source():
                             None, None, True)
     assert len(Photograph.instances) == 6
     assert len(points) == 374
+
 
 def test_drags_on_map():
     """Drag the ChamplainLabels around the map"""
@@ -33,6 +35,7 @@ def test_drags_on_map():
         assert label.get_longitude() == label.photo.longitude
         label.photo.lookup_geodata()
         assert len(label.photo.geoname) > 5
+
 
 def test_drags_from_liststore():
     """Drag from the GtkListStore to the map"""

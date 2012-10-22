@@ -10,7 +10,7 @@ The data is provided "as is" without warranty or any
 representation of accuracy, timeliness or completeness.
 
 The data was then converted from tab-delimited UTF8 into
-python source code by Robert Park <rbpark@exolucere.ca>
+python source code by Robert Park <robru@gottengeography.ca>
 
 >>> one = set(key.split('.')[0] for key in territories)
 >>> two = set(countries)

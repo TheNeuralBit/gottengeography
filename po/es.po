@@ -1,12 +1,12 @@
 # GottenGeography translation template.
 # Copyright (C) 2010 2011 2012 Robert Park
 # This file is distributed under the same license as the GottenGeography package.
-# Robert Park <rbpark@exolucere.ca>, 2010 2011 2012
+# Robert Park <robru@gottengeography.ca>, 2010 2011 2012
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gottengeography 2.0\n"
-"Report-Msgid-Bugs-To: Robert Park <rbpark@exolucere.ca>\n"
+"Report-Msgid-Bugs-To: Robert Park <robru@gottengeography.ca>\n"
 "POT-Creation-Date: 2012-08-06 09:40+0200\n"
 "PO-Revision-Date: 2012-08-06 10:28+0100\n"
 "Last-Translator: Jose Luis Tirado <joseluis.tirado@gmail.com>\n"
@@ -227,4 +227,3 @@ msgstr "%d fotos cargadas."
 #, python-format
 msgid "%d points loaded in %.2fs."
 msgstr "%d puntos cargados en %.2fs."
-

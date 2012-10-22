@@ -1,7 +1,7 @@
 # GottenGeography translation template.
 # Copyright (C) 2010 Robert Park
 # This file is distributed under the same license as the GottenGeography package.
-# Robert Park <rbpark@exolucere.ca>, 2010
+# Robert Park <robru@gottengeography.ca>, 2010
 #
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-06-25 00:16-0500\n"
 "PO-Revision-Date: 2011-02-09 18:49-0700\n"
-"Last-Translator: Robert Park <rbpark@exolucere.ca>\n"
+"Last-Translator: Robert Park <robru@gottengeography.ca>\n"
 "Language-Team: French\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -131,7 +131,7 @@ msgstr "GottenGeography Wiki"
 #: ../data/gottengeography.ui.h:24
 msgid "translator-credits"
 msgstr ""
-"Robert Park <rbpark@exolucere.ca>\n"
+"Robert Park <robru@gottengeography.ca>\n"
 "Pylyglot.org"
 
 #: ../data/gottengeography.ui.h:25

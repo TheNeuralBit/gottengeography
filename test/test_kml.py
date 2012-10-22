@@ -9,7 +9,9 @@ from gg.common import points
 
 from test import gui, setup, teardown
 
+
 KMLFILES = [abspath(f) for f in glob(join('test', 'data', '*.kml'))]
+
 
 def test_ordered():
     """Test that we can read a KML with ordered pairs"""
@@ -31,6 +33,7 @@ def test_ordered():
     assert omega.lat == 39.6012402
     assert omega.lon == 3.2617779
     assert omega.ele == 0.0
+
 
 def test_stupid_ordering():
     """Somebody at Google thought this was a good idea"""

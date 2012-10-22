@@ -9,6 +9,7 @@ from gg.actor import MAP_SOURCES
 
 from test import Gst
 
+
 def test_map_sources():
     """The map should have multiple sources"""
     MapView.set_map_source(MAP_SOURCES['osm-cyclemap'])
@@ -22,6 +23,7 @@ def test_map_sources():
     for menu_item in menu:
         menu_item.set_active(True)
         assert MapView.get_map_source().get_name() == menu_item.get_label()
+
 
 def test_polygons():
     """Polygons should behave"""

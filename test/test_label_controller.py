@@ -10,6 +10,7 @@ from gg.label import Label
 
 from test import IMGFILES, DEMOFILES, gui, random_coord
 
+
 def test_creatability():
     """ChamplainLabels should exist"""
     lat = random_coord(90)
@@ -25,6 +26,7 @@ def test_creatability():
     assert label.get_longitude() == lon
     label.photo.destroy()
 
+
 def test_hoverability():
     """Labels should grow when hovered"""
     gui.open_files(DEMOFILES)
@@ -36,6 +38,7 @@ def test_hoverability():
         assert label.get_scale() == (1.05, 1.05)
         label.emit('leave-event', Clutter.Event())
         assert label.get_scale() == (1, 1)
+
 
 def test_clickability():
     """Labels become selected when clicked"""
@@ -64,7 +67,7 @@ def test_clickability():
             assert other.get_scale() == (1, 1)
             assert not other.get_selected()
             assert other.get_property('opacity') == 64
-<<<<<<< HEAD
+
 
 def test_visible_at_launch():
     """Pre-tagged photos should have visible labels right off the bat."""
@@ -75,7 +78,7 @@ def test_visible_at_launch():
     Widgets.close_button.emit('clicked')
     assert not Label.instances
     assert not Photograph.instances
-    
+
     # Reopen just the JPEGs and confirm labels are visible
     for uri in IMGFILES:
         Photograph.load_from_file(uri)
@@ -83,6 +86,3 @@ def test_visible_at_launch():
     for label in Label.instances:
         assert label.photo.positioned
         assert label.get_property('visible')
-
-=======
->>>>>>> gexiv2
