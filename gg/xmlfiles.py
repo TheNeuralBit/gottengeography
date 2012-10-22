@@ -17,11 +17,11 @@ from os.path import basename
 from calendar import timegm
 from time import clock
 
-from .camera import Camera
-from .gpsmath import Coordinates
-from .common import staticmethod
-from .widgets import Widgets, Builder, MapView
-from .common import GSettings, Gst, Struct, memoize, points
+from gg.camera import Camera
+from gg.gpsmath import Coordinates
+from gg.common import staticmethod
+from gg.widgets import Widgets, Builder, MapView
+from gg.common import GSettings, Gst, Struct, memoize, points
 
 BOTTOM = Gtk.PositionType.BOTTOM
 RIGHT = Gtk.PositionType.RIGHT

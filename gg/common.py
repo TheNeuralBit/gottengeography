@@ -14,7 +14,7 @@ is used to place photos on the map by looking up their timestamps.
 from gi.repository import GObject, Gio, GLib
 from functools import wraps
 
-from .version import PACKAGE
+from gg.version import PACKAGE
 
 # These variables are used for sharing data between classes
 selected = set()

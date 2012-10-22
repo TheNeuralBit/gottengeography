@@ -26,10 +26,10 @@ from gettext import gettext as _
 from time import tzset
 from os import environ
 
-from .common import staticmethod
-from .widgets import Builder, Widgets
-from .common import GSettings, Binding, memoize
-from .territories import tz_regions, get_timezone
+from gg.common import staticmethod
+from gg.widgets import Builder, Widgets
+from gg.common import GSettings, Binding, memoize
+from gg.territories import tz_regions, get_timezone
 
 # Workaround for https://bugzilla.gnome.org/show_bug.cgi?id=679939
 gint = GObject.TYPE_INT
@@ -38,7 +38,7 @@ gint = GObject.TYPE_INT
 class Camera(GObject.GObject):
     """Store per-camera configuration in GSettings.
 
-    >>> from .common import Dummy as Photo
+    >>> from gg.common import Dummy as Photo
     >>> cam = Camera('unknown_camera')
     >>> cam.add_photo(Photo())
     >>> cam.num_photos

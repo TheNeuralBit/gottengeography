@@ -11,9 +11,9 @@ from gettext import gettext as _
 from os.path import join
 import fractions
 
-from .territories import get_state, get_country
-from .build_info import PKG_DATA_DIR
-from .common import memoize
+from gg.territories import get_state, get_country
+from gg.build_info import PKG_DATA_DIR
+from gg.common import memoize
 
 
 def valid_coords(lat, lon):

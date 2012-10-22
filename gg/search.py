@@ -9,9 +9,9 @@ GtkClutter.init([])
 
 from os.path import join
 
-from .territories import get_state, get_country
-from .widgets import Widgets, MapView
-from .build_info import PKG_DATA_DIR
+from gg.territories import get_state, get_country
+from gg.widgets import Widgets, MapView
+from gg.build_info import PKG_DATA_DIR
 
 # ListStore column names
 LOCATION, LATITUDE, LONGITUDE = range(3)

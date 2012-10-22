@@ -27,9 +27,9 @@ GtkClutter.init([])
 from gi.repository import Gtk, Gdk
 from urllib.parse import urlparse, unquote
 
-from .widgets import Widgets, MapView
-from .common import selected, modified
-from .photos import Photograph
+from gg.widgets import Widgets, MapView
+from gg.common import selected, modified
+from gg.photos import Photograph
 
 class DragController():
     """Control the drag & drop behavior."""

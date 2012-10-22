@@ -20,8 +20,8 @@ GtkClutter.init([])
 from gi.repository import Gtk, Champlain, Clutter
 from time import sleep
 
-from .widgets import Widgets, MapView
-from .common import Gst, singleton, memoize
+from gg.widgets import Widgets, MapView
+from gg.common import Gst, singleton, memoize
 
 START  = Clutter.BinAlignment.START
 CENTER = Clutter.BinAlignment.CENTER

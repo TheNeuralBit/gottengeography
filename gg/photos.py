@@ -14,14 +14,14 @@ from os.path import basename
 from time import mktime
 from os import stat
 
-from .label import Label
-from .widgets import Widgets
-from .xmlfiles import TrackFile
-from .gpsmath import Coordinates
-from .common import staticmethod
-from .common import Gst, memoize
-from .common import points, modified
-from .camera import Camera, CameraView
+from gg.label import Label
+from gg.widgets import Widgets
+from gg.xmlfiles import TrackFile
+from gg.gpsmath import Coordinates
+from gg.common import staticmethod
+from gg.common import Gst, memoize
+from gg.common import points, modified
+from gg.camera import Camera, CameraView
 
 # Prefixes for common EXIF keys.
 IPTC = 'Iptc.Application2.'

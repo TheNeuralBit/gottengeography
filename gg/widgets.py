@@ -22,10 +22,10 @@ from gi.repository import Gdk, GdkPixbuf
 from gi.repository import Gtk, GLib
 from os.path import join
 
-from .version import APPNAME, PACKAGE
-from .build_info import PKG_DATA_DIR, REVISION
-from .common import Gst, singleton, memoize
-from .common import modified, selected
+from gg.version import APPNAME, PACKAGE
+from gg.build_info import PKG_DATA_DIR, REVISION
+from gg.common import Gst, singleton, memoize
+from gg.common import modified, selected
 
 CONTROL_MASK = Gdk.ModifierType.CONTROL_MASK
 SHIFT_MASK = Gdk.ModifierType.SHIFT_MASK
