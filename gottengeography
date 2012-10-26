@@ -23,7 +23,7 @@ except:
 try:
     from dateutil.parser import parse
 except:
-    need('python-dateutil 1.5')
+    need('python3-dateutil 2.0')
 
 
 try:
@@ -49,7 +49,7 @@ except:
 try:
     from gi.repository import GExiv2
 except:
-    need('gexiv2 0.5 (with introspection support)')
+    need('gexiv2 0.4.90 (with introspection support, gir1.2-gexiv2-0.4)')
 
 
 old_hook = sys.excepthook
