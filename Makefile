@@ -1,5 +1,9 @@
 #!/usr/bin/make -f
 
+# TODO Clean up the testsuite enough to include it here for automated
+# tests during package building.
+check: flakes # nose
+
 doctest:
 	nosetests3 --with-doctest gg/ -v
 
@@ -18,7 +22,3 @@ install:
 
 clean:
 	rm -rf build/ *.egg-info/
-
-# TODO Clean up the testsuite enough to include it here for automated
-# tests during package building.
-check: flakes # nose
