@@ -1,10 +1,10 @@
 #!/usr/bin/make -f
 
 doctest:
-	python3 -m doctest gg/*.py -v
+	nosetests3 --with-doctest gg/ -v
 
 check:
-	nosetests-3.2 --with-doctest -v
+	nosetests3 --with-doctest -v
 
 flakes:
 	pyflakes gottengeography setup.py gg test
