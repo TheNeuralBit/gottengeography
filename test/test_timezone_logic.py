@@ -72,3 +72,8 @@ def test_manual_timezone():
     camera.gst.set_string('timezone-city', 'Edmonton')
     assert photo.latitude == 53.530476
     assert photo.longitude == -113.450635
+
+
+class suppress_pyflakes_warnings:
+    """Nose calls these, so pyflakes incorrectly assumes they're unused."""
+    setup = setup

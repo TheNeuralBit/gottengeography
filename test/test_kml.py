@@ -75,3 +75,8 @@ def test_stupid_ordering():
     assert len(points) == 84
     KMLFile(KMLFILES[1]).destroy()
     assert not points
+
+
+class suppress_pyflakes_warnings:
+    """Nose calls these, so pyflakes incorrectly assumes they're unused."""
+    setup = setup

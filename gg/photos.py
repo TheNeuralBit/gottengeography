@@ -7,9 +7,8 @@
 from gi.repository import GtkClutter
 GtkClutter.init([])
 
-from gi.repository import GdkPixbuf, GExiv2
+from gi.repository import Gdk, GdkPixbuf, GExiv2
 from gi.repository import Gio, GObject
-from fractions import Fraction
 from os.path import basename
 from time import mktime
 from os import stat

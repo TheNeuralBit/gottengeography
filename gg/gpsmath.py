@@ -6,10 +6,8 @@
 
 from gi.repository import GLib, GObject
 from time import strftime, localtime
-from math import modf as split_float
 from gettext import gettext as _
 from os.path import join
-import fractions
 
 from gg.territories import get_state, get_country
 from gg.build_info import PKG_DATA_DIR

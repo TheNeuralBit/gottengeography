@@ -28,7 +28,7 @@ from gi.repository import Gtk, Gdk
 from urllib.parse import urlparse, unquote
 
 from gg.widgets import Widgets, MapView
-from gg.common import selected, modified
+from gg.common import selected
 from gg.photos import Photograph
 
 class DragController():

@@ -54,3 +54,9 @@ def test_drags_from_liststore():
         assert len(photo.geoname) > 5
         assert photo.latitude != old[0]
         assert photo.longitude != old[1]
+
+
+class suppress_pyflakes_warnings:
+    """Nose calls these, so pyflakes incorrectly assumes they're unused."""
+    teardown = teardown
+    setup = setup

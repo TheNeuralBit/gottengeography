@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 
-from glob import glob
-from os import listdir
-from sys import argv, exit
-from os.path import join, isdir
+from sys import argv
+from os.path import join
 from distutils.core import setup
 from subprocess import Popen, PIPE
 

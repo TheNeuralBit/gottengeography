@@ -76,3 +76,8 @@ def test_minimal():
     assert omega.lat == 49.885576
     assert omega.lon == -97.151397
     assert omega.ele == 0.0
+
+
+class suppress_pyflakes_warnings:
+    """Nose calls these, so pyflakes incorrectly assumes they're unused."""
+    setup = setup

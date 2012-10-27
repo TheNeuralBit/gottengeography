@@ -4,7 +4,6 @@
 """Main application code that ties all the other modules together."""
 
 
-from gg.build_info import REVISION
 from gg.version import APPNAME, PACKAGE
 
 import gettext

@@ -144,3 +144,8 @@ def test_demo_data():
         assert photo.geoname == 'Edmonton, Alberta, Canada'
     assert not modified
     assert len(Photograph.instances) == 6
+
+
+class suppress_pyflakes_warnings:
+    """Nose calls these, so pyflakes incorrectly assumes they're unused."""
+    setup = setup

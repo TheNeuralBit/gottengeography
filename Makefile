@@ -3,7 +3,7 @@
 doctest:
 	nosetests3 --with-doctest gg/ -v
 
-check:
+nose:
 	nosetests3 --with-doctest -v
 
 flakes:
@@ -15,3 +15,7 @@ lint:
 
 install:
 	python3 setup.py install
+
+# TODO Clean up the testsuite enough to include it here for automated
+# tests during package building.
+check: flakes # nose
