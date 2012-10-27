@@ -16,6 +16,9 @@ lint:
 install:
 	python3 setup.py install
 
+clean:
+	rm -rf build/ dist/ *.egg-info/
+
 # TODO Clean up the testsuite enough to include it here for automated
 # tests during package building.
 check: flakes # nose
