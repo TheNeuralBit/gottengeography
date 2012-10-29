@@ -140,10 +140,10 @@ class GSettings(Gio.Settings):
     """Override GSettings to be more useful to me."""
     get = Gio.Settings.get_value
 
-    def __init__(self, schema='ca.exolucere.' + PACKAGE, path=None):
+    def __init__(self, schema='ca.' + PACKAGE, path=None):
         if path is not None:
-            path = '/ca/exolucere/%s/%ss/%s/' % (PACKAGE, schema, path)
-            schema = 'ca.exolucere.%s.%s' % (PACKAGE, schema)
+            path = '/ca/%s/%ss/%s/' % (PACKAGE, schema, path)
+            schema = 'ca.%s.%s' % (PACKAGE, schema)
 
         Gio.Settings.__init__(self, schema, path)
 

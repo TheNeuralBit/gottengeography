@@ -144,7 +144,7 @@ class GottenGeography(Gtk.Application):
 
     def __init__(self, do_fade_in=True):
         Gtk.Application.__init__(
-            self, application_id='ca.exolucere.' + APPNAME,
+            self, application_id='ca.' + APPNAME,
             flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
 
         self.connect('activate', lambda *ignore: Widgets.main.present())

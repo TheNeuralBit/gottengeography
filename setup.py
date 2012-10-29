@@ -18,7 +18,7 @@ root = '--root' in ' '.join(argv)
 
 data_files = [
     ('/usr/share/icons/hicolor/scalable/apps', ['data/%s.svg' % PACKAGE]),
-    ('/usr/share/glib-2.0/schemas', ['data/ca.exolucere.%s.gschema.xml' % PACKAGE]),
+    ('/usr/share/glib-2.0/schemas', ['data/ca.%s.gschema.xml' % PACKAGE]),
     ('/usr/share/applications', ['data/%s.desktop' % PACKAGE]),
     ('share/doc/' + PACKAGE, ['README.md', 'AUTHORS', 'THANKS']),
     ('share/' + PACKAGE, ['data/cities.txt', 'data/trackfile.ui', 'data/camera.ui',
