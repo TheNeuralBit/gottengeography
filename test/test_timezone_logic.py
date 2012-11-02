@@ -47,15 +47,15 @@ def test_manual_timezone():
     camera = photo.camera
 
     camera.gst.set_string('timezone-method', 'offset')
-    camera.gst.set_int('utc-offset', -6)
+    camera.gst.set_string('utc-offset', '-6.0')
     assert photo.latitude == 53.530476
     assert photo.longitude == -113.450635
 
-    camera.gst.set_int('utc-offset', 3)
+    camera.gst.set_string('utc-offset', '3.0')
     assert photo.latitude == 53.52263
     assert photo.longitude == -113.448979
 
-    camera.gst.set_int('utc-offset', -10)
+    camera.gst.set_string('utc-offset', '-10.0')
     assert photo.latitude == 53.522496
     assert photo.longitude == -113.450537
 
