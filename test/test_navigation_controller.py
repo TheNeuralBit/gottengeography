@@ -43,16 +43,6 @@ def test_zoom_buttons():
     zoom_in.emit('clicked')
     assert zoom_out.get_sensitive()
     assert zoom_in.get_sensitive()
-    assert 1 == MapView.get_zoom_level()
-
-    zoom_in.emit('clicked')
-    assert 2 == MapView.get_zoom_level()
-
-    zoom_in.emit('clicked')
-    assert 3 == MapView.get_zoom_level()
-
-    zoom_out.emit('clicked')
-    assert 2 == MapView.get_zoom_level()
 
     MapView.set_zoom_level(MapView.get_max_zoom_level() - 1)
     assert zoom_out.get_sensitive()
