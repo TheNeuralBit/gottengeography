@@ -245,6 +245,8 @@ class Photograph(Coordinates):
             self.orig_time = self.exif.get_date_time().timetuple()
         except KeyError:
             pass
+        except AttributeError:
+            pass
 
         self.longitude, self.latitude, self.altitude = self.exif.get_gps_info()
 
