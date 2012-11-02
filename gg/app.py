@@ -70,7 +70,7 @@ def startup(self):
 
     screen = Gdk.Screen.get_default()
 
-    app_menu = ('open', 'save', 'help', 'about', 'quit')
+    # Toolbar bindings.
     click_handlers = {
         'open':
             self.add_files_dialog,
@@ -94,18 +94,11 @@ def startup(self):
             lambda *ignore: Gtk.show_uri(
                 screen, 'http://maps.google.com/maps?q=%s,%s' %
                 (center.latitude, center.longitude), Gdk.CURRENT_TIME),
-        'quit':
-            self.confirm_quit_dialog,
     }
     for name, handler in click_handlers.items():
         button = Widgets[name + '_button']
         if button:
             button.connect('clicked', handler)
-        if name in app_menu:
-            action = Gio.SimpleAction(name=name)
-            action.connect('activate', handler)
-            self.add_action(action)
-    self.set_app_menu(Widgets.appmenu)
 
     Widgets.zoom_in_button.connect('clicked', lambda *x: MapView.zoom_in())
     Widgets.zoom_out_button.connect('clicked', lambda *x: MapView.zoom_out())
@@ -114,6 +107,9 @@ def startup(self):
     Widgets.open.connect('update-preview', self.update_preview, Widgets.preview)
 
     accel = Gtk.AccelGroup()
+    accel.connect(Gdk.keyval_from_name('q'),
+                  Gdk.ModifierType.CONTROL_MASK, 0, self.confirm_quit_dialog)
+
     for key in [ 'Left', 'Right', 'Up', 'Down' ]:
         accel.connect(Gdk.keyval_from_name(key),
             Gdk.ModifierType.MOD1_MASK, 0, move_by_arrow_keys)
