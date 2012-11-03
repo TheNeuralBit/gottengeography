@@ -27,7 +27,6 @@ def test_search():
         assert lon == MapView.get_property('longitude')
 
     entry.set_text('calg')
-    import sys
     assert len(gui.search.results) == 668
 
     entry.set_text('st.')
