@@ -26,7 +26,7 @@ def test_demo_data():
 
     # Load only the photos first.
     try: TrackFile.load_from_file(IMGFILES[0])
-    except IOError: pass
+    except OSError: pass
     else: assert False # Because it should have raised the exception
     gui.open_files(IMGFILES)
 
@@ -70,7 +70,7 @@ def test_demo_data():
 
     # Load the GPX
     try: Photograph.load_from_file(GPXFILES[0])
-    except IOError: pass
+    except OSError: pass
     else: assert False # Because it should have raised the exception
     gui.open_files(GPXFILES)
 

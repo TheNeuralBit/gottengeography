@@ -166,9 +166,9 @@ class GottenGeography(Gtk.Application):
             try:
                 try:
                     Photograph.load_from_file(name)
-                except IOError:
+                except OSError:
                     TrackFile.load_from_file(name)
-            except IOError:
+            except OSError:
                 invalid.append(basename(name))
         if invalid:
             Widgets.status_message(_('Could not open: ') + ', '.join(invalid))
@@ -216,7 +216,7 @@ class GottenGeography(Gtk.Application):
         try:
             image.set_from_pixbuf(fetch_thumbnail(
                 chooser.get_preview_filename(), 300))
-        except (IOError, TypeError):
+        except (OSError, TypeError):
             return
 
     def add_files_dialog(self, *ignore):

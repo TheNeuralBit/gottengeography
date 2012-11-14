@@ -107,7 +107,7 @@ def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size'), orient=1):
     try:
         exif = GExiv2.Metadata(filename)
     except GObject.GError:
-        raise IOError('{}: No thumbnail found.'.format(filename))
+        raise OSError('{}: No thumbnail found.'.format(filename))
 
     try:
         orient = int(exif['Exif.Image.Orientation'])
@@ -120,7 +120,7 @@ def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size'), orient=1):
         try:
             data = exif.get_preview_image().get_data()
         except GObject.GError:
-            raise IOError('{}: No thumbnail found.'.format(filename))
+            raise OSError('{}: No thumbnail found.'.format(filename))
 
         return GdkPixbuf.Pixbuf.new_from_stream_at_scale(
             Gio.MemoryInputStream.new_from_data(data, None),
@@ -209,7 +209,7 @@ class Photograph(Coordinates):
         return photo
 
     def __init__(self, filename):
-        """Raises IOError for invalid file types.
+        """Raises OSError for invalid file types.
 
         This MUST be the case in order to avoid the @memoize cache getting
         filled up with invalid Photograph instances.

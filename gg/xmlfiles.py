@@ -98,12 +98,12 @@ class XMLSimpleParser:
             with open(filename, 'rb') as xml:
                 self.parser.ParseFile(xml)
         except ExpatError:
-            raise IOError
+            raise OSError
 
     def element_root(self, name, attributes):
         """Called on the root XML element, we check if it's the one we want."""
         if name != self.rootname:
-            raise IOError
+            raise OSError
         self.parser.StartElementHandler = self.element_start
 
     def element_start(self, name, attributes):
@@ -197,7 +197,7 @@ class TrackFile():
     def load_from_file(uri):
         """Determine the correct subclass to instantiate.
 
-        Also time everything and report how long it took. Raises IOError if
+        Also time everything and report how long it took. Raises OSError if
         the file extension is unknown, or no track points were found.
         """
         start_time = clock()
@@ -205,7 +205,7 @@ class TrackFile():
         try:
             gpx = globals()[uri[-3:].upper() + 'File'](uri)
         except KeyError:
-            raise IOError
+            raise OSError
 
         Widgets.status_message(_('%d points loaded in %.2fs.') %
             (len(gpx.tracks), clock() - start_time), True)
@@ -259,7 +259,7 @@ class TrackFile():
         self.parse(filename, root, watch, self.element_start, self.element_end)
 
         if not self.tracks:
-            raise IOError('No points found')
+            raise OSError('No points found')
 
         points.update(self.tracks)
         keys = self.tracks.keys()
