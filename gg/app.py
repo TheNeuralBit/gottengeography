@@ -92,8 +92,8 @@ def startup(self):
             self.apply_selected_photos,
         'map_source_menu':
             lambda *ignore: Gtk.show_uri(
-                screen, 'http://maps.google.com/maps?q=%s,%s' %
-                (center.latitude, center.longitude), Gdk.CURRENT_TIME),
+                screen, 'http://maps.google.com/maps?q={},{}'.format(
+                center.latitude, center.longitude), Gdk.CURRENT_TIME),
     }
     for name, handler in click_handlers.items():
         button = Widgets[name + '_button']

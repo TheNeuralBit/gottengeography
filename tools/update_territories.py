@@ -38,7 +38,7 @@ with open('countryInfo.txt') as countries:
         if line[0] == '#':
             continue
         code, x, y, z, name = line.split('\t')[:5]
-        print '"%s": "%s",' % (code, name)
+        print '"{}": "{}",'.format(code, name)
 print '}'
 
 print
@@ -46,7 +46,7 @@ print 'territories = {'
 with open('admin1CodesASCII.txt') as states:
     for line in states:
         code, name = line.split('\t')[:2]
-        print '"%s": "%s",' % (code, name)
+        print '"{}": "{}",'.format(code, name)
 print '}'
 
 print """
@@ -74,5 +74,5 @@ def get_state(country, state):
     >>> get_state('US', 'WI')
     'Wisconsin'
     \"\"\"
-    return territories.get("%s.%s" % (country, state))
+    return territories.get("{}.{}".format(country, state))
 """

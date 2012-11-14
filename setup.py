@@ -17,21 +17,20 @@ root = '--root' in ' '.join(argv)
 
 
 data_files = [
-    ('/usr/share/icons/hicolor/scalable/apps', ['data/%s.svg' % PACKAGE]),
-    ('/usr/share/glib-2.0/schemas', ['data/ca.%s.gschema.xml' % PACKAGE]),
-    ('/usr/share/applications', ['data/%s.desktop' % PACKAGE]),
+    ('/usr/share/icons/hicolor/scalable/apps', ['data/{}.svg'.format(PACKAGE)]),
+    ('/usr/share/glib-2.0/schemas', ['data/ca.{}.gschema.xml'.format(PACKAGE)]),
+    ('/usr/share/applications', ['data/{}.desktop'.format(PACKAGE)]),
     ('share/doc/' + PACKAGE, ['README.md', 'AUTHORS', 'THANKS']),
     ('share/' + PACKAGE, ['data/cities.txt', 'data/trackfile.ui', 'data/camera.ui',
-        'data/%s.ui' % PACKAGE, 'data/%s.svg' % PACKAGE])
+        'data/{}.ui'.format(PACKAGE), 'data/{}.svg'.format(PACKAGE)])
 ]
 
 
-build_info_template = """# -*- coding: UTF-8 -*-
-
+build_info_template = """\
 # Distutils installation details:
-PREFIX='%s'
-PKG_DATA_DIR='%s'
-REVISION='Version %s'
+PREFIX='{prefix}'
+PKG_DATA_DIR='{datadir}'
+REVISION='Version {version}'
 """
 
 
@@ -45,11 +44,11 @@ class build_py(_build_py):
             try:
                 iobj = self.distribution.command_obj['install']
                 with open(module_file, 'w') as module_fp:
-                    module_fp.write(build_info_template % (
-                        iobj.prefix,
-                        join(iobj.prefix, 'share', PACKAGE),
-                        VERSION if root else Popen(('git', 'describe'),
-                            stdout=PIPE).communicate()[0].strip()
+                    module_fp.write(build_info_template.format(
+                        prefix=iobj.prefix,
+                        datadir=join(iobj.prefix, 'share', PACKAGE),
+                        version=(VERSION if root else Popen(('git', 'describe'),
+                            stdout=PIPE).communicate()[0].strip())
                     ))
             except KeyError:
                 pass

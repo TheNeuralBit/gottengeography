@@ -4140,5 +4140,4 @@ def get_state(country, state):
     >>> get_state('US', 'WI')
     'Wisconsin'
     """
-    return territories.get("%s.%s" % (country, state))
-
+    return territories.get("{}.{}".format(country, state))

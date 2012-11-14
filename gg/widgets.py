@@ -209,7 +209,7 @@ class Widgets(Builder):
 
     def status_message(self, message, info=False):
         """Display a message with the GtkInfoBar."""
-        self.error_message.set_markup('<b>%s</b>' % message)
+        self.error_message.set_markup('<b>{}</b>'.format(message))
         self.error_bar.set_message_type(
             Gtk.MessageType.INFO if info else Gtk.MessageType.WARNING)
         self.error_icon.set_from_stock(

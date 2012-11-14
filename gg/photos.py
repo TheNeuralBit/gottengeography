@@ -100,14 +100,14 @@ def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size'), orient=1):
 
     >>> fetch_thumbnail('gg/widgets.py')
     Traceback (most recent call last):
-    IOError: gg/widgets.py: No thumbnail found.
+    OSError: gg/widgets.py: No thumbnail found.
     >>> type(fetch_thumbnail('demo/IMG_2411.JPG'))
     <class 'gi.repository.GdkPixbuf.Pixbuf'>
     """
     try:
         exif = GExiv2.Metadata(filename)
     except GObject.GError:
-        raise IOError('%s: No thumbnail found.' % filename)
+        raise IOError('{}: No thumbnail found.'.format(filename))
 
     try:
         orient = int(exif['Exif.Image.Orientation'])
@@ -120,7 +120,7 @@ def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size'), orient=1):
         try:
             data = exif.get_preview_image().get_data()
         except GObject.GError:
-            raise IOError('%s: No thumbnail found.' % filename)
+            raise IOError('{}: No thumbnail found.'.format(filename))
 
         return GdkPixbuf.Pixbuf.new_from_stream_at_scale(
             Gio.MemoryInputStream.new_from_data(data, None),
@@ -223,10 +223,10 @@ class Photograph(Coordinates):
 
     def __str__(self):
         """Long summary of photo metadata with Pango markup."""
-        summary = '<span %s>%s</span>\n<span %s>%s</span>' % (
+        summary = '<span {}>{}</span>\n<span {}>{}</span>'.format(
             'size="larger"', basename(self.filename),
             'style="italic" size="smaller"', Coordinates.__str__(self))
-        return '<b>%s</b>' % summary if self in modified else summary
+        return '<b>{}</b>'.format(summary) if self in modified else summary
 
     def read(self):
         """Discard all state and (re)initialize from disk."""

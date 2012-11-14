@@ -56,7 +56,7 @@ class GeoCacheKey:
     """This class allows fuzzy geodata cache lookups."""
 
     def __init__(self, lat, lon):
-        self.key = '%.2f,%.2f' % (lat, lon)
+        self.key = '{:.2f},{:.2f}'.format(lat, lon)
         self.lat = lat
         self.lon = lon
 
@@ -162,7 +162,7 @@ class Coordinates(GObject.GObject):
         """Report a nicely formatted latitude and longitude pair."""
         if self.positioned:
             lat, lon = self.latitude, self.longitude
-            return '%s %.5f, %s %.5f' % (
+            return '{} {:.5f}, {} {:.5f}'.format(
                 _('N') if lat >= 0 else _('S'), abs(lat),
                 _('E') if lon >= 0 else _('W'), abs(lon)
             )
@@ -171,8 +171,11 @@ class Coordinates(GObject.GObject):
     def height(self):
         """Convert elevation into a human readable format."""
         if self.altitude:
-            return '%.1f%s' % (abs(self.altitude), _('m above sea level')
-                        if self.altitude >= 0 else _('m below sea level'))
+            return '{:.1f}{}'.format(
+                abs(self.altitude),
+                _('m above sea level')
+                if self.altitude >= 0 else
+                _('m below sea level'))
 
     def __init__(self, **props):
         self.filename = ''

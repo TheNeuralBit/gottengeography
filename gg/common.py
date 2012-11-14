@@ -63,7 +63,7 @@ def memoize(obj):
     ...     @memoize
     ...     def get_by_name(self, name):
     ...         print('Making new widget named', name)
-    ...         return '<<%s>>' % name
+    ...         return '<<{}>>'.format(name)
     >>> one = WidgetFactory()
     >>> one.get_by_name('bob')
     Making new widget named bob
@@ -142,8 +142,8 @@ class GSettings(Gio.Settings):
 
     def __init__(self, schema='ca.' + PACKAGE, path=None):
         if path is not None:
-            path = '/ca/%s/%ss/%s/' % (PACKAGE, schema, path)
-            schema = 'ca.%s.%s' % (PACKAGE, schema)
+            path = '/ca/{}/{}s/{}/'.format(PACKAGE, schema, path)
+            schema = 'ca.{}.{}'.format(PACKAGE, schema)
 
         Gio.Settings.__init__(self, schema, path)
 

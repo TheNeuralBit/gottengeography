@@ -127,7 +127,8 @@ class Camera(GObject.GObject):
             environ['TZ'] = self.found_timezone
         elif self.timezone_method == 'offset':
             minutes, hours = split_float(-float(self.utc_offset))
-            environ['TZ'] = 'UTC%+d:%02d' % (hours, abs(minutes) * 60)
+            environ['TZ'] = 'UTC{:+}:{:02}'.format(
+                int(hours), int(abs(minutes) * 60))
         elif self.timezone_method == 'custom' and \
              self.timezone_region and self.timezone_city:
             environ['TZ'] = '/'.join(
