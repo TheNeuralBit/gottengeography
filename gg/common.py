@@ -16,10 +16,34 @@ from functools import wraps
 
 from gg.version import PACKAGE
 
+
 # These variables are used for sharing data between classes
 selected = set()
 modified = set()
 points   = {}
+
+
+try:
+    # This will be in the stdlib in 3.4.
+    from contextlib import ignored
+except ImportError:
+    from contextlib import contextmanager
+
+    @contextmanager
+    def ignored(*exceptions):
+        """Ignore specifed exceptions with less boilerplate.
+
+        >>> with ignored(Exception):
+        ...     raise Exception
+        >>> with ignored(KeyError):
+        ...     raise OSError('Not ignored')
+        Traceback (most recent call last):
+        OSError: Not ignored
+        """
+        try:
+            yield
+        except exceptions:
+            pass
 
 
 def singleton(cls):

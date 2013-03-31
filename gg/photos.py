@@ -18,10 +18,8 @@ from gg.label import Label
 from gg.widgets import Widgets
 from gg.xmlfiles import TrackFile
 from gg.gpsmath import Coordinates
-from gg.common import staticmethod
-from gg.common import Gst, memoize
-from gg.common import points, modified
 from gg.camera import Camera, CameraView
+from gg.common import Gst, memoize, staticmethod, ignored, points, modified
 
 
 # Prefixes for common EXIF keys.
@@ -110,10 +108,8 @@ def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size'), orient=1):
     except GObject.GError:
         raise OSError('{}: No thumbnail found.'.format(filename))
 
-    try:
+    with ignored(KeyError, ValueError):
         orient = int(exif['Exif.Image.Orientation'])
-    except:
-        pass
 
     try:
         thumb = GdkPixbuf.Pixbuf.new_from_file_at_size(filename, size, size)
@@ -242,14 +238,10 @@ class Photograph(Coordinates):
         self.names = (None, None, None)
         self.geotimezone = ''
 
-        try:
+        with ignored(KeyError, AttributeError):
             self.orig_time = datetime.strptime(
                 self.exif['Exif.Photo.DateTimeOriginal'],
                 '%Y:%m:%d %H:%M:%S').timetuple()
-        except KeyError:
-            pass
-        except AttributeError:
-            pass
 
         self.longitude, self.latitude, self.altitude = self.exif.get_gps_info()
 
@@ -268,11 +260,9 @@ class Photograph(Coordinates):
         keys = ['Exif.Image.' + key for key in list(self.camera_info.keys())
                     + ['CameraSerialNumber']] + ['Exif.Photo.BodySerialNumber']
         for key in keys:
-            try:
+            with ignored(KeyError):
                 self.camera_info.update(
                     {key.split('.')[-1]: self.exif[key]})
-            except KeyError:
-                pass
 
     def calculate_timestamp(self, offset=0):
         """Determine the timestamp based on the currently selected timezone.

@@ -11,6 +11,7 @@ from distutils.command.build_py import build_py as _build_py
 from distutils.command.install import install
 
 from gg.version import PACKAGE, VERSION, AUTHOR, EMAIL
+from gg.common import ignored
 
 
 root = '--root' in ' '.join(argv)
@@ -41,7 +42,7 @@ class build_py(_build_py):
     """
     def build_module(self, module, module_file, package):
         if (module_file == 'gg/build_info.py'):
-            try:
+            with ignored(KeyError):
                 iobj = self.distribution.command_obj['install']
                 with open(module_file, 'w') as module_fp:
                     module_fp.write(build_info_template.format(
@@ -50,8 +51,6 @@ class build_py(_build_py):
                         version=(VERSION if root else Popen(('git', 'describe'),
                             stdout=PIPE).communicate()[0].strip())
                     ))
-            except KeyError:
-                pass
 
         _build_py.build_module(self, module, module_file, package)
 
