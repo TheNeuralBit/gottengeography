@@ -9,6 +9,7 @@ GtkClutter.init([])
 
 from gi.repository import Gdk, GdkPixbuf, GExiv2
 from gi.repository import Gio, GObject
+from datetime import datetime
 from os.path import basename
 from time import mktime
 from os import stat
@@ -242,7 +243,9 @@ class Photograph(Coordinates):
         self.geotimezone = ''
 
         try:
-            self.orig_time = self.exif.get_date_time().timetuple()
+            self.orig_time = datetime.strptime(
+                self.exif['Exif.Photo.DateTimeOriginal'],
+                '%Y:%m:%d %H:%M:%S').timetuple()
         except KeyError:
             pass
         except AttributeError:
