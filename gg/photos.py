@@ -79,8 +79,8 @@ def auto_timestamp_comparison(photo):
 
     except KeyError:
         # Find the two points that are nearest (in time) to the photo.
-        hi = min([point for point in points if point > stamp])
-        lo = max([point for point in points if point < stamp])
+        hi = min([p for p in points if p > stamp])
+        lo = max([p for p in points if p < stamp])
         hi_point = points[hi]
         lo_point = points[lo]
         hi_ratio = (stamp - lo) / (hi - lo)  # Proportional amount of time
