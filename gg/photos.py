@@ -285,6 +285,7 @@ class Photograph(Coordinates):
         self.exif[IPTC + 'City']          = self.names[0] or ''
         self.exif[IPTC + 'ProvinceState'] = self.names[1] or ''
         self.exif[IPTC + 'CountryName']   = self.names[2] or ''
+        self.exif['Iptc.Envelope.CharacterSet'] = '\x1b%G'
         self.exif.save_file()
         modified.discard(self)
         Widgets.loaded_photos.set_value(self.iter, 1, str(self))
