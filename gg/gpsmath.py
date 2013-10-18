@@ -196,7 +196,7 @@ class Coordinates(GObject.GObject):
         >>> coord.lookup_geodata()
         'Africa/Accra'
         >>> print(coord)
-        Yendi, Ghana
+        Yendi, Northern, Ghana
         N 10.00000, E 0.00000
         456.7m above sea level
         """
@@ -256,7 +256,7 @@ class Coordinates(GObject.GObject):
         >>> type(coord.modified_timeout)
         <class 'NoneType'>
         >>> coord.geoname
-        'Yendi, Ghana'
+        'Yendi, Northern, Ghana'
         """
         if self.modified_timeout:
             self.notify('positioned')
