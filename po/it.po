@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: gottengeography\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-08-16 22:37-0500\n"
-"PO-Revision-Date: 2012-08-25 19:08+0000\n"
-"Last-Translator: Cristian Marchi <Unknown>\n"
+"PO-Revision-Date: 2013-08-12 08:33+0000\n"
+"Last-Translator: Claudio Arseni <claudio.arseni@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-31 05:15+0000\n"
-"X-Generator: Launchpad (build 15887)\n"
+"X-Launchpad-Export-Date: 2013-08-13 06:04+0000\n"
+"X-Generator: Launchpad (build 16723)\n"
 
 #: ../data/gottengeography.ui.h:1
 msgid "_Open..."
@@ -31,7 +31,7 @@ msgstr "A_iuto"
 
 #: ../data/gottengeography.ui.h:4
 msgid "_About"
-msgstr "_Informazioni"
+msgstr "I_nformazioni"
 
 #: ../data/gottengeography.ui.h:5
 msgid "_Quit"
@@ -39,7 +39,7 @@ msgstr "_Esci"
 
 #: ../data/gottengeography.ui.h:6
 msgid "Load photos or GPS data (Ctrl O)"
-msgstr "Carica foto o dati GPS (Ctrl O)"
+msgstr "Carica foto o dati GPS (Ctrl+O)"
 
 #: ../data/gottengeography.ui.h:7
 msgid "Change map view (Google opens in your browser)"
@@ -48,7 +48,7 @@ msgstr "Cambia vista mappa (Google verrà aperto nel browser)"
 #: ../data/gottengeography.ui.h:8
 msgid "Return to the previous location viewed on map (Ctrl Left)"
 msgstr ""
-"Torna alla posizione precedentemente visualizzata sulla mappa (Ctrl Sinistra)"
+"Torna alla posizione precedentemente visualizzata sulla mappa (Ctrl+←)"
 
 #: ../data/gottengeography.ui.h:9
 msgid "Type the name of the city you would like to view."
@@ -56,15 +56,15 @@ msgstr "Digitare il nome della città da visualizzare."
 
 #: ../data/gottengeography.ui.h:10
 msgid "Zoom the map out one step (Ctrl -)"
-msgstr "Rimpicciolisce di un punto la mappa (Ctrl -)"
+msgstr "Riduce di un punto la mappa (Ctrl+-)"
 
 #: ../data/gottengeography.ui.h:11
 msgid "Enhance! (Ctrl +)"
-msgstr "Avvicina! (Ctrl +)"
+msgstr "Avvicina! (Ctrl++)"
 
 #: ../data/gottengeography.ui.h:12
 msgid "Learn how to use GottenGeography (Ctrl ?)"
-msgstr "Impara a usare GottenGeography (Ctrl ?)"
+msgstr "Impara a usare GottenGeography (Ctrl+?)"
 
 #: ../data/gottengeography.ui.h:13
 msgid "About GottenGeography"
@@ -72,24 +72,24 @@ msgstr "Informazioni su GottenGeography"
 
 #: ../data/gottengeography.ui.h:14
 msgid "Drag files here to load."
-msgstr "Trascinare qui i file per caricarli"
+msgstr "Trascinare qui i file per caricarli."
 
 #: ../data/gottengeography.ui.h:15
 msgid "Close selected photos (Ctrl W)"
-msgstr "Chiude le foto selezionate (Ctrl W)"
+msgstr "Chiude le foto selezionate (Ctrl+W)"
 
 #: ../data/gottengeography.ui.h:16
 msgid "Reload selected photos, losing all changes (Ctrl Z)"
-msgstr "Ricarica la foto selezionata, scartando tutte le modifiche (Ctrl Z)"
+msgstr "Ricarica la foto selezionata, scartando tutte le modifiche (Ctrl+Z)"
 
 #: ../data/gottengeography.ui.h:17
 msgid "Center the map view on the selected photo (Ctrl J)"
 msgstr ""
-"Centra la visualizzazione della mappa  sulla foto selezionata (Ctrl J)"
+"Centra la visualizzazione della mappa  sulla foto selezionata (Ctrl+J)"
 
 #: ../data/gottengeography.ui.h:18
 msgid "Save all photos (Ctrl S)"
-msgstr "Salva tutte le foto (Ctrl S)"
+msgstr "Salva tutte le foto (Ctrl+S)"
 
 #: ../data/gottengeography.ui.h:19
 msgid "Save All"
@@ -97,11 +97,11 @@ msgstr "Salva tutto"
 
 #: ../data/gottengeography.ui.h:20
 msgid "Place selected photos onto center of map (Ctrl Enter)"
-msgstr "Posiziona la foto selezionata al centro della mappa (Ctrl Enter)"
+msgstr "Posiziona la foto selezionata al centro della mappa (Ctrl+Invio)"
 
 #: ../data/gottengeography.ui.h:21
 msgid "Photos"
-msgstr "Fotografie"
+msgstr "Foro"
 
 #: ../data/gottengeography.ui.h:22
 msgid "Cameras"
@@ -113,7 +113,7 @@ msgstr "GPS"
 
 #: ../data/gottengeography.ui.h:24
 msgid "Is this a photo of a clock? Type the displayed time here:"
-msgstr "In questa foto compare un orologio? inserire qui l'ora visualizzata:"
+msgstr "In questa foto compare un orologio? Digitare qui l'ora visualizzata:"
 
 #: ../data/gottengeography.ui.h:25
 msgid "Set Clock Offset!"
@@ -144,7 +144,9 @@ msgstr "Wiki di GottenGeography"
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Cristian Marchi https://launchpad.net/~cri79"
+"  Claudio Arseni https://launchpad.net/~claudio.arseni\n"
+"  Cristian Marchi https://launchpad.net/~cri79\n"
+"  Robert Bruce Park https://launchpad.net/~robru"
 
 #: ../data/gottengeography.ui.h:32
 msgid ""

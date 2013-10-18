@@ -34,3 +34,8 @@ territories:
 	wget -t 10 'http://download.geonames.org/export/dump/admin1CodesASCII.txt'
 	./tools/update_territories.py > gg/territories.py
 	rm -f countryInfo.txt admin1CodesASCII.txt
+
+translations:
+	bzr branch lp:~gottengeography/gottengeography/translations
+	mv translations/po/*.po po/
+	rm -rf translations

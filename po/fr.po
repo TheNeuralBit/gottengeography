@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: gottengeography 2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-08-16 22:37-0500\n"
-"PO-Revision-Date: 2012-08-25 13:42+0000\n"
-"Last-Translator: Jerome Portal <portal.j@hotmail.fr>\n"
+"PO-Revision-Date: 2013-03-14 15:37+0000\n"
+"Last-Translator: Hélion du Mas des Bourboux <helion331990@gmail.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-31 05:15+0000\n"
-"X-Generator: Launchpad (build 15887)\n"
+"X-Launchpad-Export-Date: 2013-03-15 06:27+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 "Language: fr\n"
 
 #: ../data/gottengeography.ui.h:1
@@ -40,7 +40,7 @@ msgstr "_Quitter"
 
 #: ../data/gottengeography.ui.h:6
 msgid "Load photos or GPS data (Ctrl O)"
-msgstr "Charger des photos ou des données GPS (Ctrl + O)"
+msgstr "Charger des photos ou des données GPS (Ctrl O)"
 
 #: ../data/gottengeography.ui.h:7
 msgid "Change map view (Google opens in your browser)"
@@ -49,7 +49,7 @@ msgstr "Changer vue sur la carte (Google s'ouvre dans votre navigateur)"
 #: ../data/gottengeography.ui.h:8
 msgid "Return to the previous location viewed on map (Ctrl Left)"
 msgstr ""
-"Retourner à l'endroit précédemment consulté sur la carte (Ctrl + Gauche)"
+"Retourner à l'endroit précédemment consulté sur la carte (Ctrl Gauche)"
 
 #: ../data/gottengeography.ui.h:9
 msgid "Type the name of the city you would like to view."
@@ -61,7 +61,7 @@ msgstr "Zoom sur la carte d'un cran (Ctrl -)"
 
 #: ../data/gottengeography.ui.h:11
 msgid "Enhance! (Ctrl +)"
-msgstr "Améliorer! (Ctrl +)"
+msgstr "Améliorer ! (Ctrl +)"
 
 #: ../data/gottengeography.ui.h:12
 msgid "Learn how to use GottenGeography (Ctrl ?)"
@@ -77,13 +77,13 @@ msgstr "Glissez des fichiers ici pour les charger."
 
 #: ../data/gottengeography.ui.h:15
 msgid "Close selected photos (Ctrl W)"
-msgstr "Fermer les photos sélectionnées (Ctrl + W)"
+msgstr "Fermer les photos sélectionnées (Ctrl W)"
 
 #: ../data/gottengeography.ui.h:16
 msgid "Reload selected photos, losing all changes (Ctrl Z)"
 msgstr ""
 "Recharger les photos sélectionnées, en perdant toutes les modifications "
-"(Ctrl + Z)"
+"(Ctrl Z)"
 
 #: ../data/gottengeography.ui.h:17
 msgid "Center the map view on the selected photo (Ctrl J)"
@@ -91,7 +91,7 @@ msgstr "Voir la photo sélectionnée (Ctrl J)"
 
 #: ../data/gottengeography.ui.h:18
 msgid "Save all photos (Ctrl S)"
-msgstr "Enregistrer toutes les photos (Ctrl + S)"
+msgstr "Enregistrer toutes les photos (Ctrl S)"
 
 #: ../data/gottengeography.ui.h:19
 msgid "Save All"
@@ -133,10 +133,14 @@ msgid ""
 "This program is written in the Python programming language, and adds geotags "
 "to your photos. The name is an anagram of \"Python Geotagger.\""
 msgstr ""
+"GottenGeography : Allez ouvrir votre tagueur !\n"
+"\n"
+"Ce programme est écrit en langage de programmation Python, et ajoute des "
+"geotags à vos photos. Le nom est un anagramme de « Python Geotagger »."
 
 #: ../data/gottengeography.ui.h:30
 msgid "GottenGeography Wiki"
-msgstr "GottenGeography Wiki"
+msgstr "Wiki de GottenGeography"
 
 #: ../data/gottengeography.ui.h:31
 msgid "translator-credits"
@@ -145,6 +149,7 @@ msgstr ""
 "Pylyglot.org\n"
 "\n"
 "Launchpad Contributions:\n"
+"  Hélion du Mas des Bourboux https://launchpad.net/~helion331990\n"
 "  Jerome Portal https://launchpad.net/~portal-j\n"
 "  Robert Bruce Park https://launchpad.net/~robru\n"
 "  Stanislas Michalak https://launchpad.net/~stanislas-michalak"
@@ -155,7 +160,7 @@ msgid ""
 "closing?</span>"
 msgstr ""
 "<span weight=\"bold\" size=\"larger\">Voulez-vous enregistrer les "
-"modifications avant la fermeture?</span>"
+"modifications avant la fermeture ?</span>"
 
 #: ../data/gottengeography.ui.h:34
 #, no-c-format
@@ -188,7 +193,7 @@ msgstr "Spécifiez le fuseau horaire manuellement."
 
 #: ../gg/app.py:179
 msgid "Could not open: "
-msgstr "Impossible d'ouvrir: "
+msgstr "Impossible d'ouvrir : "
 
 #: ../gg/gpsmath.py:211
 msgid "N"
