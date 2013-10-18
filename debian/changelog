@@ -1,0 +1,6 @@
+gottengeography (2.4-1) unstable; urgency=low
+
+  [ Robert Bruce Park ]
+  * Initial debian package.
+
+ -- Robert Bruce Park <robru@gottengeography.ca>  Thu, 17 Oct 2013 19:41:02 -0700
