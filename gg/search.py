@@ -4,7 +4,7 @@
 """Control how the map is searched."""
 
 
-from gi.repository import GtkClutter
+from gi.repository import Gtk, GtkClutter
 GtkClutter.init([])
 
 from os.path import join
@@ -25,14 +25,19 @@ class SearchController():
     def __init__(self):
         """Make the search box and insert it into the window."""
         self.search = None
-        self.results = Widgets.search_results
-        search = Widgets.search_completion
+        self.results = Gtk.ListStore.new([str, float, float])
+        search = Gtk.EntryCompletion.new()
+        search.set_model(self.results)
+        search.set_minimum_key_length(3)
+        search.set_text_column(LOCATION)
+        search.set_inline_completion(True)
         search.set_match_func(
             lambda c, s, itr, get:
                 (get(itr, LOCATION) or '').lower().find(self.search) > -1,
             self.results.get_value)
         search.connect('match-selected', self.search_completed)
         entry = Widgets.search_box
+        entry.set_completion(search)
         entry.connect('changed', self.load_results, self.results.append)
         entry.connect('icon-release', lambda entry, i, e: entry.set_text(''))
         entry.connect('icon-release', lambda *ignore: entry.emit('grab_focus'))
