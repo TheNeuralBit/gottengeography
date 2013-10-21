@@ -1,5 +1,8 @@
 #!/usr/bin/make -f
 
+build:
+	python3 setup.py build
+
 # TODO Clean up the testsuite enough to include it here for automated
 # tests during package building.
 check: flakes # nose
