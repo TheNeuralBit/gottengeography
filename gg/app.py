@@ -85,7 +85,7 @@ def startup(self):
             lambda *ignore: Widgets.about.run() and Widgets.about.hide(),
         'help':
             lambda *ignore: Gtk.show_uri(screen,
-                'ghelp:gottengeography', Gdk.CURRENT_TIME),
+                'help:gottengeography', Gdk.CURRENT_TIME),
         'jump':
             self.jump_to_photo,
         'apply':
