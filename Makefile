@@ -7,6 +7,9 @@ build:
 # tests during package building.
 check: flakes # nose
 
+autopilot:
+	cd ./test; autopilot run gottengeography_autopilot
+
 doctest:
 	nosetests3 --with-doctest gg/ -v
 
