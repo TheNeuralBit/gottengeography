@@ -38,20 +38,8 @@ from gg.search import SearchController
 # Handy names for GtkListStore column numbers.
 PATH, SUMMARY, THUMB, TIMESTAMP = range(4)
 
-# Just pretend these functions are actually GottenGeography() instance methods.
+# Just pretend this function is actually a GottenGeography() instance method.
 # The 'self' argument gets passed in by GtkApplication instead of Python.
-
-def command_line(self, commands):
-    """Open the files passed in at the commandline.
-
-    This method collects any commandline arguments from any invocation of
-    GottenGeography and reports them to the primary instance for opening.
-    """
-    files = commands.get_arguments()[1:]
-    if files:
-        self.activate()
-        self.open_files([abspath(f) for f in files])
-    return 0
 
 def startup(self):
     """Display the primary window and connect some signals."""
@@ -141,13 +129,23 @@ class GottenGeography(Gtk.Application):
     def __init__(self, do_fade_in=True):
         Gtk.Application.__init__(
             self, application_id='ca.' + APPNAME,
-            flags=Gio.ApplicationFlags.HANDLES_COMMAND_LINE)
+            flags=Gio.ApplicationFlags.HANDLES_OPEN)
 
         self.connect('activate', lambda *ignore: Widgets.main.present())
-        self.connect('command-line', command_line)
         self.connect('startup', startup)
 
         self.do_fade_in = do_fade_in
+
+    def do_open(self, files, n_files, hint):
+        """Open the files passed in at the commandline.
+
+        This method collects any commandline arguments from any
+        invocation of GottenGeography and reports them to the primary
+        instance for opening.
+        """
+        print('
+        self.activate()
+        self.open_files([f.get_path() for f in files])
 
     def open_files(self, files):
         """Attempt to load all of the specified files.
