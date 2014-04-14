@@ -48,7 +48,7 @@ class build_py(_build_py):
                         prefix=iobj.prefix,
                         datadir=join(iobj.prefix, 'share', PACKAGE),
                         version=(VERSION if root else Popen(('git', 'describe'),
-                            stdout=PIPE).communicate()[0].strip())
+                            stdout=PIPE).communicate()[0].strip().decode("utf-8"))
                     ))
             except KeyError:
                 pass
