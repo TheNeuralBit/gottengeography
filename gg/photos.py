@@ -12,7 +12,7 @@ from gi.repository import Gio, GObject
 from datetime import datetime
 from os.path import basename
 from time import mktime
-from os import stat
+from os import stat, utime
 
 from gg.label import Label
 from gg.widgets import Widgets
@@ -238,10 +238,15 @@ class Photograph(Coordinates):
         self.names = (None, None, None)
         self.geotimezone = ''
 
-        with ignored(KeyError, AttributeError):
-            self.orig_time = datetime.strptime(
-                self.exif['Exif.Photo.DateTimeOriginal'],
-                '%Y:%m:%d %H:%M:%S').timetuple()
+        for tag in ('Exif.Photo.DateTimeOriginal',
+                    'Exif.Image.DateTimeOriginal',
+                    'Exif.Photo.DateTime',
+                    'Exif.Image.DateTime'):
+            with ignored(TypeError, AttributeError, ValueError):
+                self.orig_time = datetime.strptime(
+                    self.exif.get(tag),
+                    '%Y:%m:%d %H:%M:%S').timetuple()
+                break
 
         self.longitude, self.latitude, self.altitude = self.exif.get_gps_info()
 
@@ -281,12 +286,14 @@ class Photograph(Coordinates):
 
     def write(self):
         """Save exif data to photo file on disk."""
+        times = stat(self.filename)
         self.exif.set_gps_info(self.longitude, self.latitude, self.altitude)
         self.exif[IPTC + 'City']          = self.names[0] or ''
         self.exif[IPTC + 'ProvinceState'] = self.names[1] or ''
         self.exif[IPTC + 'CountryName']   = self.names[2] or ''
         self.exif['Iptc.Envelope.CharacterSet'] = '\x1b%G'
         self.exif.save_file()
+        utime(self.filename, (times.st_atime, times.st_mtime))
         modified.discard(self)
         Widgets.loaded_photos.set_value(self.iter, 1, str(self))
 
