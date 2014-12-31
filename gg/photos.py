@@ -115,8 +115,9 @@ def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size'), orient=1):
         thumb = GdkPixbuf.Pixbuf.new_from_file_at_size(filename, size, size)
     except GObject.GError:
         try:
-            data = exif.get_preview_image().get_data()
-        except GObject.GError:
+            preview = exif.get_preview_properties()
+            data = exif.get_preview_image(preview[0]).get_data()
+        except (IndexError, GObject.GError):
             raise OSError('{}: No thumbnail found.'.format(filename))
 
         return GdkPixbuf.Pixbuf.new_from_stream_at_scale(
