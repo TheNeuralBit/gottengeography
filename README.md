@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/robru/gottengeography.svg?branch=master)](https://travis-ci.org/robru/gottengeography.svg?branch=master)
+
+
 GottenGeography
 ===============
 
