@@ -14,7 +14,7 @@ doctest:
 	python3 -m nose --with-doctest gg/ -v
 
 nose:
-	python3 -m nose tests/
+	python3 -m nose tests/ --with-coverage --cover-package=gg
 
 flakes:
 	pyflakes gottengeography setup.py gg tests
