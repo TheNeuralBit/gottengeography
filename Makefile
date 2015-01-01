@@ -3,12 +3,7 @@
 build:
 	python3 setup.py build
 
-# TODO Clean up the testsuite enough to include it here for automated
-# tests during package building.
-check: flakes nose
-
-autopilot:
-	cd ./test; autopilot run gottengeography_autopilot
+check: nose flakes
 
 doctest:
 	python3 -m nose --with-doctest gg/ -v
