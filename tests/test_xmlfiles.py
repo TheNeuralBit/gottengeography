@@ -8,6 +8,11 @@ from tests import BaseTestCase
 class XmlFilesTestCase(BaseTestCase):
     filename = 'xmlfiles'
 
+    def setUp(self):
+        super().setUp()
+        self.mod.Champlain.PathLayer.set_stroke_width = Mock()
+        self.mod.Champlain.PathLayer.add_node = Mock()
+
     def test_gtkclutter_init(self):
         self.mod.GtkClutter.init.assert_called_once_with([])
 
@@ -30,3 +35,26 @@ class XmlFilesTestCase(BaseTestCase):
         c.lighten.return_value.lighten.assert_called_once_with()
         p[0].set_stroke_color.assert_called_once_with(c)
         p[1].set_stroke_color.assert_called_once_with(c.lighten().lighten())
+
+    def test_polygon_init(self):
+        p = self.mod.Polygon()
+        p.set_stroke_width.assert_called_once_with(4)
+        self.mod.MapView.add_layer.assert_called_once_with(p)
+
+    def test_polygon_append_point(self):
+        p = self.mod.Polygon()
+        coord = p.append_point(1, 2, 3)
+        self.mod.Champlain.Coordinate.new_full.assert_called_once_with(1, 2)
+        self.assertEqual(coord.lat, 1)
+        self.assertEqual(coord.lon, 2)
+        self.assertEqual(coord.ele, 3.0)
+        p.add_node.assert_called_once_with(coord)
+
+    def test_polygon_append_point_invalid_elevation(self):
+        p = self.mod.Polygon()
+        coord = p.append_point(1, 2, 'five')
+        self.mod.Champlain.Coordinate.new_full.assert_called_once_with(1, 2)
+        self.assertEqual(coord.lat, 1)
+        self.assertEqual(coord.lon, 2)
+        self.assertEqual(coord.ele, 0.0)
+        p.add_node.assert_called_once_with(coord)

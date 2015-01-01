@@ -9,6 +9,10 @@ import importlib.machinery
 from mock import Mock
 
 
+class null:
+    pass
+
+
 class BaseTestCase(unittest.TestCase):
     root_dir = os.path.dirname(os.path.dirname(__file__))
     gg_dir = os.path.join(root_dir, 'gg')
@@ -23,7 +27,12 @@ class BaseTestCase(unittest.TestCase):
     def setUp(self):
         """MOCK ALL THE THINGS!"""
         super().setUp()
-        sys.modules['gi.repository'] = Mock()
+        giMock = Mock()
+        # When we define a class that inherits from a mocked class, our class
+        # becomes a useless mock. Some classes need to be defined to be empty
+        # so that we can inherit from them and then just mock specific methods.
+        giMock.Champlain.PathLayer = null
+        sys.modules['gi.repository'] = giMock
         for fname in glob.glob(self.pyfile('*')):
             modname = os.path.basename(fname.replace('.py', ''))
             sys.modules['gg.' + modname] = Mock()
