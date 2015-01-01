@@ -11,10 +11,10 @@ autopilot:
 	cd ./test; autopilot run gottengeography_autopilot
 
 doctest:
-	nosetests3 --with-doctest gg/ -v
+	python3 -m nose --with-doctest gg/ -v
 
 nose:
-	nosetests3 --with-doctest -v
+	python3 -m nose --with-doctest -v
 
 flakes:
 	pyflakes gottengeography setup.py gg test
