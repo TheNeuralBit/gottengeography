@@ -2,6 +2,6 @@ language: python
 python:
   - "3.4"
 install:
-  - pip install pyflakes
+  - pip install pyflakes python-dateutil
 script:
   - make check
