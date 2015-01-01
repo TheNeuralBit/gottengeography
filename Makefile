@@ -5,7 +5,7 @@ build:
 
 # TODO Clean up the testsuite enough to include it here for automated
 # tests during package building.
-check: flakes # nose
+check: flakes nose
 
 autopilot:
 	cd ./test; autopilot run gottengeography_autopilot
@@ -14,10 +14,10 @@ doctest:
 	python3 -m nose --with-doctest gg/ -v
 
 nose:
-	python3 -m nose --with-doctest -v
+	python3 -m nose tests/
 
 flakes:
-	pyflakes gottengeography setup.py gg test
+	pyflakes gottengeography setup.py gg tests
 
 lint:
 	pylint --include-ids=y gg test -d \
