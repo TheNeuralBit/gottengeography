@@ -4,4 +4,4 @@ python:
 install:
   - pip install pyflakes
 script:
-  - make flakes
+  - make check
