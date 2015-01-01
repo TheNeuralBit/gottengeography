@@ -3,4 +3,3 @@ python:
   - "3.4"
 script:
   - make flakes
-  - make doctest
