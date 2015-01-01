@@ -10,8 +10,8 @@ class XmlFilesTestCase(BaseTestCase):
 
     def setUp(self):
         super().setUp()
-        self.mod.Champlain.PathLayer.set_stroke_width = Mock()
-        self.mod.Champlain.PathLayer.add_node = Mock()
+        self.mod.Gst = Mock()
+        self.mod.MapView = Mock()
 
     def test_gtkclutter_init(self):
         self.mod.GtkClutter.init.assert_called_once_with([])

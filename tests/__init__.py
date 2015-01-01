@@ -2,7 +2,6 @@
 
 import os
 import sys
-import glob
 import unittest
 import importlib.machinery
 
@@ -32,10 +31,22 @@ class BaseTestCase(unittest.TestCase):
         # becomes a useless mock. Some classes need to be defined to be empty
         # so that we can inherit from them and then just mock specific methods.
         giMock.Champlain.PathLayer = null
+        giMock.Champlain.PathLayer.set_stroke_width = Mock()
+        giMock.Champlain.PathLayer.add_node = Mock()
+        giMock.Gio.Settings = null
+        giMock.Gio.Settings.__init__ = Mock()
+        giMock.Gio.Settings.__getitem__ = Mock()
+        giMock.Gio.Settings.bind = Mock()
+        giMock.Gio.Settings.connect = Mock()
+        giMock.Gio.Settings.get_int = Mock()
+        giMock.Gio.Settings.get_string = Mock()
+        giMock.Gio.Settings.get_value = Mock()
+        giMock.Gio.Settings.set_value = Mock()
+        giMock.Gtk.Builder = null
+        giMock.Gtk.Builder.get_object = Mock()
+        giMock.GtkChamplain.Embed = null
+        giMock.GtkChamplain.Embed.get_view = Mock()
         sys.modules['gi.repository'] = giMock
-        for fname in glob.glob(self.pyfile('*')):
-            modname = os.path.basename(fname.replace('.py', ''))
-            sys.modules['gg.' + modname] = Mock()
         self.mod = importlib.machinery.SourceFileLoader(
             'gg.' + self.filename, os.path.join(self.pyfile(self.filename))
         ).load_module()
