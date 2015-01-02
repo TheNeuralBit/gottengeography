@@ -163,14 +163,13 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.call_end.mock_calls, [])
         self.assertEqual(x.tracking, 'neon')
 
-    def test_gpxfile(self):
+    def test_gpxfile(self, filename='minimal.gpx'):
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
-        gpx = join(self.demo_dir, '2010 10 16.gpx')
+        gpx = join(self.data_dir, filename)
         g = self.mod.GPXFile(gpx)
         timestamps = sorted(g.tracks)
-        self.assertEqual(len(timestamps), 374)
-        middle = len(timestamps) // 2
+        self.assertEqual(len(timestamps), 3)
         self.assertEqual(timestamps[0], 1287259751)
         self.assertEqual(g.tracks[timestamps[0]].lat, 53.52263)
         self.assertEqual(g.tracks[timestamps[0]].lon, -113.448979)
@@ -179,18 +178,16 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(g.tracks[timestamps[1]].lat, 53.522731)
         self.assertEqual(g.tracks[timestamps[1]].lon, -113.448985)
         self.assertEqual(g.tracks[timestamps[1]].ele, 671.092)
-        self.assertEqual(timestamps[middle], 1287260239)
-        self.assertEqual(g.tracks[timestamps[middle]].lat, 53.534902)
-        self.assertEqual(g.tracks[timestamps[middle]].lon, -113.443092)
-        self.assertEqual(g.tracks[timestamps[middle]].ele, 655.542)
-        self.assertEqual(timestamps[-2], 1287260754)
-        self.assertEqual(g.tracks[timestamps[-2]].lat, 53.522584)
-        self.assertEqual(g.tracks[timestamps[-2]].lon, -113.450535)
-        self.assertEqual(g.tracks[timestamps[-2]].ele, 662.377)
-        self.assertEqual(timestamps[-1], 1287260756)
-        self.assertEqual(g.tracks[timestamps[-1]].lat, 53.522496)
-        self.assertEqual(g.tracks[timestamps[-1]].lon, -113.450537)
-        self.assertEqual(g.tracks[timestamps[-1]].ele, 662.475)
+        self.assertEqual(timestamps[2], 1287259755)
+        self.assertEqual(g.tracks[timestamps[2]].lat, 53.52283)
+        self.assertEqual(g.tracks[timestamps[2]].lon, -113.448985)
+        self.assertEqual(g.tracks[timestamps[2]].ele, 671.307)
+
+    def test_gpxfile_unusual(self):
+        self.test_gpxfile('unusual.gpx')
+
+    def test_gpxfile_invalid(self):
+        self.test_gpxfile('invalid.gpx')
 
     def test_tcxfile(self):
         self.mod.Champlain.Coordinate.new_full = Mock
