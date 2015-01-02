@@ -190,3 +190,35 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(g.tracks[timestamps[-1]].lat, 53.522496)
         self.assertEqual(g.tracks[timestamps[-1]].lon, -113.450537)
         self.assertEqual(g.tracks[timestamps[-1]].ele, 662.475)
+
+    def test_kmlfile(self, filename='normal.kml'):
+        self.mod.Champlain.Coordinate.new_full = Mock
+        self.mod.Coordinates = Mock()
+        kml = join(self.data_dir, filename)
+        k = self.mod.KMLFile(kml)
+        timestamps = sorted(k.tracks)
+        self.assertEqual(len(timestamps), 84)
+        middle = len(timestamps) // 2
+        self.assertEqual(timestamps[0], 1336169331)
+        self.assertEqual(k.tracks[timestamps[0]].lat, 39.6012887)
+        self.assertEqual(k.tracks[timestamps[0]].lon, 3.2617136)
+        self.assertEqual(k.tracks[timestamps[0]].ele, 185.0)
+        self.assertEqual(timestamps[1], 1336170232)
+        self.assertEqual(k.tracks[timestamps[1]].lat, 39.6012887)
+        self.assertEqual(k.tracks[timestamps[1]].lon, 3.2617136)
+        self.assertEqual(k.tracks[timestamps[1]].ele, 185.0)
+        self.assertEqual(timestamps[middle], 1336207136)
+        self.assertEqual(k.tracks[timestamps[middle]].lat, 39.6013261)
+        self.assertEqual(k.tracks[timestamps[middle]].lon, 3.2617602)
+        self.assertEqual(k.tracks[timestamps[middle]].ele, 178.0)
+        self.assertEqual(timestamps[-2], 1336253537)
+        self.assertEqual(k.tracks[timestamps[-2]].lat, 39.6012402)
+        self.assertEqual(k.tracks[timestamps[-2]].lon, 3.2617779)
+        self.assertEqual(k.tracks[timestamps[-2]].ele, 0.0)
+        self.assertEqual(timestamps[-1], 1336254435)
+        self.assertEqual(k.tracks[timestamps[-1]].lat, 39.6012402)
+        self.assertEqual(k.tracks[timestamps[-1]].lon, 3.2617779)
+        self.assertEqual(k.tracks[timestamps[-1]].ele, 0.0)
+
+    def test_kmlfile_disordered(self):
+        self.test_kmlfile('disordered.kml')
