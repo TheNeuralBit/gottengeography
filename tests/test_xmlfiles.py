@@ -261,6 +261,20 @@ class XmlFilesTestCase(BaseTestCase):
         self.mod.GSettings.return_value.set_value.assert_called_once_with(
             'track-color', self.mod.Gst.get_value.return_value)
 
+    def test_trackfile_element_end(self):
+        events = [False, True, True]
+        self.mod.Gtk.events_pending = lambda: events.pop()
+        self.mod.clock = Mock(return_value=5)
+        self.mod.TrackFile.clock = 1
+        self.mod.TrackFile.progress = Mock()
+        self.mod.TrackFile.__init__ = lambda s: None
+        tf = self.mod.TrackFile()
+        tf.element_end('foo', 'bar')
+        self.assertEqual(
+            self.mod.Gtk.main_iteration.mock_calls,
+            [call(), call()])
+        self.assertEqual(tf.clock, 5)
+
     def test_gpxfile(self, filename='minimal.gpx'):
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
