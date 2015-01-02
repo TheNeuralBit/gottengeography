@@ -17,6 +17,7 @@ class BaseTestCase(unittest.TestCase):
     gg_dir = os.path.join(root_dir, 'gg')
     test_dir = os.path.join(root_dir, 'tests')
     data_dir = os.path.join(test_dir, 'data')
+    demo_dir = os.path.join(root_dir, 'demo')
 
     filename = None
     mod = None

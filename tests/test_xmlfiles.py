@@ -13,8 +13,8 @@ class XmlFilesTestCase(BaseTestCase):
     def setUp(self):
         super().setUp()
         self.mod.Gst = Mock()
+        self.mod.GSettings = Mock()
         self.mod.MapView = Mock()
-        self.mod.ParserCreate = Mock()
         self.normal_kml = join(self.data_dir, 'normal.kml')
 
     def test_gtkclutter_init(self):
@@ -64,6 +64,7 @@ class XmlFilesTestCase(BaseTestCase):
         p.add_node.assert_called_once_with(coord)
 
     def test_xmlsimpleparser_init(self):
+        self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
         self.assertEqual(x.call_start, 4)
         self.assertEqual(x.call_end, 5)
@@ -76,17 +77,20 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.parser.StartElementHandler, x.element_root)
 
     def test_xmlsimpleparser_init_failed(self):
+        self.mod.ParserCreate = Mock()
         self.mod.ParserCreate.return_value.ParseFile.side_effect = ExpatError()
         with self.assertRaises(OSError):
             self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
 
     def test_xmlsimpleparser_element_root(self):
+        self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
         self.assertEqual(x.parser.StartElementHandler, x.element_root)
         x.element_root(2, 'five')
         self.assertEqual(x.parser.StartElementHandler, x.element_start)
 
     def test_xmlsimpleparser_element_root_failed(self):
+        self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
         self.assertEqual(x.parser.StartElementHandler, x.element_root)
         with self.assertRaises(OSError):
@@ -94,6 +98,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.parser.StartElementHandler, x.element_root)
 
     def test_xmlsimpleparser_element_start_ignored(self):
+        self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, [], 4, 5)
         x.call_start = Mock()
         x.element_start('foo', 'bar')
@@ -101,6 +106,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertIsNone(x.element)
 
     def test_xmlsimpleparser_element_start_watching(self):
+        self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         x.call_start = Mock()
         x.element_start('foo', dict(bar='grill'))
@@ -112,12 +118,14 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.state, dict(bar='grill'))
 
     def test_xmlsimpleparser_element_data_empty(self):
+        self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         self.assertEqual(x.state, {})
         x.element_data('        ')
         self.assertEqual(x.state, {})
 
     def test_xmlsimpleparser_element_data_something(self):
+        self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         x.element = 'neon'
         self.assertEqual(x.state, {})
@@ -125,6 +133,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.state, dict(neon='atomic number: 10'))
 
     def test_xmlsimpleparser_element_data_chunked(self):
+        self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         x.element = 'neon'
         self.assertEqual(x.state, {})
@@ -133,6 +142,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.state, dict(neon='atomic number: 10'))
 
     def test_xmlsimpleparser_element_end(self):
+        self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         x.call_end = Mock()
         x.tracking = 'neon'
@@ -145,9 +155,38 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertIsNone(x.parser.EndElementHandler)
 
     def test_xmlsimpleparser_element_end_ignored(self):
+        self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         x.call_end = Mock()
         x.tracking = 'neon'
         x.element_end('lithium')
         self.assertEqual(x.call_end.mock_calls, [])
         self.assertEqual(x.tracking, 'neon')
+
+    def test_gpxfile(self):
+        self.mod.Champlain.Coordinate.new_full = Mock
+        gpx = join(self.demo_dir, '2010 10 16.gpx')
+        g = self.mod.GPXFile(gpx)
+        timestamps = sorted(g.tracks)
+        self.assertEqual(len(timestamps), 374)
+        middle = len(timestamps) // 2
+        self.assertEqual(timestamps[0], 1287259751)
+        self.assertEqual(g.tracks[timestamps[0]].lat, 53.52263)
+        self.assertEqual(g.tracks[timestamps[0]].lon, -113.448979)
+        self.assertEqual(g.tracks[timestamps[0]].ele, 671.666)
+        self.assertEqual(timestamps[1], 1287259753)
+        self.assertEqual(g.tracks[timestamps[1]].lat, 53.522731)
+        self.assertEqual(g.tracks[timestamps[1]].lon, -113.448985)
+        self.assertEqual(g.tracks[timestamps[1]].ele, 671.092)
+        self.assertEqual(timestamps[middle], 1287260239)
+        self.assertEqual(g.tracks[timestamps[middle]].lat, 53.534902)
+        self.assertEqual(g.tracks[timestamps[middle]].lon, -113.443092)
+        self.assertEqual(g.tracks[timestamps[middle]].ele, 655.542)
+        self.assertEqual(timestamps[-2], 1287260754)
+        self.assertEqual(g.tracks[timestamps[-2]].lat, 53.522584)
+        self.assertEqual(g.tracks[timestamps[-2]].lon, -113.450535)
+        self.assertEqual(g.tracks[timestamps[-2]].ele, 662.377)
+        self.assertEqual(timestamps[-1], 1287260756)
+        self.assertEqual(g.tracks[timestamps[-1]].lat, 53.522496)
+        self.assertEqual(g.tracks[timestamps[-1]].lon, -113.450537)
+        self.assertEqual(g.tracks[timestamps[-1]].ele, 662.475)
