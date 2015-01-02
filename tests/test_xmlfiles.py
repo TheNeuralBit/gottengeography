@@ -14,6 +14,8 @@ class XmlFilesTestCase(BaseTestCase):
         super().setUp()
         self.mod.Gst = Mock()
         self.mod.MapView = Mock()
+        self.mod.ParserCreate = Mock()
+        self.normal_kml = join(self.data_dir, 'normal.kml')
 
     def test_gtkclutter_init(self):
         self.mod.GtkClutter.init.assert_called_once_with([])
@@ -62,9 +64,7 @@ class XmlFilesTestCase(BaseTestCase):
         p.add_node.assert_called_once_with(coord)
 
     def test_xmlsimpleparser_init(self):
-        kml = join(self.data_dir, 'normal.kml')
-        self.mod.ParserCreate = Mock()
-        x = self.mod.XMLSimpleParser(kml, 2, 3, 4, 5)
+        x = self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
         self.assertEqual(x.call_start, 4)
         self.assertEqual(x.call_end, 5)
         self.assertEqual(x.watchlist, 3)
@@ -72,12 +72,82 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertIsNone(x.tracking)
         self.assertIsNone(x.element)
         self.mod.ParserCreate.assert_called_once_with()
-        self.assertEqual(x.parser.ParseFile.mock_calls[0][1][0].name, kml)
+        self.assertEqual(x.parser.ParseFile.mock_calls[0][1][0].name, self.normal_kml)
         self.assertEqual(x.parser.StartElementHandler, x.element_root)
 
     def test_xmlsimpleparser_init_failed(self):
-        kml = join(self.data_dir, 'normal.kml')
-        self.mod.ParserCreate = Mock()
         self.mod.ParserCreate.return_value.ParseFile.side_effect = ExpatError()
         with self.assertRaises(OSError):
-            self.mod.XMLSimpleParser(kml, 2, 3, 4, 5)
+            self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
+
+    def test_xmlsimpleparser_element_root(self):
+        x = self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
+        self.assertEqual(x.parser.StartElementHandler, x.element_root)
+        x.element_root(2, 'five')
+        self.assertEqual(x.parser.StartElementHandler, x.element_start)
+
+    def test_xmlsimpleparser_element_root_failed(self):
+        x = self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
+        self.assertEqual(x.parser.StartElementHandler, x.element_root)
+        with self.assertRaises(OSError):
+            x.element_root(3, 'five')
+        self.assertEqual(x.parser.StartElementHandler, x.element_root)
+
+    def test_xmlsimpleparser_element_start_ignored(self):
+        x = self.mod.XMLSimpleParser(self.normal_kml, 2, [], 4, 5)
+        x.call_start = Mock()
+        x.element_start('foo', 'bar')
+        self.assertEqual(x.call_start.mock_calls, [])
+        self.assertIsNone(x.element)
+
+    def test_xmlsimpleparser_element_start_watching(self):
+        x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
+        x.call_start = Mock()
+        x.element_start('foo', dict(bar='grill'))
+        x.call_start.assert_called_once_with('foo', dict(bar='grill'))
+        self.assertEqual(x.tracking, 'foo')
+        self.assertEqual(x.element, 'foo')
+        self.assertEqual(x.parser.CharacterDataHandler, x.element_data)
+        self.assertEqual(x.parser.EndElementHandler, x.element_end)
+        self.assertEqual(x.state, dict(bar='grill'))
+
+    def test_xmlsimpleparser_element_data_empty(self):
+        x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
+        self.assertEqual(x.state, {})
+        x.element_data('        ')
+        self.assertEqual(x.state, {})
+
+    def test_xmlsimpleparser_element_data_something(self):
+        x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
+        x.element = 'neon'
+        self.assertEqual(x.state, {})
+        x.element_data('atomic number: 10')
+        self.assertEqual(x.state, dict(neon='atomic number: 10'))
+
+    def test_xmlsimpleparser_element_data_chunked(self):
+        x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
+        x.element = 'neon'
+        self.assertEqual(x.state, {})
+        x.element_data('atomic ')
+        x.element_data('number: 10')
+        self.assertEqual(x.state, dict(neon='atomic number: 10'))
+
+    def test_xmlsimpleparser_element_end(self):
+        x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
+        x.call_end = Mock()
+        x.tracking = 'neon'
+        x.state = dict(neon='atomic number: 10')
+        x.element_end('neon')
+        x.call_end.assert_called_once_with('neon', x.state)
+        self.assertIsNone(x.tracking)
+        self.assertEqual(x.state, dict())
+        self.assertIsNone(x.parser.CharacterDataHandler)
+        self.assertIsNone(x.parser.EndElementHandler)
+
+    def test_xmlsimpleparser_element_end_ignored(self):
+        x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
+        x.call_end = Mock()
+        x.tracking = 'neon'
+        x.element_end('lithium')
+        self.assertEqual(x.call_end.mock_calls, [])
+        self.assertEqual(x.tracking, 'neon')
