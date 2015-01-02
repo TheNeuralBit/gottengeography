@@ -1,6 +1,6 @@
 """Test the classes and functions defined by gg/xmlfiles.py"""
 
-from mock import Mock
+from mock import Mock, call
 from os.path import join
 from xml.parsers.expat import ExpatError
 
@@ -162,6 +162,48 @@ class XmlFilesTestCase(BaseTestCase):
         x.element_end('lithium')
         self.assertEqual(x.call_end.mock_calls, [])
         self.assertEqual(x.tracking, 'neon')
+
+    def test_trackfile_update_range(self):
+        self.mod.TrackFile.range = [9, 10]
+        self.mod.TrackFile.instances = ['something']
+        self.mod.points = [1, 2, 3]
+        self.mod.TrackFile.update_range()
+        self.mod.Widgets.empty_trackfile_list.hide.assert_called_once_with()
+        self.assertEqual(self.mod.TrackFile.range, [1, 3])
+
+    def test_trackfile_update_range_empty(self):
+        self.mod.TrackFile.range = [9, 10]
+        self.mod.points = [1, 2, 3]
+        self.mod.TrackFile.update_range()
+        self.mod.Widgets.empty_trackfile_list.show.assert_called_once_with()
+        self.assertEqual(self.mod.TrackFile.range, [])
+
+    def test_trackfile_get_bounding_box(self):
+        class tf:
+            polygons = [Mock(), Mock()]
+        self.mod.TrackFile.instances = [tf]
+        bounds = self.mod.TrackFile.get_bounding_box()
+        self.mod.Champlain.BoundingBox.new.assert_called_once_with()
+        self.assertEqual(bounds.compose.mock_calls, [
+            call(tf.polygons[0].get_bounding_box.return_value),
+            call(tf.polygons[1].get_bounding_box.return_value),
+        ])
+
+    def test_trackfile_query_all_timezones(self):
+        class tf:
+            class start:
+                geotimezone = 'hello'
+        self.mod.TrackFile.instances = [tf]
+        self.assertEqual(self.mod.TrackFile.query_all_timezones(), 'hello')
+
+    def test_trackfile_query_all_timezones_none(self):
+        self.mod.TrackFile.instances = []
+        self.assertIsNone(self.mod.TrackFile.query_all_timezones())
+        class tf:
+            class start:
+                geotimezone = None
+        self.mod.TrackFile.instances = [tf]
+        self.assertIsNone(self.mod.TrackFile.query_all_timezones())
 
     def test_gpxfile(self, filename='minimal.gpx'):
         self.mod.Champlain.Coordinate.new_full = Mock
