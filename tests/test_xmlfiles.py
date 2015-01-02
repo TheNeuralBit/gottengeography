@@ -223,6 +223,9 @@ class XmlFilesTestCase(BaseTestCase):
     def test_kmlfile_disordered(self):
         self.test_kmlfile('disordered.kml')
 
+    def test_kmlfile_invalid(self):
+        self.test_kmlfile('invalid.kml')
+
     def test_csvfile_mytracks(self):
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
