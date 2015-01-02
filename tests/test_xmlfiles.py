@@ -165,6 +165,7 @@ class XmlFilesTestCase(BaseTestCase):
 
     def test_gpxfile(self):
         self.mod.Champlain.Coordinate.new_full = Mock
+        self.mod.Coordinates = Mock()
         gpx = join(self.demo_dir, '2010 10 16.gpx')
         g = self.mod.GPXFile(gpx)
         timestamps = sorted(g.tracks)
@@ -190,6 +191,35 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(g.tracks[timestamps[-1]].lat, 53.522496)
         self.assertEqual(g.tracks[timestamps[-1]].lon, -113.450537)
         self.assertEqual(g.tracks[timestamps[-1]].ele, 662.475)
+
+    def test_tcxfile(self):
+        self.mod.Champlain.Coordinate.new_full = Mock
+        self.mod.Coordinates = Mock()
+        tcx = join(self.data_dir, 'sample.tcx')
+        t = self.mod.TCXFile(tcx)
+        timestamps = sorted(t.tracks)
+        self.assertEqual(len(timestamps), 814)
+        middle = len(timestamps) // 2
+        self.assertEqual(timestamps[0], 1235221063)
+        self.assertEqual(t.tracks[timestamps[0]].lat, 52.148514)
+        self.assertEqual(t.tracks[timestamps[0]].lon, 4.500887)
+        self.assertEqual(t.tracks[timestamps[0]].ele, -91.731)
+        self.assertEqual(timestamps[1], 1235221067)
+        self.assertEqual(t.tracks[timestamps[1]].lat, 52.148326)
+        self.assertEqual(t.tracks[timestamps[1]].lon, 4.500603)
+        self.assertEqual(t.tracks[timestamps[1]].ele, -90.795)
+        self.assertEqual(timestamps[middle], 1235225270)
+        self.assertEqual(t.tracks[timestamps[middle]].lat, 52.156655)
+        self.assertEqual(t.tracks[timestamps[middle]].lon, 4.793787)
+        self.assertEqual(t.tracks[timestamps[middle]].ele, -17.627)
+        self.assertEqual(timestamps[-2], 1235229241)
+        self.assertEqual(t.tracks[timestamps[-2]].lat, 52.149542)
+        self.assertEqual(t.tracks[timestamps[-2]].lon, 4.502316)
+        self.assertEqual(t.tracks[timestamps[-2]].ele, 2.443)
+        self.assertEqual(timestamps[-1], 1235229253)
+        self.assertEqual(t.tracks[timestamps[-1]].lat, 52.149317)
+        self.assertEqual(t.tracks[timestamps[-1]].lon, 4.50191)
+        self.assertEqual(t.tracks[timestamps[-1]].ele, 2.803)
 
     def test_kmlfile(self, filename='normal.kml'):
         self.mod.Champlain.Coordinate.new_full = Mock
