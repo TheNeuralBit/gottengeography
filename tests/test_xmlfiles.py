@@ -238,6 +238,19 @@ class XmlFilesTestCase(BaseTestCase):
         self.mod.Camera.set_all_found_timezone.assert_called_once_with(
             self.mod.GPXFile.return_value.start.geotimezone)
 
+    def test_trackfile_load_from_file_keyerror(self):
+        with self.assertRaises(OSError):
+            self.mod.TrackFile.load_from_file('foo.unsupported')
+
+    def test_trackfile_load_from_file_no_tracks(self):
+        self.mod.GPXFile = Mock()
+        self.mod.GPXFile.return_value.tracks = [1]
+        self.mod.TrackFile.update_range = Mock()
+        self.mod.TrackFile.load_from_file('foo.gpx')
+        self.assertEqual(self.mod.MapView.emit.mock_calls, [])
+        self.assertEqual(self.mod.MapView.ensure_visible.mock_calls, [])
+        self.assertEqual(self.mod.TrackFile.update_range.mock_calls, [])
+
     def test_gpxfile(self, filename='minimal.gpx'):
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
