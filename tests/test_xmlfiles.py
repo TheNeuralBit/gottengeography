@@ -205,6 +205,39 @@ class XmlFilesTestCase(BaseTestCase):
         self.mod.TrackFile.instances = [tf]
         self.assertIsNone(self.mod.TrackFile.query_all_timezones())
 
+    def test_trackfile_clear_all(self):
+        self.mod.points = Mock()
+        self.mod.TrackFile.instances = tf = [Mock()]
+        self.mod.TrackFile.clear_all()
+        tf[0].destroy.assert_called_once_with()
+        self.mod.points.clear.assert_called_once_with()
+
+    def test_trackfile_load_from_file(self):
+        times = [2, 1]
+        self.mod.clock = lambda: times.pop()
+        self.mod.Camera = Mock()
+        self.mod.GPXFile = Mock()
+        self.mod.GPXFile.return_value.tracks = [1, 2, 3]
+        self.mod.Widgets = Mock()
+        self.mod.TrackFile.get_bounding_box = Mock()
+        self.mod.TrackFile.instances = Mock()
+        self.mod.TrackFile.update_range = Mock()
+        self.mod.TrackFile.load_from_file('foo.gpx')
+        self.mod.GPXFile.assert_called_once_with('foo.gpx')
+        self.mod.Widgets.status_message.assert_called_once_with(
+            '3 points loaded in 1.00s.', True)
+        self.mod.TrackFile.instances.add.assert_called_once_with(
+            self.mod.GPXFile.return_value)
+        self.mod.MapView.emit.assert_called_once_with('realize')
+        self.mod.MapView.get_max_zoom_level.assert_called_once_with()
+        self.mod.MapView.set_zoom_level.assert_called_once_with(
+            self.mod.MapView.get_max_zoom_level.return_value)
+        self.mod.MapView.ensure_visible.assert_called_once_with(
+            self.mod.TrackFile.get_bounding_box.return_value, False)
+        self.mod.TrackFile.update_range.assert_called_once_with()
+        self.mod.Camera.set_all_found_timezone.assert_called_once_with(
+            self.mod.GPXFile.return_value.start.geotimezone)
+
     def test_gpxfile(self, filename='minimal.gpx'):
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
