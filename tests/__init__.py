@@ -15,6 +15,8 @@ class null:
 class BaseTestCase(unittest.TestCase):
     root_dir = os.path.dirname(os.path.dirname(__file__))
     gg_dir = os.path.join(root_dir, 'gg')
+    test_dir = os.path.join(root_dir, 'tests')
+    data_dir = os.path.join(test_dir, 'data')
 
     filename = None
     mod = None

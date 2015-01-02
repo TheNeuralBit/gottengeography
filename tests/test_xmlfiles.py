@@ -1,6 +1,8 @@
 """Test the classes and functions defined by gg/xmlfiles.py"""
 
 from mock import Mock
+from os.path import join
+from xml.parsers.expat import ExpatError
 
 from tests import BaseTestCase
 
@@ -58,3 +60,24 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(coord.lon, 2)
         self.assertEqual(coord.ele, 0.0)
         p.add_node.assert_called_once_with(coord)
+
+    def test_xmlsimpleparser_init(self):
+        kml = join(self.data_dir, 'normal.kml')
+        self.mod.ParserCreate = Mock()
+        x = self.mod.XMLSimpleParser(kml, 2, 3, 4, 5)
+        self.assertEqual(x.call_start, 4)
+        self.assertEqual(x.call_end, 5)
+        self.assertEqual(x.watchlist, 3)
+        self.assertEqual(x.rootname, 2)
+        self.assertIsNone(x.tracking)
+        self.assertIsNone(x.element)
+        self.mod.ParserCreate.assert_called_once_with()
+        self.assertEqual(x.parser.ParseFile.mock_calls[0][1][0].name, kml)
+        self.assertEqual(x.parser.StartElementHandler, x.element_root)
+
+    def test_xmlsimpleparser_init_failed(self):
+        kml = join(self.data_dir, 'normal.kml')
+        self.mod.ParserCreate = Mock()
+        self.mod.ParserCreate.return_value.ParseFile.side_effect = ExpatError()
+        with self.assertRaises(OSError):
+            self.mod.XMLSimpleParser(kml, 2, 3, 4, 5)
