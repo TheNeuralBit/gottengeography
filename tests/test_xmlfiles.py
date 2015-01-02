@@ -281,10 +281,10 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(c.tracks[timestamps[-1]].lon, -97.13052)
         self.assertEqual(c.tracks[timestamps[-1]].ele, 0)
 
-    def test_csvfile_minimal(self):
+    def test_csvfile_minimal(self, filename='minimal.csv'):
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
-        csv = join(self.data_dir, 'minimal.csv')
+        csv = join(self.data_dir, filename)
         c = self.mod.CSVFile(csv)
         timestamps = sorted(c.tracks)
         self.assertEqual(len(timestamps), 3)
@@ -300,3 +300,9 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(c.tracks[timestamps[2]].lat, 49.885576)
         self.assertEqual(c.tracks[timestamps[2]].lon, -97.151397)
         self.assertEqual(c.tracks[timestamps[2]].ele, 0)
+
+    def test_csvfile_invalid(self):
+        self.test_csvfile_minimal('invalid.csv')
+
+    def test_csvfile_invalid2(self):
+        self.test_csvfile_minimal('invalid2.csv')
