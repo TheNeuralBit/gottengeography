@@ -275,6 +275,23 @@ class XmlFilesTestCase(BaseTestCase):
             [call(), call()])
         self.assertEqual(tf.clock, 5)
 
+    def test_trackfile_destroy(self):
+        other_tf = Mock()
+        self.mod.points = Mock()
+        self.mod.TrackFile.__init__ = lambda s: None
+        self.mod.TrackFile.update_range = Mock()
+        tf = self.mod.TrackFile()
+        self.mod.TrackFile.instances = set([tf, other_tf])
+        tf.widgets = Mock()
+        tf.polygons = set(['poly'])
+        tf.filename = 'foo.gpx'
+        tf.cache = {'foo.gpx': 'contents'}
+        tf.destroy()
+        self.mod.points.clear.assert_called_once_with()
+        self.mod.points.update.assert_called_once_with(other_tf.tracks)
+        tf.widgets.trackfile_settings.destroy.assert_called_once_with()
+        self.mod.TrackFile.update_range.assert_called_once_with()
+
     def test_gpxfile(self, filename='minimal.gpx'):
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
