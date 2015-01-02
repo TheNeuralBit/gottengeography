@@ -251,6 +251,16 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(self.mod.MapView.ensure_visible.mock_calls, [])
         self.assertEqual(self.mod.TrackFile.update_range.mock_calls, [])
 
+    def test_trackfile_init_first_no_points(self):
+        self.mod.GSettings.return_value.get_string.return_value = ''
+        self.mod.TrackFile.parse = Mock()
+        with self.assertRaisesRegexp(OSError, 'No points found'):
+            self.mod.TrackFile('/path/to/foo.gpx', 'a', 'b')
+        self.mod.GSettings.assert_called_once_with('trackfile', 'foo.gpx')
+        self.mod.Gst.get_value.assert_called_once_with('track-color')
+        self.mod.GSettings.return_value.set_value.assert_called_once_with(
+            'track-color', self.mod.Gst.get_value.return_value)
+
     def test_gpxfile(self, filename='minimal.gpx'):
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
