@@ -141,3 +141,16 @@ class PhotosTestCase(BaseTestCase):
         stream.assert_called_once_with(
             self.mod.Gio.MemoryInputStream.new_from_data.return_value,
             100, 100, True, None)
+
+    def test_photograph_resize_all_photos(self):
+        gst = Mock()
+        gst.get_int.return_value = 150
+        p = Mock()
+        self.mod.Photograph.instances = [p]
+        self.mod.fetch_thumbnail = Mock()
+        self.mod.Photograph.resize_all_photos(gst, 'size')
+        gst.get_int.assert_called_once_with('size')
+        self.assertEqual(p.thumb, self.mod.fetch_thumbnail.return_value)
+        self.mod.fetch_thumbnail.assert_called_once_with(p.filename, 150)
+        self.mod.Widgets.loaded_photos.set_value.assert_called_once_with(
+            p.iter, 2, p.thumb)
