@@ -1,5 +1,6 @@
 """Test the classes and functions defined by gg/photos.py"""
 
+from time import struct_time
 from mock import Mock, call
 
 from tests import BaseTestCase
@@ -189,3 +190,39 @@ class PhotosTestCase(BaseTestCase):
             p.connect.mock_calls,
             [call('notify::geoname', p.update_liststore_summary),
              call('notify::positioned', self.mod.Widgets.button_sensitivity)])
+
+    def test_photograph_read(self):
+        self.mod.modified = Mock()
+        self.mod.fetch_thumbnail = Mock()
+        self.mod.str = Mock(return_value='hola!')
+        m = self.mod.GExiv2.Metadata
+        m.return_value.get.return_value = '2015:01:03 12:13:14'
+        m.return_value.__getitem__ = Mock(return_value='hi')
+        m.return_value.get_gps_info.return_value = (3, 5, 8)
+        p = self.mod.Photograph('hello.jpg')
+        p.calculate_timestamp = Mock()
+        self.assertIsNone(p.exif)
+        p.read()
+        self.assertEqual(p.exif, m.return_value)
+        m.assert_called_once_with('hello.jpg')
+        self.assertFalse(p.manual)
+        self.assertIsNone(p.modified_timeout)
+        self.assertEqual(p.names, (None, None, None))
+        self.assertEqual(
+            p.orig_time, struct_time([2015, 1, 3, 12, 13, 14, 5, 3, -1]))
+        self.assertEqual(p.longitude, 3)
+        self.assertEqual(p.latitude, 5)
+        self.assertEqual(p.altitude, 8)
+        self.mod.modified.discard.assert_called_once_with(p)
+        p.calculate_timestamp.assert_called_once_with()
+        self.mod.Widgets.loaded_photos.append.assert_called_once_with()
+        self.assertEqual(
+            p.iter, self.mod.Widgets.loaded_photos.append.return_value)
+        self.mod.Widgets.loaded_photos.set_row.assert_called_once_with(
+            p.iter,
+            [p.filename, self.mod.str.return_value, p.thumb, p.timestamp])
+        print(p.camera_info)
+        self.assertEqual(
+            p.camera_info,
+            dict(Make='hi', BodySerialNumber='hi',
+                 CameraSerialNumber='hi', Model='hi'))
