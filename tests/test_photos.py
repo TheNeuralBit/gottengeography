@@ -12,6 +12,10 @@ class point:
         self.ele = ele
 
 
+class GError(Exception):
+    pass
+
+
 class PhotosTestCase(BaseTestCase):
     filename = 'photos'
 
@@ -66,3 +70,61 @@ class PhotosTestCase(BaseTestCase):
         photo.timestamp = 3
         self.mod.auto_timestamp_comparison(photo)
         self.assertEqual(photo.set_location.mock_calls, [])
+
+    def test_fetch_thumbnail(self, orient=1, pixbuf=None, args=None):
+        new = self.mod.GdkPixbuf.Pixbuf.new_from_file_at_size
+        new_args = ['foo.jpg', 100, 100]
+        pixbuf = pixbuf or new
+        args = [new.return_value] + args if args else new_args
+        self.mod.GExiv2.Metadata.return_value.__getitem__ = Mock(
+            return_value=orient)
+        thumb = self.mod.fetch_thumbnail('foo.jpg', size=100)
+        self.mod.GExiv2.Metadata.assert_called_once_with('foo.jpg')
+        new.assert_called_once_with(*new_args)
+        self.assertEqual(thumb, pixbuf.return_value)
+        pixbuf.assert_called_once_with(*args)
+
+    def test_fetch_thumbnail_orient_2(self):
+        self.test_fetch_thumbnail(
+            orient=2,
+            args=[False],
+            pixbuf=self.mod.GdkPixbuf.Pixbuf.flip)
+
+    def test_fetch_thumbnail_orient_3(self):
+        self.test_fetch_thumbnail(
+            orient=3,
+            args=[self.mod.GdkPixbuf.PixbufRotation.UPSIDEDOWN],
+            pixbuf=self.mod.GdkPixbuf.Pixbuf.rotate_simple)
+
+    def test_fetch_thumbnail_orient_4(self):
+        self.test_fetch_thumbnail(
+            orient=4,
+            args=[True],
+            pixbuf=self.mod.GdkPixbuf.Pixbuf.flip)
+
+    def test_fetch_thumbnail_orient_6(self):
+        self.test_fetch_thumbnail(
+            orient=6,
+            args=[self.mod.GdkPixbuf.PixbufRotation.CLOCKWISE],
+            pixbuf=self.mod.GdkPixbuf.Pixbuf.rotate_simple)
+
+    def test_fetch_thumbnail_orient_8(self):
+        self.test_fetch_thumbnail(
+            orient=8,
+            args=[self.mod.GdkPixbuf.PixbufRotation.COUNTERCLOCKWISE],
+            pixbuf=self.mod.GdkPixbuf.Pixbuf.rotate_simple)
+
+    def test_fetch_thumbnail_gerror(self):
+        self.mod.GExiv2.Metadata.side_effect = self.mod.GObject.GError = GError
+        with self.assertRaisesRegexp(OSError, 'No thumbnail found.'):
+            self.mod.fetch_thumbnail('foo.jpg', size=100)
+
+    def test_fetch_thumbnail_gerror2(self):
+        m = self.mod.GExiv2.Metadata.return_value
+        m.__getitem__ = Mock(return_value=1)
+        m.get_preview_properties.return_value.__getitem__ = Mock()
+        m.get_preview_image.side_effect = GError
+        self.mod.GdkPixbuf.Pixbuf.new_from_file_at_size.side_effect = GError
+        self.mod.GObject.GError = GError
+        with self.assertRaisesRegexp(OSError, 'No thumbnail found.'):
+            self.mod.fetch_thumbnail('foo.jpg', size=100)
