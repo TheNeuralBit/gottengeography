@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/robru/gottengeography.svg?branch=master)](https://travis-ci.org/robru/gottengeography.svg?branch=master)
-
+[![Coverage Status](https://img.shields.io/coveralls/robru/gottengeography.svg)](https://coveralls.io/r/robru/gottengeography?branch=master)
 
 GottenGeography
 ===============
