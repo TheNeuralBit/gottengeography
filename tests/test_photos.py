@@ -154,3 +154,26 @@ class PhotosTestCase(BaseTestCase):
         self.mod.fetch_thumbnail.assert_called_once_with(p.filename, 150)
         self.mod.Widgets.loaded_photos.set_value.assert_called_once_with(
             p.iter, 2, p.thumb)
+
+    def test_photograph_load_from_file(self):
+        load = self.mod.Photograph.load_from_file
+        self.mod.Photograph = Mock()
+        p = self.mod.Photograph.return_value
+        self.mod.Label = Mock()
+        self.mod.Camera = Mock()
+        self.mod.Camera.generate_id.return_value = ('Nikon', 'Nikonos')
+        c = self.mod.Camera.return_value
+        self.mod.CameraView = Mock()
+        c.timezone_method = 'lookup'
+        self.mod.Widgets = Mock()
+        self.assertEqual(load('zing.jpg'), p)
+        self.mod.Photograph.assert_called_once_with('zing.jpg')
+        self.mod.Label.assert_called_once_with(p)
+        p.read.assert_called_once_with()
+        self.mod.Widgets.empty_camera_list.hide.assert_called_once_with()
+        self.mod.Camera.generate_id.assert_called_once_with(p.camera_info)
+        self.mod.Camera.assert_called_once_with('Nikon')
+        c.add_photo.assert_called_once_with(p)
+        self.mod.CameraView.assert_called_once_with(c, 'Nikonos')
+        p.calculate_timestamp.assert_called_once_with(c.offset)
+        self.mod.Widgets.button_sensitivity.assert_called_once_with()
