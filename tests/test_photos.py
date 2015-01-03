@@ -1,6 +1,6 @@
 """Test the classes and functions defined by gg/photos.py"""
 
-from mock import Mock
+from mock import Mock, call
 
 from tests import BaseTestCase
 
@@ -177,3 +177,15 @@ class PhotosTestCase(BaseTestCase):
         self.mod.CameraView.assert_called_once_with(c, 'Nikonos')
         p.calculate_timestamp.assert_called_once_with(c.offset)
         self.mod.Widgets.button_sensitivity.assert_called_once_with()
+
+    def test_photograph_init(self):
+        self.mod.Coordinates.__init__ = Mock()
+        self.mod.fetch_thumbnail = Mock()
+        p = self.mod.Photograph('grill.jpg')
+        self.mod.Coordinates.__init__.assert_called_once_with(p)
+        self.assertEqual(p.thumb, self.mod.fetch_thumbnail.return_value)
+        self.assertEqual(p.filename, 'grill.jpg')
+        self.assertEqual(
+            p.connect.mock_calls,
+            [call('notify::geoname', p.update_liststore_summary),
+             call('notify::positioned', self.mod.Widgets.button_sensitivity)])
