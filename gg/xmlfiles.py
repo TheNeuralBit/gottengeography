@@ -131,7 +131,7 @@ class XMLSimpleParser:
         self.state[self.element] += data
 
     def element_end(self, name, state=None):
-        """When the tag closes, pass it's data to the end callback and reset."""
+        """When the tag closes, pass its data to the end callback and reset."""
         if name != self.tracking:
             return
 
@@ -207,7 +207,8 @@ class TrackFile():
         except KeyError:
             raise OSError
 
-        Widgets.status_message(_('%d points loaded in %.2fs.') %
+        Widgets.status_message(
+            _('%d points loaded in %.2fs.') %
             (len(gpx.tracks), clock() - start_time), True)
 
         if len(gpx.tracks) < 2:
@@ -265,8 +266,9 @@ class TrackFile():
         keys = self.tracks.keys()
         self.alpha = min(keys)
         self.omega = max(keys)
-        self.start = Coordinates(latitude = self.tracks[self.alpha].lat,
-                                 longitude = self.tracks[self.alpha].lon)
+        self.start = Coordinates(
+            latitude=self.tracks[self.alpha].lat,
+            longitude=self.tracks[self.alpha].lon)
 
         self.gst.set_string('start-timezone', self.start.lookup_geodata())
 
@@ -367,7 +369,7 @@ class KMLFile(TrackFile):
     """
 
     def __init__(self, filename):
-        self.whens  = deque()
+        self.whens = deque()
         self.coords = deque()
 
         TrackFile.__init__(self, filename,
@@ -435,7 +437,8 @@ class CSVFile(TrackFile):
     columns = None
 
     def __init__(self, filename):
-        TrackFile.__init__(self, filename, None,
+        TrackFile.__init__(
+            self, filename, None,
             ('Segment', 'Latitude (deg)', 'Longitude (deg)', 'Time'))
 
     def parse(self, filename, root, watch, start, end):
@@ -448,8 +451,9 @@ class CSVFile(TrackFile):
     def parse_header(self, state, columns, alt='Altitude (m)'):
         """Ignore as many lines as necessary until column headers are found."""
         try:
-            self.columns = Struct({col.split(' ')[0].lower():
-                state.index(col) for col in self.watchlist})
+            self.columns = Struct({
+                col.split(' ')[0].lower(): state.index(col)
+                for col in self.watchlist})
         except ValueError:
             return
 

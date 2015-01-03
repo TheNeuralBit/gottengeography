@@ -3,7 +3,7 @@
 build:
 	python3 setup.py build
 
-check: nose flakes
+check: nose flakes pep8
 
 doctest:
 	python3 -m nose --with-doctest gg/ -v
@@ -13,6 +13,9 @@ nose:
 
 flakes:
 	pyflakes gottengeography setup.py gg tests
+
+pep8:
+	pep8 gg/[x]*.py tests/*.py
 
 lint:
 	pylint --include-ids=y gg test -d \

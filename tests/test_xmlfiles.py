@@ -33,8 +33,10 @@ class XmlFilesTestCase(BaseTestCase):
         self.mod.make_clutter_color = Mock()
         self.mod.track_color_changed(s, p)
         s.get_color.assert_called_once_with()
-        self.mod.Gst.set_color.assert_called_once_with(s.get_color.return_value)
-        self.mod.make_clutter_color.assert_called_once_with(s.get_color.return_value)
+        self.mod.Gst.set_color.assert_called_once_with(
+            s.get_color.return_value)
+        self.mod.make_clutter_color.assert_called_once_with(
+            s.get_color.return_value)
         c = self.mod.make_clutter_color.return_value
         c.lighten.return_value.lighten.assert_called_once_with()
         p[0].set_stroke_color.assert_called_once_with(c)
@@ -73,7 +75,8 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertIsNone(x.tracking)
         self.assertIsNone(x.element)
         self.mod.ParserCreate.assert_called_once_with()
-        self.assertEqual(x.parser.ParseFile.mock_calls[0][1][0].name, self.normal_kml)
+        self.assertEqual(
+            x.parser.ParseFile.mock_calls[0][1][0].name, self.normal_kml)
         self.assertEqual(x.parser.StartElementHandler, x.element_root)
 
     def test_xmlsimpleparser_init_failed(self):
@@ -197,11 +200,11 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(self.mod.TrackFile.query_all_timezones(), 'hello')
 
     def test_trackfile_query_all_timezones_none(self):
-        self.mod.TrackFile.instances = []
-        self.assertIsNone(self.mod.TrackFile.query_all_timezones())
         class tf:
             class start:
                 geotimezone = None
+        self.mod.TrackFile.instances = []
+        self.assertIsNone(self.mod.TrackFile.query_all_timezones())
         self.mod.TrackFile.instances = [tf]
         self.assertIsNone(self.mod.TrackFile.query_all_timezones())
 
