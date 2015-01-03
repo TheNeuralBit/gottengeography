@@ -2,6 +2,8 @@ language: python
 python:
   - "3.4"
 install:
-  - pip install pep8 pyflakes python-dateutil coverage
+  - pip install pep8 pyflakes python-dateutil coverage coveralls
 script:
   - make check
+after_success:
+  - coveralls
