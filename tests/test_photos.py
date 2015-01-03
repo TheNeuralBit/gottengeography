@@ -128,3 +128,16 @@ class PhotosTestCase(BaseTestCase):
         self.mod.GObject.GError = GError
         with self.assertRaisesRegexp(OSError, 'No thumbnail found.'):
             self.mod.fetch_thumbnail('foo.jpg', size=100)
+
+    def test_fetch_thumbnail_gerror3(self):
+        m = self.mod.GExiv2.Metadata.return_value
+        m.__getitem__ = Mock(return_value=1)
+        m.get_preview_properties.return_value.__getitem__ = Mock()
+        self.mod.GdkPixbuf.Pixbuf.new_from_file_at_size.side_effect = GError
+        self.mod.GObject.GError = GError
+        thumb = self.mod.fetch_thumbnail('foo.jpg', size=100)
+        stream = self.mod.GdkPixbuf.Pixbuf.new_from_stream_at_scale
+        self.assertEqual(thumb, stream.return_value)
+        stream.assert_called_once_with(
+            self.mod.Gio.MemoryInputStream.new_from_data.return_value,
+            100, 100, True, None)
