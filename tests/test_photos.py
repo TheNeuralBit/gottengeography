@@ -23,6 +23,7 @@ class PhotosTestCase(BaseTestCase):
     def setUp(self):
         super().setUp()
         self.mod.TrackFile = Mock()
+        self.mod.Widgets = Mock()
 
     def test_auto_timestamp_comparison_exact(self):
         self.mod.points = {
@@ -261,3 +262,29 @@ class PhotosTestCase(BaseTestCase):
         self.mod.mktime.assert_called_once_with(p.orig_time)
         self.mod.auto_timestamp_comparison.assert_called_once_with(p)
         self.assertEqual(p.timestamp, 1234)
+
+    def test_photograph_write(self):
+        self.mod.modified = Mock()
+        self.mod.stat = Mock(return_value=Mock(st_atime=5432, st_mtime=9876))
+        self.mod.fetch_thumbnail = Mock()
+        self.mod.utime = Mock()
+        self.mod.str = Mock()
+        p = self.mod.Photograph('delta.jpg')
+        p.exif = Mock(__setitem__=Mock())
+        p.longitude, p.latitude, p.altitude = (10, 15, 20)
+        p.names = 'Here There Everywhere'.split()
+        p.write()
+        self.mod.stat.assert_called_once_with('delta.jpg')
+        p.exif.set_gps_info.assert_called_once_with(
+            p.longitude, p.latitude, p.altitude)
+        self.assertEqual(
+            p.exif.__setitem__.mock_calls,
+            [call('Iptc.Application2.City', 'Here'),
+             call('Iptc.Application2.ProvinceState', 'There'),
+             call('Iptc.Application2.CountryName', 'Everywhere'),
+             call('Iptc.Envelope.CharacterSet', '\x1b%G')])
+        self.mod.utime.assert_called_once_with(
+            'delta.jpg', (5432, 9876))
+        self.mod.modified.discard.assert_called_once_with(p)
+        self.mod.Widgets.loaded_photos.set_value.assert_called_once_with(
+            p.iter, 1, self.mod.str.return_value)
