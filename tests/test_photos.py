@@ -269,12 +269,12 @@ class PhotosTestCase(BaseTestCase):
         self.mod.fetch_thumbnail = Mock()
         self.mod.utime = Mock()
         self.mod.str = Mock()
-        p = self.mod.Photograph('delta.jpg')
+        p = self.mod.Photograph('gamma.jpg')
         p.exif = Mock(__setitem__=Mock())
         p.longitude, p.latitude, p.altitude = (10, 15, 20)
         p.names = 'Here There Everywhere'.split()
         p.write()
-        self.mod.stat.assert_called_once_with('delta.jpg')
+        self.mod.stat.assert_called_once_with('gamma.jpg')
         p.exif.set_gps_info.assert_called_once_with(
             p.longitude, p.latitude, p.altitude)
         self.assertEqual(
@@ -284,7 +284,24 @@ class PhotosTestCase(BaseTestCase):
              call('Iptc.Application2.CountryName', 'Everywhere'),
              call('Iptc.Envelope.CharacterSet', '\x1b%G')])
         self.mod.utime.assert_called_once_with(
-            'delta.jpg', (5432, 9876))
+            'gamma.jpg', (5432, 9876))
         self.mod.modified.discard.assert_called_once_with(p)
         self.mod.Widgets.loaded_photos.set_value.assert_called_once_with(
             p.iter, 1, self.mod.str.return_value)
+
+    def test_photograph_disable_auto_position(self):
+        self.mod.fetch_thumbnail = Mock()
+        p = self.mod.Photograph('delta.jpg')
+        p.manual = False
+        p.disable_auto_position()
+        self.assertTrue(p.manual)
+
+    def test_photograph_set_location(self):
+        self.mod.modified = Mock()
+        self.mod.fetch_thumbnail = Mock()
+        p = self.mod.Photograph('epsilon.jpg')
+        p.set_location(12, 24, 48)
+        self.assertEqual(p.latitude, 12)
+        self.assertEqual(p.longitude, 24)
+        self.assertEqual(p.altitude, 48)
+        self.mod.modified.add.assert_called_once_with(p)
