@@ -305,3 +305,47 @@ class PhotosTestCase(BaseTestCase):
         self.assertEqual(p.longitude, 24)
         self.assertEqual(p.altitude, 48)
         self.mod.modified.add.assert_called_once_with(p)
+
+    def test_photograph_get_large_preview(self):
+        s = self.mod.Gdk.Screen.get_default.return_value
+        s.get_width.return_value = 42
+        s.get_height.return_value = 69
+        self.mod.fetch_thumbnail = Mock()
+        p = self.mod.Photograph('zeta.jpg')
+        self.mod.fetch_thumbnail.reset_mock()
+        self.assertEqual(
+            p.get_large_preview(), self.mod.fetch_thumbnail.return_value)
+        self.mod.Gdk.Screen.get_default.assert_called_once_with()
+        self.mod.fetch_thumbnail.assert_called_once_with(
+            p.filename, 33)
+        s.get_width.assert_called_once_with()
+        s.get_height.assert_called_once_with()
+
+    def test_photograph_update_liststore_summary(self):
+        self.mod.fetch_thumbnail = Mock()
+        self.mod.str = Mock(return_value='eta')
+        p = self.mod.Photograph('eta.jpg')
+        p.geotimezone = 'here'
+        p.camera = Mock(found_timezone='there')
+        p.iter = 'foo'
+        p.update_liststore_summary()
+        self.mod.Widgets.loaded_photos.set_value.assert_called_once_with(
+            'foo', 1, 'eta')
+        self.assertEqual(p.camera.found_timezone, p.geotimezone)
+
+    def test_photograph_destroy(self):
+        self.mod.fetch_thumbnail = Mock()
+        self.mod.Label = Mock()
+        self.mod.modified = Mock()
+        p = self.mod.Photograph('theta.jpg')
+        self.mod.Label.cache = [p]
+        p.camera = Mock()
+        p.iter = 'theta'
+        self.assertIn('theta.jpg', self.mod.Photograph.cache)
+        p.destroy()
+        self.mod.Label.assert_called_once_with(p)
+        self.mod.Label.return_value.destroy.assert_called_once_with()
+        p.camera.remove_photo.assert_called_once_with(p)
+        self.mod.modified.discard.assert_called_once_with(p)
+        self.mod.Widgets.loaded_photos.remove.assert_called_once_with('theta')
+        self.assertNotIn('theta.jpg', self.mod.Photograph.cache)
