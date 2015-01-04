@@ -32,29 +32,29 @@ ROTATIONS = {
         GdkPixbuf.Pixbuf.flip(thumb, False),
 
     3: lambda thumb:
-        GdkPixbuf.Pixbuf.rotate_simple(thumb,
-            GdkPixbuf.PixbufRotation.UPSIDEDOWN),
+        GdkPixbuf.Pixbuf.rotate_simple(
+            thumb, GdkPixbuf.PixbufRotation.UPSIDEDOWN),
 
     4: lambda thumb:
         GdkPixbuf.Pixbuf.flip(thumb, True),
 
     5: lambda thumb:
         GdkPixbuf.Pixbuf.flip(
-            GdkPixbuf.Pixbuf.rotate_simple(thumb,
-                GdkPixbuf.PixbufRotation.CLOCKWISE), True),
+            GdkPixbuf.Pixbuf.rotate_simple(
+                thumb, GdkPixbuf.PixbufRotation.CLOCKWISE), True),
 
     6: lambda thumb:
-        GdkPixbuf.Pixbuf.rotate_simple(thumb,
-            GdkPixbuf.PixbufRotation.CLOCKWISE),
+        GdkPixbuf.Pixbuf.rotate_simple(
+            thumb, GdkPixbuf.PixbufRotation.CLOCKWISE),
 
     7: lambda thumb:
         GdkPixbuf.Pixbuf.flip(
-            GdkPixbuf.Pixbuf.rotate_simple(thumb,
-                GdkPixbuf.PixbufRotation.CLOCKWISE), False),
+            GdkPixbuf.Pixbuf.rotate_simple(
+                thumb, GdkPixbuf.PixbufRotation.CLOCKWISE), False),
 
     8: lambda thumb:
-        GdkPixbuf.Pixbuf.rotate_simple(thumb,
-            GdkPixbuf.PixbufRotation.COUNTERCLOCKWISE),
+        GdkPixbuf.Pixbuf.rotate_simple(
+            thumb, GdkPixbuf.PixbufRotation.COUNTERCLOCKWISE),
 }
 
 
@@ -70,10 +70,10 @@ def auto_timestamp_comparison(photo):
     stamp = sorted(TrackFile.range + [photo.timestamp])[1]
 
     try:
-        point = points[stamp] # Try to use an exact match,
-        lat   = point.lat     # if such a thing were to exist.
-        lon   = point.lon     # It's more likely than you think. 50%
-        ele   = point.ele     # of the included demo data matches here.
+        point = points[stamp]  # Try to use an exact match,
+        lat = point.lat        # if such a thing were to exist.
+        lon = point.lon        # It's more likely than you think. 50%
+        ele = point.ele        # of the included demo data matches here.
 
     except KeyError:
         # Find the two points that are nearest (in time) to the photo.
@@ -85,14 +85,15 @@ def auto_timestamp_comparison(photo):
         lo_ratio = (hi - stamp) / (hi - lo)  # between each point & the photo.
 
         # Find intermediate values using the proportional ratios.
-        lat = ((lo_point.lat * lo_ratio)  +
+        lat = ((lo_point.lat * lo_ratio) +
                (hi_point.lat * hi_ratio))
-        lon = ((lo_point.lon * lo_ratio)  +
+        lon = ((lo_point.lon * lo_ratio) +
                (hi_point.lon * hi_ratio))
-        ele = ((lo_point.ele * lo_ratio)  +
+        ele = ((lo_point.ele * lo_ratio) +
                (hi_point.ele * hi_ratio))
 
     photo.set_location(lat, lon, ele)
+
 
 def fetch_thumbnail(filename, size=Gst.get_int('thumbnail-size'), orient=1):
     """Load a photo's thumbnail from disk
@@ -264,7 +265,7 @@ class Photograph(Coordinates):
         # Get the camera info
         self.camera_info = {'Make': '', 'Model': ''}
         keys = ['Exif.Image.' + key for key in list(self.camera_info.keys())
-                    + ['CameraSerialNumber']] + ['Exif.Photo.BodySerialNumber']
+                + ['CameraSerialNumber']] + ['Exif.Photo.BodySerialNumber']
         for key in keys:
             with ignored(KeyError):
                 self.camera_info.update(
@@ -289,9 +290,9 @@ class Photograph(Coordinates):
         """Save exif data to photo file on disk."""
         times = stat(self.filename)
         self.exif.set_gps_info(self.longitude, self.latitude, self.altitude)
-        self.exif[IPTC + 'City']          = self.names[0] or ''
+        self.exif[IPTC + 'City'] = self.names[0] or ''
         self.exif[IPTC + 'ProvinceState'] = self.names[1] or ''
-        self.exif[IPTC + 'CountryName']   = self.names[2] or ''
+        self.exif[IPTC + 'CountryName'] = self.names[2] or ''
         self.exif['Iptc.Envelope.CharacterSet'] = '\x1b%G'
         self.exif.save_file()
         utime(self.filename, (times.st_atime, times.st_mtime))
@@ -310,13 +311,14 @@ class Photograph(Coordinates):
         modified.add(self)
         if ele is not None:
             self.altitude = ele
-        self.latitude  = lat
+        self.latitude = lat
         self.longitude = lon
 
     def get_large_preview(self):
-        """Return a GdkPixbuf that is 80% of the screen's shortest dimension."""
+        """Return a GdkPixbuf that's 80% of the screen's shortest dimension."""
         screen = Gdk.Screen.get_default()
-        return fetch_thumbnail(self.filename,
+        return fetch_thumbnail(
+            self.filename,
             int(min(screen.get_width(), screen.get_height()) * 0.8))
 
     def update_liststore_summary(self, *ignore):
@@ -328,7 +330,7 @@ class Photograph(Coordinates):
 
     def destroy(self):
         """Agony!"""
-        self.update_derived_properties() # To clear any callback...
+        self.update_derived_properties()  # To clear any callback...
         # TODO: Disconnect this from here
         if self in Label.cache:
             Label(self).destroy()
