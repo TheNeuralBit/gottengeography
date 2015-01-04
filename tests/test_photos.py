@@ -235,3 +235,16 @@ class PhotosTestCase(BaseTestCase):
             p.camera_info,
             dict(Make='hi', BodySerialNumber='hi',
                  CameraSerialNumber='hi', Model='hi'))
+
+    def test_photograph_calculate_timestamp(self, time=1420341828, offset=0):
+        self.mod.mktime = Mock(return_value=time + 0.1)
+        self.mod.auto_timestamp_comparison = Mock()
+        self.mod.fetch_thumbnail = Mock()
+        p = self.mod.Photograph('hello.jpg')
+        p.calculate_timestamp(offset)
+        self.mod.mktime.assert_called_once_with(p.orig_time)
+        self.mod.auto_timestamp_comparison.assert_called_once_with(p)
+        self.assertEqual(p.timestamp, time + offset)
+
+    def test_photograph_calculate_timestamp_with_offset(self):
+        self.test_photograph_calculate_timestamp(1420341828, 15)
