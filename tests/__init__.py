@@ -51,6 +51,9 @@ class BaseTestCase(unittest.TestCase):
         giMock.GtkChamplain.Embed = null
         giMock.GtkChamplain.Embed.get_view = Mock()
         sys.modules['gi.repository'] = giMock
+        spMock = Mock()
+        spMock.Popen.return_value.communicate.return_value.__getitem__ = Mock()
+        sys.modules['subprocess'] = spMock
         self.mod = importlib.machinery.SourceFileLoader(
             'gg.' + self.filename, os.path.join(self.pyfile(self.filename))
         ).load_module()
