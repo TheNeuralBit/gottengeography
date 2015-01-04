@@ -191,6 +191,15 @@ class PhotosTestCase(BaseTestCase):
             [call('notify::geoname', p.update_liststore_summary),
              call('notify::positioned', self.mod.Widgets.button_sensitivity)])
 
+    def test_photograph_str(self):
+        self.mod.fetch_thumbnail = Mock()
+        self.mod.Coordinates.__str__ = Mock(return_value='coords')
+        p = self.mod.Photograph('file.jpg')
+        self.assertEqual(
+            str(p),
+            '<span size="larger">file.jpg</span>\n'
+            '<span style="italic" size="smaller">coords</span>')
+
     def test_photograph_read(self):
         self.mod.modified = Mock()
         self.mod.fetch_thumbnail = Mock()
