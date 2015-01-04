@@ -240,7 +240,8 @@ class PhotosTestCase(BaseTestCase):
         self.mod.mktime = Mock(return_value=time + 0.1)
         self.mod.auto_timestamp_comparison = Mock()
         self.mod.fetch_thumbnail = Mock()
-        p = self.mod.Photograph('hello.jpg')
+        p = self.mod.Photograph('alpha.jpg')
+        p.orig_time = 'zap'
         p.calculate_timestamp(offset)
         self.mod.mktime.assert_called_once_with(p.orig_time)
         self.mod.auto_timestamp_comparison.assert_called_once_with(p)
@@ -248,3 +249,15 @@ class PhotosTestCase(BaseTestCase):
 
     def test_photograph_calculate_timestamp_with_offset(self):
         self.test_photograph_calculate_timestamp(1420341828, 15)
+
+    def test_photograph_calculate_timestamp_typeerror(self):
+        self.mod.mktime = Mock(side_effect=TypeError)
+        self.mod.auto_timestamp_comparison = Mock()
+        self.mod.fetch_thumbnail = Mock()
+        self.mod.stat = Mock(return_value=Mock(st_mtime=1234))
+        p = self.mod.Photograph('beta.jpg')
+        p.orig_time = 'zip'
+        p.calculate_timestamp()
+        self.mod.mktime.assert_called_once_with(p.orig_time)
+        self.mod.auto_timestamp_comparison.assert_called_once_with(p)
+        self.assertEqual(p.timestamp, 1234)
