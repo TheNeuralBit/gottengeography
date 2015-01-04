@@ -45,6 +45,7 @@ class BaseTestCase(unittest.TestCase):
         giMock.Gio.Settings.get_string = Mock()
         giMock.Gio.Settings.get_value = Mock()
         giMock.Gio.Settings.set_value = Mock()
+        giMock.GObject.Binding = null
         giMock.GObject.GObject = null
         giMock.Gtk.Builder = null
         giMock.Gtk.Builder.get_object = Mock()
