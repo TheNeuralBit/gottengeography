@@ -57,7 +57,8 @@ class SearchController():
         three = self.search[0:3]
         if len(three) == 3 and three not in searched:
             searched.add(three)
-            with open(join(PKG_DATA_DIR, 'cities.txt')) as cities:
+            cityfile = join(PKG_DATA_DIR, 'cities.txt')
+            with open(cityfile, encoding='utf-8') as cities:
                 for line in cities:
                     city, lat, lon, country, state = line.split('\t')[0:5]
                     if city.lower().find(three) > -1:
