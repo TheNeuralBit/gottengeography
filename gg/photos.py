@@ -28,33 +28,26 @@ IPTC = 'Iptc.Application2.'
 
 # This defines the transformations used by the Exif.Image.Orientation tag.
 ROTATIONS = {
-    2: lambda thumb:
-        GdkPixbuf.Pixbuf.flip(thumb, False),
+    2: lambda thumb: GdkPixbuf.Pixbuf.flip(thumb, False),
 
-    3: lambda thumb:
+    3: lambda thumb: GdkPixbuf.Pixbuf.rotate_simple(
+        thumb, GdkPixbuf.PixbufRotation.UPSIDEDOWN),
+
+    4: lambda thumb: GdkPixbuf.Pixbuf.flip(thumb, True),
+
+    5: lambda thumb: GdkPixbuf.Pixbuf.flip(
         GdkPixbuf.Pixbuf.rotate_simple(
-            thumb, GdkPixbuf.PixbufRotation.UPSIDEDOWN),
+            thumb, GdkPixbuf.PixbufRotation.CLOCKWISE), True),
 
-    4: lambda thumb:
-        GdkPixbuf.Pixbuf.flip(thumb, True),
+    6: lambda thumb: GdkPixbuf.Pixbuf.rotate_simple(
+        thumb, GdkPixbuf.PixbufRotation.CLOCKWISE),
 
-    5: lambda thumb:
-        GdkPixbuf.Pixbuf.flip(
-            GdkPixbuf.Pixbuf.rotate_simple(
-                thumb, GdkPixbuf.PixbufRotation.CLOCKWISE), True),
-
-    6: lambda thumb:
+    7: lambda thumb: GdkPixbuf.Pixbuf.flip(
         GdkPixbuf.Pixbuf.rotate_simple(
-            thumb, GdkPixbuf.PixbufRotation.CLOCKWISE),
+            thumb, GdkPixbuf.PixbufRotation.CLOCKWISE), False),
 
-    7: lambda thumb:
-        GdkPixbuf.Pixbuf.flip(
-            GdkPixbuf.Pixbuf.rotate_simple(
-                thumb, GdkPixbuf.PixbufRotation.CLOCKWISE), False),
-
-    8: lambda thumb:
-        GdkPixbuf.Pixbuf.rotate_simple(
-            thumb, GdkPixbuf.PixbufRotation.COUNTERCLOCKWISE),
+    8: lambda thumb: GdkPixbuf.Pixbuf.rotate_simple(
+        thumb, GdkPixbuf.PixbufRotation.COUNTERCLOCKWISE),
 }
 
 
