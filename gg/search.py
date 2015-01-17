@@ -18,7 +18,7 @@ from gg.build_info import PKG_DATA_DIR
 LOCATION, LATITUDE, LONGITUDE = range(3)
 
 
-class SearchController():
+class SearchController(object):
     """Controls the behavior for searching the map."""
     last_search = None
 
@@ -32,8 +32,8 @@ class SearchController():
         search.set_text_column(LOCATION)
         search.set_inline_completion(True)
         search.set_match_func(
-            lambda c, s, itr, get:
-                (get(itr, LOCATION) or '').lower().find(self.search) > -1,
+            lambda c, s, itr, get: (get(itr, LOCATION) or '').lower().find(
+                self.search) > -1,
             self.results.get_value)
         search.connect('match-selected', self.search_completed)
         entry = Widgets.search_box
