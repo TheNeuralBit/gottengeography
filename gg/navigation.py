@@ -31,8 +31,8 @@ def move_by_arrow_keys(accel_group, acceleratable, keyval, modifier):
 def remember_location(view):
     """Add current location to history stack."""
     history = list(Gst.get('history'))
-    location = tuple([view.get_property(x) for x in
-        ('latitude', 'longitude', 'zoom-level')])
+    location = tuple([
+        view.get_property(x) for x in ('latitude', 'longitude', 'zoom-level')])
     if history[-1] != location:
         history.append(location)
     Gst.set_history(history[-30:])
@@ -51,17 +51,20 @@ def go_back(*ignore):
         Gst.reset('history')
 
 
-def zoom_button_sensitivity(view, signal, in_sensitive, out_sensitive):
+def zoom_button_sensitivity(view, signal, inn_sensitive, out_sensitive):
     """Ensure zoom buttons are only sensitive when they need to be."""
     zoom = view.get_zoom_level()
     out_sensitive(view.get_min_zoom_level() != zoom)
-    in_sensitive( view.get_max_zoom_level() != zoom)
+    inn_sensitive(view.get_max_zoom_level() != zoom)
 
 
 for prop in ('latitude', 'longitude', 'zoom-level'):
     Gst.bind(prop, MapView, prop)
 
 
-MapView.connect('notify::zoom-level', zoom_button_sensitivity,
-    Widgets.zoom_in_button.set_sensitive, Widgets.zoom_out_button.set_sensitive)
+MapView.connect(
+    'notify::zoom-level',
+    zoom_button_sensitivity,
+    Widgets.zoom_in_button.set_sensitive,
+    Widgets.zoom_out_button.set_sensitive)
 MapView.connect('realize', remember_location)
