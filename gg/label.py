@@ -55,12 +55,12 @@ class Label(Champlain.Label):
         self.connect('enter-event', hover, 1.05)
         self.connect('leave-event', hover, 1/1.05)
         self.connect('button-press', clicked)
-        self.connect('drag-finish',
-            lambda *ignore: modified.add(photo)
-                and photo.disable_auto_position())
+        self.connect(
+            'drag-finish',
+            lambda *i: modified.add(photo) and photo.disable_auto_position())
 
-        for prop in ('latitude', 'longitude'):
-            Binding(photo, prop, self, flags=GObject.BindingFlags.BIDIRECTIONAL)
+        for prp in ('latitude', 'longitude'):
+            Binding(photo, prp, self, flags=GObject.BindingFlags.BIDIRECTIONAL)
         Binding(photo, 'positioned', self, 'visible')
 
         MarkerLayer.add_marker(self)
