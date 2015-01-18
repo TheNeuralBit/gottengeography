@@ -33,6 +33,19 @@ class BaseTestCase(unittest.TestCase):
         # When we define a class that inherits from a mocked class, our class
         # becomes a useless mock. Some classes need to be defined to be empty
         # so that we can inherit from them and then just mock specific methods.
+        giMock.Champlain.Label = null
+        giMock.Champlain.Label.destroy = Mock()
+        giMock.Champlain.Label.get_property = Mock()
+        giMock.Champlain.Label.raise_top = Mock()
+        giMock.Champlain.Label.set_draggable = Mock()
+        giMock.Champlain.Label.set_name = Mock()
+        giMock.Champlain.Label.set_opacity = Mock()
+        giMock.Champlain.Label.set_property = Mock()
+        giMock.Champlain.Label.set_scale = Mock()
+        giMock.Champlain.Label.set_selectable = Mock()
+        giMock.Champlain.Label.set_selected = Mock()
+        giMock.Champlain.Label.set_text = Mock()
+        giMock.Champlain.Label.unmap = Mock()
         giMock.Champlain.PathLayer = null
         giMock.Champlain.PathLayer.set_stroke_width = Mock()
         giMock.Champlain.PathLayer.add_node = Mock()
