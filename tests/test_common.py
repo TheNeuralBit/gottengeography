@@ -15,6 +15,7 @@ class CommonTestCase(BaseTestCase):
         print_.reset_mock()
 
     def test_singleton(self):
+        """Ensure we can define classes that have only one instance."""
         @self.mod.singleton
         class Highlander:
             pass
@@ -23,6 +24,7 @@ class CommonTestCase(BaseTestCase):
         self.assertEqual(id(Highlander()), id(Highlander))
 
     def test_memoize_function(self):
+        """Ensure we can define functions that cache return values."""
         @self.mod.memoize
         def doubler(foo):
             print_('Expensive calculation!')
@@ -32,6 +34,7 @@ class CommonTestCase(BaseTestCase):
         print_.assert_called_once_with('Expensive calculation!')  # Once!
 
     def test_memoize_class(self):
+        """Ensure we can define classes that cache instances."""
         @self.mod.memoize
         class Memorable:
             def __init__(self, foo):
@@ -42,6 +45,7 @@ class CommonTestCase(BaseTestCase):
         self.assertEqual(print_.call_count, 2)
 
     def test_binding(self):
+        """Ensure we can bind GObject properties to GSettings keys."""
         m = self.mod.GObject.Binding.__init__ = Mock()
         b = self.mod.Binding('foo', 'bar', 'grill')
         m.assert_called_once_with(

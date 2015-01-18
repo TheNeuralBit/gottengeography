@@ -14,6 +14,7 @@ class SearchTestCase(BaseTestCase):
         self.controller = self.mod.SearchController()
 
     def test_search_init(self):
+        """Ensure we can set up searching."""
         self.mod.Gtk.ListStore.new.assert_called_once_with([str, float, float])
         self.mod.Gtk.EntryCompletion.new.assert_called_once_with()
         search = self.mod.Gtk.EntryCompletion.new.return_value
@@ -26,6 +27,7 @@ class SearchTestCase(BaseTestCase):
         self.assertEqual(4, len(entry.connect.mock_calls))
 
     def test_search_load_result(self):
+        """Ensure we can load results into the search db."""
         searched = set()
         append = Mock()
         entry = Mock()
@@ -47,6 +49,7 @@ class SearchTestCase(BaseTestCase):
         self.assertEqual(searched, set(['reg']))
 
     def test_search_load_result_cache(self):
+        """Ensure we can search against cached results."""
         searched = set(['reg'])
         append = Mock()
         entry = Mock()
@@ -55,6 +58,7 @@ class SearchTestCase(BaseTestCase):
         self.assertEqual(append.mock_calls, [])
 
     def test_search_search_completed(self):
+        """Ensure we can jump to selected search results."""
         entry = Mock()
         model = Mock()
         model.get.return_value = [1, 2]
@@ -67,6 +71,7 @@ class SearchTestCase(BaseTestCase):
         self.mod.MapView.center_on.assert_called_once_with(1, 2)
 
     def test_search_repeat_last_search(self):
+        """Ensure we can jump back to previous search results."""
         entry = Mock()
         model = Mock()
         self.controller.last_search = 'foo'

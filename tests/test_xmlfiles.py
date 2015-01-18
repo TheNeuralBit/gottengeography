@@ -11,6 +11,7 @@ class XmlFilesTestCase(BaseTestCase):
     filename = 'xmlfiles'
 
     def setUp(self):
+        """Initialize mocks."""
         super().setUp()
         self.mod.Gst = Mock()
         self.mod.GSettings = Mock()
@@ -18,9 +19,11 @@ class XmlFilesTestCase(BaseTestCase):
         self.normal_kml = join(self.data_dir, 'normal.kml')
 
     def test_gtkclutter_init(self):
+        """Ensure GtkClutter.__init__() has been called."""
         self.mod.GtkClutter.init.assert_called_once_with([])
 
     def test_make_clutter_color(self):
+        """Ensure we can create Clutter colors."""
         m = Mock(red=32767, green=65535, blue=32767)
         color = self.mod.make_clutter_color(m)
         self.assertEqual(color, self.mod.Clutter.Color.new.return_value)
@@ -28,6 +31,7 @@ class XmlFilesTestCase(BaseTestCase):
             127.99609375, 255.99609375, 127.99609375, 192.0)
 
     def test_track_color_changed(self):
+        """Ensure we can change GPX track colors."""
         s = Mock()
         p = [Mock(), Mock()]
         self.mod.make_clutter_color = Mock()
@@ -43,11 +47,13 @@ class XmlFilesTestCase(BaseTestCase):
         p[1].set_stroke_color.assert_called_once_with(c.lighten().lighten())
 
     def test_polygon_init(self):
+        """Ensure we can create Polygons."""
         p = self.mod.Polygon()
         p.set_stroke_width.assert_called_once_with(4)
         self.mod.MapView.add_layer.assert_called_once_with(p)
 
     def test_polygon_append_point(self):
+        """Ensure we can append points to Polygons."""
         p = self.mod.Polygon()
         coord = p.append_point(1, 2, 3)
         self.mod.Champlain.Coordinate.new_full.assert_called_once_with(1, 2)
@@ -57,6 +63,7 @@ class XmlFilesTestCase(BaseTestCase):
         p.add_node.assert_called_once_with(coord)
 
     def test_polygon_append_point_invalid_elevation(self):
+        """Ensure we can append invalid elevation values."""
         p = self.mod.Polygon()
         coord = p.append_point(1, 2, 'five')
         self.mod.Champlain.Coordinate.new_full.assert_called_once_with(1, 2)
@@ -66,6 +73,7 @@ class XmlFilesTestCase(BaseTestCase):
         p.add_node.assert_called_once_with(coord)
 
     def test_xmlsimpleparser_init(self):
+        """Ensure we can initialize the simple XML parser."""
         self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
         self.assertEqual(x.call_start, 4)
@@ -80,12 +88,14 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.parser.StartElementHandler, x.element_root)
 
     def test_xmlsimpleparser_init_failed(self):
+        """Ensure the simple XML parser fails correctly."""
         self.mod.ParserCreate = Mock()
         self.mod.ParserCreate.return_value.ParseFile.side_effect = ExpatError()
         with self.assertRaises(OSError):
             self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
 
     def test_xmlsimpleparser_element_root(self):
+        """Ensure the simple XML parser finds the correct root element."""
         self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
         self.assertEqual(x.parser.StartElementHandler, x.element_root)
@@ -93,6 +103,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.parser.StartElementHandler, x.element_start)
 
     def test_xmlsimpleparser_element_root_failed(self):
+        """Ensure the XML parser fails to find the root element correctly."""
         self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, 3, 4, 5)
         self.assertEqual(x.parser.StartElementHandler, x.element_root)
@@ -101,6 +112,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.parser.StartElementHandler, x.element_root)
 
     def test_xmlsimpleparser_element_start_ignored(self):
+        """Ensure the XML parser ignores the right starting elements."""
         self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, [], 4, 5)
         x.call_start = Mock()
@@ -109,6 +121,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertIsNone(x.element)
 
     def test_xmlsimpleparser_element_start_watching(self):
+        """Ensure the XML parser starts watching."""
         self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         x.call_start = Mock()
@@ -121,6 +134,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.state, dict(bar='grill'))
 
     def test_xmlsimpleparser_element_data_empty(self):
+        """Ensure the XML parser handles empty data."""
         self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         self.assertEqual(x.state, {})
@@ -128,6 +142,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.state, {})
 
     def test_xmlsimpleparser_element_data_something(self):
+        """Ensure the XML parser handles data."""
         self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         x.element = 'neon'
@@ -136,6 +151,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.state, dict(neon='atomic number: 10'))
 
     def test_xmlsimpleparser_element_data_chunked(self):
+        """Ensure the XML parser handles chunked data."""
         self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         x.element = 'neon'
@@ -145,6 +161,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.state, dict(neon='atomic number: 10'))
 
     def test_xmlsimpleparser_element_end(self):
+        """Ensure the XML parser closes tags correctly."""
         self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         x.call_end = Mock()
@@ -158,6 +175,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertIsNone(x.parser.EndElementHandler)
 
     def test_xmlsimpleparser_element_end_ignored(self):
+        """Ensure the XML parser ignores the right end tags."""
         self.mod.ParserCreate = Mock()
         x = self.mod.XMLSimpleParser(self.normal_kml, 2, ['foo'], 4, 5)
         x.call_end = Mock()
@@ -167,6 +185,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(x.tracking, 'neon')
 
     def test_trackfile_update_range(self):
+        """Ensure the TrackFile can update its range."""
         self.mod.TrackFile.range = [9, 10]
         self.mod.TrackFile.instances = ['something']
         self.mod.points = [1, 2, 3]
@@ -175,6 +194,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(self.mod.TrackFile.range, [1, 3])
 
     def test_trackfile_update_range_empty(self):
+        """Ensure the TrackFile can update an empty range."""
         self.mod.TrackFile.range = [9, 10]
         self.mod.points = [1, 2, 3]
         self.mod.TrackFile.update_range()
@@ -182,6 +202,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(self.mod.TrackFile.range, [])
 
     def test_trackfile_get_bounding_box(self):
+        """Ensure the TrackFile can get its bounding box."""
         class tf:
             polygons = [Mock(), Mock()]
         self.mod.TrackFile.instances = [tf]
@@ -193,6 +214,7 @@ class XmlFilesTestCase(BaseTestCase):
         ])
 
     def test_trackfile_query_all_timezones(self):
+        """Ensure the TrackFile can query all timezones."""
         class tf:
             class start:
                 geotimezone = 'hello'
@@ -200,6 +222,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(self.mod.TrackFile.query_all_timezones(), 'hello')
 
     def test_trackfile_query_all_timezones_none(self):
+        """Ensure the TrackFile can handle no timezones found."""
         class tf:
             class start:
                 geotimezone = None
@@ -209,6 +232,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertIsNone(self.mod.TrackFile.query_all_timezones())
 
     def test_trackfile_clear_all(self):
+        """Ensure the TrackFile can clear all tracks."""
         self.mod.points = Mock()
         self.mod.TrackFile.instances = tf = [Mock()]
         self.mod.TrackFile.clear_all()
@@ -216,6 +240,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.mod.points.clear.assert_called_once_with()
 
     def test_trackfile_load_from_file(self):
+        """Ensure the TrackFile can load a file."""
         times = [2, 1]
         self.mod.clock = lambda: times.pop()
         self.mod.Camera = Mock()
@@ -242,10 +267,12 @@ class XmlFilesTestCase(BaseTestCase):
             self.mod.GPXFile.return_value.start.geotimezone)
 
     def test_trackfile_load_from_file_keyerror(self):
+        """Ensure the TrackFile raises OSError correctly."""
         with self.assertRaises(OSError):
             self.mod.TrackFile.load_from_file('foo.unsupported')
 
     def test_trackfile_load_from_file_no_tracks(self):
+        """Ensure the TrackFile can load a file with no tracks."""
         self.mod.GPXFile = Mock()
         self.mod.GPXFile.return_value.tracks = [1]
         self.mod.TrackFile.update_range = Mock()
@@ -255,6 +282,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(self.mod.TrackFile.update_range.mock_calls, [])
 
     def test_trackfile_init_first_no_points(self):
+        """Ensure the TrackFile can load a track with no points."""
         self.mod.GSettings.return_value.get_string.return_value = ''
         self.mod.TrackFile.parse = Mock()
         with self.assertRaisesRegexp(OSError, 'No points found'):
@@ -265,6 +293,7 @@ class XmlFilesTestCase(BaseTestCase):
             'track-color', self.mod.Gst.get_value.return_value)
 
     def test_trackfile_element_end(self):
+        """Ensure the TrackFile can end tracks."""
         events = [False, True, True]
         self.mod.Gtk.events_pending = lambda: events.pop()
         self.mod.clock = Mock(return_value=5)
@@ -279,6 +308,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(tf.clock, 5)
 
     def test_trackfile_destroy(self):
+        """Ensure the TrackFile can destroy itself."""
         other_tf = Mock()
         self.mod.points = Mock()
         self.mod.TrackFile.__init__ = lambda s: None
@@ -296,6 +326,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.mod.TrackFile.update_range.assert_called_once_with()
 
     def test_gpxfile(self, filename='minimal.gpx'):
+        """Ensure the GPXFile can parse GPX data."""
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
         gpx = join(self.data_dir, filename)
@@ -316,12 +347,15 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(g.tracks[timestamps[2]].ele, 671.307)
 
     def test_gpxfile_unusual(self):
+        """Ensure the GPXFile can understand an unusual GPX variant."""
         self.test_gpxfile('unusual.gpx')
 
     def test_gpxfile_invalid(self):
+        """Ensure the GPXFile recovers gracefully from invalid data."""
         self.test_gpxfile('invalid.gpx')
 
     def test_tcxfile(self):
+        """Ensure we can read TCX data."""
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
         tcx = join(self.data_dir, 'sample.tcx')
@@ -351,6 +385,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(t.tracks[timestamps[-1]].ele, 2.803)
 
     def test_kmlfile(self, filename='normal.kml'):
+        """Ensure we can read KML data."""
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
         kml = join(self.data_dir, filename)
@@ -380,12 +415,15 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(k.tracks[timestamps[-1]].ele, 0.0)
 
     def test_kmlfile_disordered(self):
+        """Ensure we can read disordered KML data as per wonky spec."""
         self.test_kmlfile('disordered.kml')
 
     def test_kmlfile_invalid(self):
+        """Ensure we can recover gracefully from invalid KML data."""
         self.test_kmlfile('invalid.kml')
 
     def test_csvfile_mytracks(self):
+        """Ensure we can read CSV data."""
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
         csv = join(self.data_dir, 'mytracks.csv')
@@ -415,6 +453,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(c.tracks[timestamps[-1]].ele, 195.6999969482422)
 
     def test_csvfile_missing_alt(self):
+        """Ensure we can read CSV data that has no altitude info."""
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
         csv = join(self.data_dir, 'missing_alt.csv')
@@ -444,6 +483,7 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(c.tracks[timestamps[-1]].ele, 0)
 
     def test_csvfile_minimal(self, filename='minimal.csv'):
+        """Ensure we can read the simplest possible CSV."""
         self.mod.Champlain.Coordinate.new_full = Mock
         self.mod.Coordinates = Mock()
         csv = join(self.data_dir, filename)
@@ -464,7 +504,9 @@ class XmlFilesTestCase(BaseTestCase):
         self.assertEqual(c.tracks[timestamps[2]].ele, 0)
 
     def test_csvfile_invalid(self):
+        """Ensure we can gracefully recover from invalid CSV."""
         self.test_csvfile_minimal('invalid.csv')
 
     def test_csvfile_invalid2(self):
+        """Ensure we can gracefully recover from more invalid CSV."""
         self.test_csvfile_minimal('invalid2.csv')

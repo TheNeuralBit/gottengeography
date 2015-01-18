@@ -13,12 +13,14 @@ class AppTestCase(BaseTestCase):
         super().setUp()
 
     def test_constants(self):
+        """Ensure we define some constants."""
         self.assertEqual(self.mod.PATH, 0)
         self.assertEqual(self.mod.SUMMARY, 1)
         self.assertEqual(self.mod.THUMB, 2)
         self.assertEqual(self.mod.TIMESTAMP, 3)
 
     def test_command_line_blank(self):
+        """Ensure we can handle no files on the commandline."""
         app, commands = Mock(), Mock()
         commands.get_arguments.return_value = ['appname']
         self.assertEqual(self.mod.command_line(app, commands), 0)
@@ -26,6 +28,7 @@ class AppTestCase(BaseTestCase):
         self.assertEqual(app.open_files.mock_calls, [])
 
     def test_command_line_files(self):
+        """Ensure we load files specified by commandline."""
         app, commands = Mock(), Mock()
         args = commands.get_arguments.return_value = [
             'appname', 'pic.jpg', 'gps.xml']
