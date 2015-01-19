@@ -15,7 +15,7 @@ flakes:
 	pyflakes gottengeography setup.py gg tests
 
 pep8:
-	pep8 gg/[lpnsx]*.py tests/*.py
+	pep8 gg/[dlpnsx]*.py tests/*.py
 
 lint:
 	pylint --include-ids=y gg test -d \

@@ -31,14 +31,15 @@ from gg.widgets import Widgets, MapView
 from gg.common import selected
 from gg.photos import Photograph
 
-class DragController():
+
+class DragController(object):
     """Control the drag & drop behavior."""
 
     def __init__(self, open_files):
         # Drag source definitons
         photos_view = Widgets.photos_view
-        photos_view.enable_model_drag_source(Gdk.ModifierType.BUTTON1_MASK,
-            [], Gdk.DragAction.COPY)
+        photos_view.enable_model_drag_source(
+            Gdk.ModifierType.BUTTON1_MASK, [], Gdk.DragAction.COPY)
         photos_view.drag_source_add_text_targets()
         photos_view.connect('drag-data-get', self.photo_drag_start)
 
@@ -59,7 +60,7 @@ class DragController():
 
     def photo_drag_start(self, widget, drag_context, data, info, time):
         """Allow dragging more than one photo."""
-        self.external_drag = False # Don't reload files from disk
+        self.external_drag = False  # Don't reload files from disk
         data.set_text('\n'.join([photo.filename for photo in selected]), -1)
 
     def photo_drag_end(self, widget, drag_context, x, y,
