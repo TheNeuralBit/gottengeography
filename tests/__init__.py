@@ -62,6 +62,10 @@ class BaseTestCase(unittest.TestCase):
         giMock.GObject.GObject = null
         giMock.Gtk.Builder = null
         giMock.Gtk.Builder.get_object = Mock()
+        giMock.Gtk.RadioMenuItem = null
+        giMock.Gtk.RadioMenuItem.__init__ = Mock()
+        giMock.Gtk.RadioMenuItem.set_label = Mock()
+        giMock.Gtk.RadioMenuItem.get_active = Mock()
         giMock.GtkChamplain.Embed = null
         giMock.GtkChamplain.Embed.get_view = Mock()
         sys.modules['gi.repository'] = giMock
