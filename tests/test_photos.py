@@ -51,9 +51,9 @@ class PhotosTestCase(BaseTestCase):
         photo.timestamp = 3
         self.mod.auto_timestamp_comparison(photo)
         mock_call = photo.set_location.mock_calls[0][1]
-        self.assertAlmostEqual(mock_call[0], 2/3, 7)
-        self.assertAlmostEqual(mock_call[1], 20/3, 7)
-        self.assertAlmostEqual(mock_call[2], 200/3, 7)
+        self.assertAlmostEqual(mock_call[0], 2 / 3, 7)
+        self.assertAlmostEqual(mock_call[1], 20 / 3, 7)
+        self.assertAlmostEqual(mock_call[2], 200 / 3, 7)
 
     def test_auto_timestamp_comparison_interpolate_2(self):
         """Ensure we can interpolate GPX data (realistic timestamps)."""

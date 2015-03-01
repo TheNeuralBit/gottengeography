@@ -53,7 +53,7 @@ class Label(Champlain.Label):
         self.set_draggable(True)
         self.set_property('reactive', True)
         self.connect('enter-event', hover, 1.05)
-        self.connect('leave-event', hover, 1/1.05)
+        self.connect('leave-event', hover, 1 / 1.05)
         self.connect('button-press', clicked)
         self.connect(
             'drag-finish',
