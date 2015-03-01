@@ -43,9 +43,9 @@ class SearchTestCase(BaseTestCase):
             append.mock_calls)
         # Anything with 'reg' is also there
         self.assertIn(
-            call(('Waregem, Flemish, Belgium', 50.88898, 3.42756)),
+            call(('Waregem, Flanders, Belgium', 50.88898, 3.42756)),
             append.mock_calls)
-        self.assertEqual(len(append.mock_calls), 265)
+        self.assertEqual(len(append.mock_calls), 266)
         self.assertEqual(searched, set(['reg']))
 
     def test_search_load_result_cache(self):
