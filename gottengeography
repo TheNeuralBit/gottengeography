@@ -49,12 +49,14 @@ except:
 
 try:
     from gi.repository import GtkChamplain
+    GtkChamplain  # Appease pyflakes
 except:
     need('libchamplain 0.12.2 (with introspection, gir1.2-gtkchamplain-0.12)')
 
 
 try:
     from gi.repository import GtkClutter
+    GtkClutter  # Appease pyflakes
 except:
     need('clutter (with introspection, gir1.2-gtkclutter-1.0)')
 
