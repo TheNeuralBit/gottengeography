@@ -257,8 +257,8 @@ class Photograph(Coordinates):
 
         # Get the camera info
         self.camera_info = {'Make': '', 'Model': ''}
-        keys = ['Exif.Image.' + key for key in list(self.camera_info.keys())
-                + ['CameraSerialNumber']] + ['Exif.Photo.BodySerialNumber']
+        keys = ['Exif.Image.' + key for key in list(self.camera_info.keys()) +
+                ['CameraSerialNumber']] + ['Exif.Photo.BodySerialNumber']
         for key in keys:
             with ignored(KeyError):
                 self.camera_info.update(
