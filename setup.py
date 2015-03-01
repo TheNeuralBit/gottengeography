@@ -43,10 +43,11 @@ class build_py(_build_py):
         if (module_file == 'gg/build_info.py'):
             try:
                 iobj = self.distribution.command_obj['install']
+                prefix = iobj.prefix if root else join(iobj.prefix, 'local')
                 with open(module_file, 'w') as module_fp:
                     module_fp.write(build_info_template.format(
-                        prefix=iobj.prefix,
-                        datadir=join(iobj.prefix, 'share', PACKAGE),
+                        prefix=prefix,
+                        datadir=join(prefix, 'share', PACKAGE),
                         version=(VERSION if root else Popen(('git', 'describe'),
                             stdout=PIPE).communicate()[0].strip().decode("utf-8"))
                     ))
