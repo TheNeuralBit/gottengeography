@@ -44,14 +44,26 @@ try:
     [source.get_id() for source in
         Champlain.MapSourceFactory.dup_default().get_registered()]
 except:
-    need('libchamplain 0.12.2')
+    need('libchamplain 0.12.2 (with introspection, gir1.2-champlain-0.12)')
+
+
+try:
+    from gi.repository import GtkChamplain
+except:
+    need('libchamplain 0.12.2 (with introspection, gir1.2-gtkchamplain-0.12)')
+
+
+try:
+    from gi.repository import GtkClutter
+except:
+    need('clutter (with introspection, gir1.2-gtkclutter-1.0)')
 
 
 try:
     from gi.repository import GExiv2
     GExiv2.Metadata()
 except:
-    need('gexiv2 0.4.90 (with introspection support, gir1.2-gexiv2-0.4)')
+    need('gexiv2 0.4.90 (with introspection, gir1.2-gexiv2-*)')
 
 
 old_hook = sys.excepthook
