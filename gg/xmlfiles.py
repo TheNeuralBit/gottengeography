@@ -1,4 +1,4 @@
-# Author: Robert Park <robru@gottengeography.ca>, (C) 2010
+# Author:i Robert Park <robru@gottengeography.ca>, (C) 2010
 # Copyright: See COPYING file included with this distribution.
 
 """Define classes used for parsing GPX and KML XML files."""
@@ -8,6 +8,7 @@ from gi.repository import GtkClutter
 GtkClutter.init([])
 
 from xml.parsers.expat import ParserCreate, ExpatError
+import ijson
 from gi.repository import Champlain, Clutter, Gtk, Gdk
 from dateutil.parser import parse as parse_date
 from collections import defaultdict, deque
@@ -140,6 +141,22 @@ class XMLSimpleParser:
         self.state.clear()
         self.parser.CharacterDataHandler = None
         self.parser.EndElementHandler = None
+
+class JSONSimpleParser:
+    """A simple wrapper for the ijson JSON parser."""
+
+    def __init__(self, filename, root, watch, call_start, call_end):
+        self.state = defaultdict(str)
+        self.call_start = call_start
+        self.call_end = call_end
+        self.rootname = root
+        self.tracking = None
+        self.element = None
+
+        with open(filename, 'r') as json:
+            for item in ijson.items(json, watch[0]):
+                call_start(watch[0])
+                call_end(item)
 
 
 class TrackFile():
@@ -303,15 +320,28 @@ class TrackFile():
             points.update(trackfile.tracks)
         TrackFile.update_range()
 
+@memoize
+class SONFile(TrackFile):
+    parse = JSONSimpleParser
+
+    def __init__(self, filename):
+        TrackFile.__init__(self, filename, 'json', ('locations.item',))
+
+    def element_end(self, item):
+        timestamp = float(item['timestampMs'])/1E3
+        lat = float(item['latitudeE7'])/1E7
+        lon = float(item['longitudeE7'])/1E7
+        TrackFile.element_end(self)
+
+        self.tracks[timestamp] = self.append(lat, lon, None)
+
 
 # GPX files use ISO 8601 dates, which look like 2010-10-16T20:09:13Z.
 # This regex splits that up into a list like 2010, 10, 16, 20, 09, 13.
 split = re_compile(r'[:T.Z-]').split
 
-
 @memoize
 class GPXFile(TrackFile):
-    """Support for the open GPS eXchange format."""
 
     def __init__(self, filename):
         TrackFile.__init__(self, filename, 'gpx', ('trkseg', 'trkpt'))
@@ -426,7 +456,6 @@ class KMLFile(TrackFile):
 @memoize
 class CSVFile(TrackFile):
     """Support for Google's MyTracks' Comma Separated Values format.
-
     This implementation ignores everything before the first line that contains
     the necessary column headers, allowing you to have any arbitrary preamble
     you like. Extra columns are harmlessly ignored. All "values" must be
